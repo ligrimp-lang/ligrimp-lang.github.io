@@ -117,3 +117,10 @@ footer a:hover { color: var(--ink); }
   .blurb { font-size: 17px; }
   .top nav { display: none; }
 }
+
+/* On a phone the bar scrolls away with the page. iOS Safari keeps its own address bar over the
+   top of the screen and parks a sticky bar underneath it, a hand's width below the top edge, with
+   the page showing above it. Either at the very top or not stuck at all: not stuck. */
+@media (max-width: 760px), (pointer: coarse) and (max-height: 520px) {
+  .top { position: static; }
+}
