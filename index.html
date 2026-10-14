@@ -222,10 +222,23 @@
   function load(stage) {
     var v = stage.querySelector('video');
     if (v.dataset.loaded) return v;
+    v.preload = 'auto';
     v.src = 'video/' + stage.dataset.video + '-' + variant + '.mp4';
     v.dataset.loaded = '1';
     v.addEventListener('playing', function () { v.classList.add('on'); });
     return v;
+  }
+
+  // Start fetching a video about a screen and a half before it is reached, so it can play the moment it
+  // is in view. Skipped when the visitor has asked their browser to save data.
+  var saver = navigator.connection && navigator.connection.saveData;
+  if ('IntersectionObserver' in window && !saver) {
+    var near = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { load(e.target); near.unobserve(e.target); }
+      });
+    }, { rootMargin: '150% 0px' });
+    stages.forEach(function (stage) { near.observe(stage); });
   }
 
   if (reduce) {
