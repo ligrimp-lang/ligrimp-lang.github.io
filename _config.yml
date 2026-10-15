@@ -1,0 +1,8 @@
+# GitHub Pages runs Jekyll over this repository. Everything not listed here is on the web.
+exclude:
+  - CLAUDE.md
+  - README.md
+  - _config.yml
+  - docs
+  - tools
+  - build
