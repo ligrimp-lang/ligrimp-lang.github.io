@@ -45,7 +45,9 @@ store, so when Apple approves it, remove the class and the note — nothing else
 ## Words on the page are the apps' approved words
 
 The sentence after the opening phrase is the App Store promotional text
-(`docs/app-store-listing*.md` in each app's repo), lightly joined. **The line under each name and
+(`docs/app-store-listing*.md` in each app's repo), lightly joined — **except Dive log's**, which
+names his six key features in the video's order (Rustam, 2026-10-18, "update the website"); its
+listing still has the older promotional text. **The line under each name and
 the first words of each paragraph are search wording, no longer the store subtitle** (2026-10-15,
 Rustam: searchers type the problem, not the app names). Each leads with what a diver types, taken
 from the search research (`weights_check/nimbalyst-local/promotion/search-terms.txt` and
