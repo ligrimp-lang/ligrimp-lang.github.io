@@ -43,8 +43,9 @@ facts and any drafted text in its repository; this session then:
    (`git commit … -- <app>-site`), since another session usually works in that repository;
 3. runs the app's `.claude/skills/ship/scripts/publish-site.sh <app> --dry-run` and reads the file list: the
    script sends the whole folder, so anything committed there goes out with it;
-4. publishes with the same script, waits for `gh run list -R ligrimp-lang/<app>-site --limit 1` to say
-   completed, and checks the live page at `diver.today/<app>-site/…` in the browser pane;
+4. publishes with the same script, waits for `gh run list -R ligrimp-lang/<app>-site --limit 1 --json
+   status,conclusion,headSha` to show the run whose `headSha` is the commit just pushed (the run before it
+   is also "completed success" and fools the check), and checks the live page at `diver.today/<app>-site/…` in the browser pane;
 5. tells the asking session the addresses, and anything in its pages that disagrees with the family page.
 
 A change in what an app keeps in iCloud also changes `privacy/index.html` here. Publishing wording about a
