@@ -143,11 +143,14 @@ footer a:hover { color: var(--ink); }
 .prose .closing p { margin: 4px 0 0; font-size: 16px; line-height: 1.5; color: var(--dim); }
 .prose .closing .actions, .prose .closing .note { grid-column: 1 / -1; }
 .prose .closing .note { margin: 0; }
+.prose ul { margin: 0 0 1.2em; padding-left: 1.2em; font-size: 18px; line-height: 1.7; }
+.prose li { margin: 0 0 .3em; }
+.prose code { font-size: .88em; padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.07); overflow-wrap: anywhere; }
 main + footer { margin-top: 56px; }
 @media (max-width: 760px) {
   .prose { padding: 40px 24px 0; }
   .prose h2 { font-size: 20px; }
-  .prose p { font-size: 17px; }
+  .prose p, .prose ul { font-size: 17px; }
   .closing { grid-template-columns: 60px 1fr; margin-top: 40px; }
   .closing img { width: 60px; height: 60px; }
 }
