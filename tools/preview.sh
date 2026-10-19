@@ -1,5 +1,5 @@
 #!/bin/bash
-# Screenshots of pages straight from the files, with no local web server and no open port.
+# Screenshots of pages straight from the files, no web server needed.
 # Chrome renders file:// pages fully (styles, images, posters); the phone cut is a 390-px frame,
 # because headless Chrome will not make a window that narrow. Videos do not play in a screenshot,
 # their posters (which are the videos' first frames) do show.
