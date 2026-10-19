@@ -30,6 +30,27 @@ ligrimp-lang/ligrimp-lang.github.io --limit 1` shows the deployment, then look a
 This repository is public, CLAUDE.md and `docs/` included, so private working notes stay in the
 git-ignored `CLAUDE.local.md`.
 
+## Updating an app's own site (privacy, support, landing)
+
+Rustam's rule (2026-10-19): when an app's pages must change, the app's session asks **this** session and
+does not publish them itself, because this one knows how. The asking session writes a brief and leaves the
+facts and any drafted text in its repository; this session then:
+
+1. reads the brief and checks every claim against the app (and against `privacy/index.html`, which the
+   per-app privacy pages point to), and greps the whole site folder for the old claim, not only the pages
+   named: Turn Pressure's worked examples under `plan/` also said "40/85 (the app's default)";
+2. edits the folder `<app>-site/` in the app's repository and commits **only that folder**
+   (`git commit … -- <app>-site`), since another session usually works in that repository;
+3. runs the app's `.claude/skills/ship/scripts/publish-site.sh <app> --dry-run` and reads the file list: the
+   script sends the whole folder, so anything committed there goes out with it;
+4. publishes with the same script, waits for `gh run list -R ligrimp-lang/<app>-site --limit 1` to say
+   completed, and checks the live page at `diver.today/<app>-site/…` in the browser pane;
+5. tells the asking session the addresses, and anything in its pages that disagrees with the family page.
+
+A change in what an app keeps in iCloud also changes `privacy/index.html` here. Publishing wording about a
+version that is not on sale yet waits for the version to go to review (Rustam's word travels with the
+request); the live store version must not be described falsely meanwhile.
+
 ## The apps on the page
 
 Rustam chose this order on 2026-10-14 and it is the order on the page, in the header menu, in the
