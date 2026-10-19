@@ -17,9 +17,34 @@ and search. **This file is the present tense; read it before changing anything.*
 | Hosting | GitHub Pages, repo `ligrimp-lang/ligrimp-lang.github.io` (the account's **user site**, renamed from `divertoday-site` on 2026-10-19 by Rustam's hand; see "Everything under diver.today" below), branch `main`, folder `/`. Push to `main` and it deploys in about a minute. **Everything in this repository is on the web unless `_config.yml` excludes it** — the notes (`CLAUDE.md`, `README.md`, `docs/`), `tools/` and `build/` are excluded there; add any new non-site folder to that list before committing it |
 | Domain | `diver.today` at Namecheap. Advanced DNS holds four `A` records on `@` → 185.199.108.153 / .109 / .110 / .111 and `CNAME www` → `ligrimp-lang.github.io` (set by Rustam, 2026-10-14). The `CNAME` file in this repo tells GitHub the domain |
 | Search | `robots.txt`, `sitemap.xml`, canonical `https://diver.today/`, JSON-LD `WebSite` + `ItemList` of five `SoftwareApplication`s, Open Graph and Twitter cards |
-| Preview | `.claude/launch.json` starts `python3 -m http.server 8765` for the browser pane |
+| Preview | `tools/preview.sh [page-folder]` — screenshots from the files with headless Chrome, desktop and phone width, into `build/preview/`. **No local web server** (see the next section); there is no `.claude/launch.json` on purpose |
 | Question pages | Five articles for Google, one per app, each a folder with its own `index.html`: `weight-for-scuba-diving/`, `minimum-gas-rock-bottom/`, `gradient-factors-explained/`, `blue-gopro-dive-footage/`, `shearwater-dives-on-iphone/`. Linked from the home page under each app and listed in `sitemap.xml`; their CSS is the `/* question pages */` block at the end of `style.css`. See "The question pages" below |
 | Promotion | **This project is the home for app promotion** (Rustam, 2026-10-19). Start at `docs/promotion-knowledge.md`: where every number and listing lives, each app's store position, what was learned, what is open, and the weekly loop. Beside it: `docs/promotion-posts-2026-10-15.md` (where to post and the texts, in Rustam's voice, for him to post himself) and `docs/search-findability-proposal-2026-10-19.md` (the proposal that was implemented that day). None of it is on the web |
+
+## Updating the site with ordinary developer steps only (2026-10-19)
+
+Rustam, 2026-10-19: *"i need to find a way we update website without alarming"*. Site work uses
+only the ordinary steps below; the reasons are in the private notes, not in this public repository.
+
+- **Edit → preview → commit → push, nothing else.** Change the files, look with `tools/preview.sh`,
+  then `git add`, `git commit`, `git push`. The remote is HTTPS
+  (`https://github.com/ligrimp-lang/ligrimp-lang.github.io.git`, credentials from the `gh` login),
+  never SSH; this Mac has no SSH key.
+- **No local web server.** No `http.server`, no `.claude/launch.json`, no `preview_start` by name.
+  The browser pane cannot show `file://` pages (it turns them into a bare snapshot), so the
+  preview is `tools/preview.sh`, which needs no port.
+- **No `curl` or `wget`.** After a push, `gh run list -R ligrimp-lang/ligrimp-lang.github.io --limit 1`
+  says whether the deployment finished, and the live page is opened in the browser pane like any
+  visitor would. Store listings the same way (above).
+- **No `rsync`, no copies of folders into temporary places.** For a second working copy,
+  `git worktree add`.
+- **Never touch a LaunchAgent, LaunchDaemon, cron entry or login item, or a file one of them runs,**
+  without Rustam's say-so.
+- `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` is set in `~/.claude/settings.json` so Claude Code refreshes its
+  plugin catalogues over HTTPS instead of first probing `ssh git@github.com`.
+
+These are the ordinary ways to do the work, not a way of hiding it: a push still reaches GitHub
+like any other.
 
 ## The apps on the page
 
@@ -39,7 +64,7 @@ are served under diver.today, the github.io addresses redirect there):
 | Turn Pressure | Turn Pressure – Dive Planner | 6801749776 | diver.today/turnpressure-site/ |
 | Weights Check | Weights Check – Dive Weighting | 6806640499 | diver.today/weightscheck-site/ |
 
-Verify a listing with `curl "https://itunes.apple.com/lookup?id=<id>"` rather than from memory.
+Verify a listing by opening `https://itunes.apple.com/lookup?id=<id>` in the browser pane rather than from memory (not with `curl`; see "Updating the site with ordinary developer steps only" above).
 **Dive log went into App Review on 2026-10-14**; the page shows its button as "Coming soon on the
 App Store" (class `soon` on the link, plus the `.note` under it). The link already points at the
 store, so when Apple approves it, remove the class and the note — nothing else.
@@ -162,9 +187,9 @@ the usual faults:
     ffmpeg -y -ss 6.5 -i video/surface-interval-tall.mp4 -frames:v 1 /tmp/tall.png
 
 (scene *n* starts at 4.6·(n−1) seconds — for Dive log, whose first scene scrolls, 6.4 + 4.6·(n−2); add two seconds to land past the fade; scene 1 has no
-fade-in, its first frame is the poster). Then open
-the page from `.claude/launch.json` and watch the section play at desktop and at phone width,
-commit the changed `video/` and `img/` files with the script, and push.
+fade-in, its first frame is the poster). Then run `tools/preview.sh` for the page at desktop and
+phone width; to watch a video play, `open -a Safari index.html` opens the file itself for Rustam.
+Commit the changed `video/` and `img/` files with the script, and push.
 
 **If a real screen recording should replace a generated video**: encode it to the same names
 and shapes — `video/<slug>-wide.mp4` at 1920×1080 and `video/<slug>-tall.mp4` at 864×1080
