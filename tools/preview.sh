@@ -7,7 +7,8 @@
 #   tools/preview.sh                          # home page
 #   tools/preview.sh weight-for-scuba-diving  # a question page (its folder)
 #
-# Writes build/preview/<name>-wide.png (1440 wide) and <name>-phone.png (390 wide).
+# Writes build/preview/<name>-wide.png (1440 wide) and <name>-phone.png (390 wide), 2400 px tall;
+# PREVIEW_HEIGHT=9000 for a long page (the home page with its seven sections is about 8,000 px).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 SITE="$PWD"
@@ -22,11 +23,12 @@ QUIET=(--headless=new --disable-gpu --no-first-run --no-default-browser-check --
        --disable-background-networking --disable-component-update --disable-sync --no-pings
        --allow-file-access-from-files --hide-scrollbars)
 
-"$CHROME" "${QUIET[@]}" --window-size=1440,2400 --screenshot="$OUT/$NAME-wide.png" "file://$FILE" 2>/dev/null
+H="${PREVIEW_HEIGHT:-2400}"
+"$CHROME" "${QUIET[@]}" --window-size=1440,"$H" --screenshot="$OUT/$NAME-wide.png" "file://$FILE" 2>/dev/null
 
 FRAME="$OUT/$NAME-phone-frame.html"
-printf '<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:#333}iframe{border:0;display:block}</style><iframe src="file://%s" width="390" height="2400"></iframe>\n' "$FILE" > "$FRAME"
-"$CHROME" "${QUIET[@]}" --window-size=600,2400 --screenshot="$OUT/$NAME-phone.png" "file://$FRAME" 2>/dev/null
+printf '<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:#333}iframe{border:0;display:block}</style><iframe src="file://%s" width="390" height="%s"></iframe>\n' "$FILE" "$H" > "$FRAME"
+"$CHROME" "${QUIET[@]}" --window-size=600,"$H" --screenshot="$OUT/$NAME-phone.png" "file://$FRAME" 2>/dev/null
 rm -f "$FRAME"
 
 echo "$OUT/$NAME-wide.png"

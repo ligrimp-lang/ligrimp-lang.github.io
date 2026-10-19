@@ -12,12 +12,12 @@ and search. **This file is the present tense; read it before changing anything.*
 | | |
 |---|---|
 | The page | `index.html` (one file, inline script), `style.css` (`?v=` on its link is the cache-buster: bump it when the CSS changes) |
-| Media | `img/` icons at 512, favicon, `og.png` (1200×630), posters; `video/` ten MP4s, `<app>-wide.mp4` (1920×1080, desktops) and `<app>-tall.mp4` (864×1080, 4:5, phones) |
+| Media | `img/` icons at 512, favicon, `og.png` (1200×630), posters; `video/` twelve MP4s, `<slug>-wide.mp4` (1920×1080, desktops) and `<slug>-tall.mp4` (864×1080, 4:5, phones) — five apps plus `time-to-surface-pro`, the dive-professional cut of Time to Surface |
 | Generator | `tools/build-media.py` — makes all of `img/` and `video/` from the app repositories beside this one. Needs ffmpeg and Pillow. `build/` is its scratch, git-ignored |
 | Hosting | GitHub Pages, repo `ligrimp-lang/ligrimp-lang.github.io` (the account's **user site**, renamed from `divertoday-site` on 2026-10-19 by Rustam's hand; see "Everything under diver.today" below), branch `main`, folder `/`. Push to `main` and it deploys in about a minute. **Everything in this repository is on the web unless `_config.yml` excludes it** — the notes (`CLAUDE.md`, `README.md`, `docs/`), `tools/` and `build/` are excluded there; add any new non-site folder to that list before committing it |
 | Domain | `diver.today` at Namecheap. Advanced DNS holds four `A` records on `@` → 185.199.108.153 / .109 / .110 / .111 and `CNAME www` → `ligrimp-lang.github.io` (set by Rustam, 2026-10-14). The `CNAME` file in this repo tells GitHub the domain |
 | Search | `robots.txt`, `sitemap.xml`, canonical `https://diver.today/`, JSON-LD `WebSite` + `ItemList` of five `SoftwareApplication`s, Open Graph and Twitter cards |
-| Preview | `tools/preview.sh [page-folder]` — screenshots from the files with headless Chrome, desktop and phone width, into `build/preview/`. see "Previewing and publishing" below |
+| Preview | `tools/preview.sh [page-folder]` — screenshots from the files with headless Chrome, desktop and phone width, into `build/preview/`; `PREVIEW_HEIGHT=9000` for the whole home page. See "Previewing and publishing" below |
 | Privacy | `privacy/index.html` — the **family-wide privacy statement** at `diver.today/privacy/` (2026-10-19, Rustam: *"for privacy update, use the diver.today project"*): the shared CloudKit container `iCloud.net.ismailov.divertoday`, private database only, no server of ours, signed out of iCloud everything works on one device, and links to the five per-app privacy pages, which stay the authority on what each app does. Each app's own page points here for the shared-container part. Linked from every page's footer; in `sitemap.xml`. Update it when an app starts or stops keeping data in that container |
 | Question pages | Five articles for Google, one per app, each a folder with its own `index.html`: `weight-for-scuba-diving/`, `minimum-gas-rock-bottom/`, `gradient-factors-explained/`, `blue-gopro-dive-footage/`, `shearwater-dives-on-iphone/`. Linked from the home page under each app and listed in `sitemap.xml`; their CSS is the `/* question pages */` block at the end of `style.css`. See "The question pages" below |
 | Promotion | **This project is the home for app promotion** (Rustam, 2026-10-19). Start at `docs/promotion-knowledge.md`: where every number and listing lives, each app's store position, what was learned, what is open, and the weekly loop. Beside it: `docs/promotion-posts-2026-10-15.md` (where to post and the texts, in Rustam's voice, for him to post himself) and `docs/search-findability-proposal-2026-10-19.md` (the proposal that was implemented that day). None of it is on the web |
@@ -51,6 +51,21 @@ facts and any drafted text in its repository; this session then:
 A change in what an app keeps in iCloud also changes `privacy/index.html` here. Publishing wording about a
 version that is not on sale yet waits for the version to go to review (Rustam's word travels with the
 request); the live store version must not be described falsely meanwhile.
+
+## The page's sections (2026-10-20)
+
+Hero, then Time to Surface, **Time to Surface for dive professionals** (`#dive-professionals`, the same app's
+second proposition: signed team plans in the dive centre's brand, its own video `time-to-surface-pro`, the
+App Store link and the per-app site's `team.html`), Surface Interval, Dive log, Turn Pressure, Weights Check,
+then **One iCloud, five apps** (`#one-icloud`: what the family shares through `iCloud.net.ismailov.divertoday`,
+each line a claim from the apps' 1.8/1.9 What's New, and the footnote every asterisk on the page points at).
+The header menu names all seven. **The asterisk** (`<a class="soon-mark" href="#in-review">*</a>`) marks a
+feature that is submitted to Apple and not yet on sale (Rustam, 2026-10-20: *"add asterisks to the features
+that coming soon within next days"*): Time to Surface 1.8, Turn Pressure 1.9 and Weights Check 1.9, all in
+review since 2026-10-19, and Dive log's branding and Weights Check link, which are on TestFlight and go in the
+first update after 1.0. **When a version is approved, take its asterisks off** and reword the footnote; when
+all are on sale, remove the footnote and the marks together. The Time to Surface and Dive log videos show
+the versions in review (the swim, signed plans, the brand), so the marks stay on until then.
 
 ## The apps on the page
 
@@ -119,6 +134,22 @@ Surface promo Rustam had made on 2026-10-10 (`turn_pressure/build/promo/`). Scen
 are the `APPS` table at the top of the generator; the screenshots are read from each app's
 `design/screenshots/<app>/` (1320×2868, the 6.9" set). Fonts are SF Pro from the system.
 
+**Time to Surface and Dive log are journeys** (2026-10-20; see "A video can be a journey" below), and their
+shots are site sets of their own, taken on the builds in review by Debug-only launch arguments that live on a
+`site-shots` branch in each app's repository (worktrees `../turn_pressure-site-shots` and
+`../sharewater_dive_log-site-shots`, neither merged into main — the app sessions decide; the screenshot
+folders themselves are committed on main). `turn_pressure/design/screenshots/time-to-surface-site/`: the
+journey `a1`–`a10` (the swim 10 m/15 min, 45 m/10 min, a second deep segment 51 m/4 min on **18/45** — at 51 m
+the app refuses 21/35, 1.28 bar of oxygen — EAN50 in an AL80, one diver at 18 L/min; `a3-page/` the whole plan
+page every 500 points by `-scrollY`; `a9` the send sheet with the team Lena, Anna, Marco by `-sendTeam`; `a10`
+the free sent page as the app writes it), the dive-professional story `b1`–`b6` in the sample brand "Blue Deep
+Divers" (`-seedBrand YES -entitled YES`), and `brand-<green|red|orange|black>-{app,document}` with four
+**fictional** dive centres (Deep Stop Dive Centre, Blue Deep Divers, Hangtime Technical, North Reef Tec; logos
+drawn, heroes cut from the reef clips; `-seedBrandName/-Line1/-Line2/-Colour/-Logo/-Hero`). Dive log's set
+gained `7-search` ("trimix"), `8-tags` (dive 273 tagged by `-seedTags YES`) and `me-<1–4>-{log,dive,card,card-picture}`
+for four fictional divers (Lena Voss, Marco Rinaldi, Ann Keller, Tomas Berg) — individuals, not companies, as
+he asked. The same six brand arguments exist in both apps.
+
 **Dive log is the exception** (2026-10-17, Rustam's six key features in his order: the dive on one
 page, super fast navigation, import once from any computer with the merge, SAC per dive and over
 time, dive sites, the social card). Its video reads its own set, `design/screenshots/dive-log-site/`,
@@ -130,6 +161,20 @@ his real export's rate is too noisy for that. The trips are at four famous sites
 the Blue Hole (where all the Dahab dives, his five real ones too, are put), Richelieu Rock, Maaya
 Thila, Batu Bolong — because the map names only one pin of a crowd, and a sample site in Gozo once
 showed up as "Blue Hole" near Italy (Rustam, 2026-10-17). The merge scene is the app's two-computer seed.
+
+**A video can be a journey instead of scenes** (2026-10-20, Rustam: *"a smooth video, not a collection
+of not much related screens … a connected story"*). An app entry with `journey=[…]` keeps one phone in
+place and changes what is on its screen: `dict(shot="stem", …)` crossfades to that screenshot;
+`dict(page="folder", at=<points>)` shows a stitched page at that scroll position, and two such steps
+in a row scroll between them (add `to=<points>` to scroll during the caption's hold); `shot=[…]` cycles
+a few shots under one caption; `gallery=[…]` lays them side by side under a banner caption. A picture
+whose shape is not a 6.9" screen (the sent plan, the share card) is drawn as a sheet of paper where the
+phone was. Each step carries `pill`, `head`, `sub` and an optional `hold` (`JOURNEY_HOLD` is 3.8 s;
+`XFADE` 0.6 s). The fixed chrome of a scrolling page is the app's `chrome` dict (`DIVE_LOG_CHROME`;
+`STATUS_BAR_CHROME` keeps only the status bar). A journey writes about a thousand full-frame PNGs per
+cut into `build/<slug>/<cut>/` (held frames are hard links) and takes about two minutes per cut.
+Time to Surface, its dive-professional cut (`time-to-surface-pro`, the same icon, an `outro` line of its
+own) and Dive log are journeys; the other three keep scenes.
 
 **A scene can scroll a whole page.** When a scene's stem is a folder of pieces (`00.png`, `01.png`, …
 the same screen 500 points further down each time), the generator stitches them, keeps the status
@@ -311,7 +356,7 @@ If the symptom above ever appears anyway, skip the cancels and go straight to th
 ## Not done yet / next
 
 - "Enforce HTTPS": done 2026-10-14 (`https_enforced` is true on `repos/ligrimp-lang/ligrimp-lang.github.io/pages`).
-- Dive log's button when it is on sale (above).
+- Dive log's button when it is on sale (above), and the asterisks as each version is approved ("The page's sections").
 - Google Search Console: **done 2026-10-15.** URL-prefix property `https://diver.today/` in
   Rustam's Google account, verified by the HTML tag (`google-site-verification` meta in the head
   of `index.html`; **keep it there**, removing it un-verifies the property), `sitemap.xml`

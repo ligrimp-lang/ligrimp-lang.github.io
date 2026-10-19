@@ -31,6 +31,16 @@ won by popularity, not wording.
 | Surface Interval | *surface interval*, *dive videos*, *dive video* | *snorkel video* #7 US | *underwater color correction* #74 US although the US store suggests that phrase; *underwater video editor* absent | subtitle → `Underwater color fix & reels` (replaces his 2026-09-28 choice); keywords: out `underwater,color,reel`, in `correction,assembly,blue`; goes out with 1.7.2 |
 | Dive log | — (in review since 2026-10-14) | — | *dive log* is the most crowded term of the five | terms file written, app added to the Monday job, rating request after the second import |
 
+## The page since 2026-10-20
+
+The Time to Surface and Dive log videos are journeys (one phone, the whole plan end to end; the log from
+import to "make it yours"), and the page has two sections that are not apps: **Time to Surface for dive
+professionals** (`#dive-professionals`, the signed-team-plans proposition, its own video with four sample
+dive-centre brands) and **One iCloud, five apps** (`#one-icloud`, what the family shares). Features submitted
+and not yet on sale carry an asterisk that points at the footnote there. The dive-professional section is the
+page to send a dive centre or an instructor; the App Store custom product page for it is still a proposal in
+the Time to Surface repo (`nimbalyst-local/plans/time-to-surface-signed-plans-subscription-2026-10-18.md`).
+
 ## What was learned (keep these; they cost time to find out)
 
 1. **Keywords change nothing until a version ships.** Name, subtitle and keywords belong to a version
