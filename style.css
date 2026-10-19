@@ -101,6 +101,24 @@ img { display: block; }
 .more:hover { color: var(--ink); border-color: var(--dim); }
 .note { margin: 14px 0 0; color: var(--dim); font-size: 14px; }
 
+/* The second proposition of the same app, and the family section */
+.app.pro .title h2 { font-size: 26px; }
+.soon-mark { color: var(--accent); font-weight: 600; margin-left: 1px; }
+.family { border-top: 1px solid var(--rule); padding: 72px 0 56px; }
+.family h2 { margin: 0 0 12px; font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 650; }
+.family .lead { margin: 0 0 28px; font-size: 18px; color: var(--dim); max-width: 56ch; }
+.family ul { list-style: none; margin: 0 0 28px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 48px; max-width: 980px; }
+.family li { font-size: 17px; color: var(--ink); padding-left: 18px; border-left: 2px solid var(--accent); }
+.family li b { font-weight: 600; }
+.family .note { max-width: 72ch; }
+.family .note a { color: var(--dim); border-bottom: 1px solid var(--rule); }
+.family .note a:hover { color: var(--ink); }
+@media (max-width: 760px) {
+  .family { padding: 48px 0 40px; }
+  .family ul { grid-template-columns: 1fr; gap: 14px; }
+  .app.pro .title h2 { font-size: 22px; }
+}
+
 /* Footer */
 footer { border-top: 1px solid var(--rule); padding: 40px 0 64px; color: var(--dim); font-size: 14px; }
 footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
