@@ -14,7 +14,7 @@ and search. **This file is the present tense; read it before changing anything.*
 | The page | `index.html` (one file, inline script), `style.css` (`?v=` on its link is the cache-buster: bump it when the CSS changes) |
 | Media | `img/` icons at 512, favicon, `og.png` (1200×630), posters; `video/` ten MP4s, `<app>-wide.mp4` (1920×1080, desktops) and `<app>-tall.mp4` (864×1080, 4:5, phones) |
 | Generator | `tools/build-media.py` — makes all of `img/` and `video/` from the app repositories beside this one. Needs ffmpeg and Pillow, both on this Mac. `build/` is its scratch, git-ignored |
-| Hosting | GitHub Pages, repo `ligrimp-lang/divertoday-site`, branch `main`, folder `/`. Push to `main` and it deploys in about a minute. **Everything in this repository is on the web unless `_config.yml` excludes it** — the notes (`CLAUDE.md`, `README.md`, `docs/`), `tools/` and `build/` are excluded there; add any new non-site folder to that list before committing it |
+| Hosting | GitHub Pages, repo `ligrimp-lang/ligrimp-lang.github.io` (the account's **user site**, renamed from `divertoday-site` on 2026-10-19 by Rustam's hand; see "Everything under diver.today" below), branch `main`, folder `/`. Push to `main` and it deploys in about a minute. **Everything in this repository is on the web unless `_config.yml` excludes it** — the notes (`CLAUDE.md`, `README.md`, `docs/`), `tools/` and `build/` are excluded there; add any new non-site folder to that list before committing it |
 | Domain | `diver.today` at Namecheap. Advanced DNS holds four `A` records on `@` → 185.199.108.153 / .109 / .110 / .111 and `CNAME www` → `ligrimp-lang.github.io` (set by Rustam, 2026-10-14). The `CNAME` file in this repo tells GitHub the domain |
 | Search | `robots.txt`, `sitemap.xml`, canonical `https://diver.today/`, JSON-LD `WebSite` + `ItemList` of five `SoftwareApplication`s, Open Graph and Twitter cards |
 | Preview | `.claude/launch.json` starts `python3 -m http.server 8765` for the browser pane |
@@ -28,15 +28,16 @@ JSON-LD list, in the `APPS` table of the generator and in the share image: Time 
 Interval, Dive log, Turn Pressure, Weights Check. Change all of them together.
 
 The App Store ids, store names and the per-app sites (each app's own repo publishes its landing,
-privacy and support pages, which this page links to as "Details, support & privacy"):
+privacy and support pages, which this page links to as "Details, support & privacy"; since 2026-10-19 they
+are served under diver.today, the github.io addresses redirect there):
 
 | App | Store name | id | Per-app site |
 |---|---|---|---|
-| Time to Surface | Time to Surface – Deco Planner | 6803187271 | ligrimp-lang.github.io/timetosurface-site/ |
-| Surface Interval | Surface Interval – Dive Videos (iPhone and Mac, one record) | 6813333816 | ligrimp-lang.github.io/surfaceinterval-site/ |
-| Dive log | Dive log – Computer Logbook | 6822452235 | ligrimp-lang.github.io/divelog-site/ |
-| Turn Pressure | Turn Pressure – Dive Planner | 6801749776 | ligrimp-lang.github.io/turnpressure-site/ |
-| Weights Check | Weights Check – Dive Weighting | 6806640499 | ligrimp-lang.github.io/weightscheck-site/ |
+| Time to Surface | Time to Surface – Deco Planner | 6803187271 | diver.today/timetosurface-site/ |
+| Surface Interval | Surface Interval – Dive Videos (iPhone and Mac, one record) | 6813333816 | diver.today/surfaceinterval-site/ |
+| Dive log | Dive log – Computer Logbook | 6822452235 | diver.today/divelog-site/ |
+| Turn Pressure | Turn Pressure – Dive Planner | 6801749776 | diver.today/turnpressure-site/ |
+| Weights Check | Weights Check – Dive Weighting | 6806640499 | diver.today/weightscheck-site/ |
 
 Verify a listing with `curl "https://itunes.apple.com/lookup?id=<id>"` rather than from memory.
 **Dive log went into App Review on 2026-10-14**; the page shows its button as "Coming soon on the
@@ -222,7 +223,17 @@ weeks which pages draw queries; that is the signal for writing more or rewriting
   at all"). iOS Safari keeps its own address bar over the top of the screen and parks a sticky bar
   under it. On phones (`max-width: 760px`, and a phone held sideways) the bar is `position: static`
   and scrolls away; the menu links are hidden there anyway, so the bar is only the site name.
-- **Why the repo is `divertoday-site` and not `diver-today`** — the first repository's Pages
+- **Everything under diver.today** (2026-10-19, Rustam: *"make all the pages you are linking from diver.today be
+  under the diver.today domain and not a github"*). GitHub serves every project site of an account under the
+  custom domain of the account's *user site*, the repository named `<account>.github.io`. So the site
+  repository was renamed from `divertoday-site` to `ligrimp-lang.github.io`; nothing else changed, and
+  from then on `ligrimp-lang.github.io/<repo>/` answers `301` to `diver.today/<repo>/` for all six Pages
+  sites of the account (the five per-app sites and `fourandsix-site`, which comes along whether or not it
+  is a dive app). The App Store links in the listings still name github.io and keep working through the
+  redirect; the per-app sites' canonical tags were changed to diver.today the same day. The repo names keep
+  their `-site` suffix: Pages addresses of a renamed repository do not redirect, so renaming them would
+  break the store links.
+- **Why the repo was `divertoday-site` and not `diver-today`** — the first repository's Pages
   deployment got stuck for good. The whole story, and the way out, is the next section.
 
 ## GitHub Pages: the deployment that stayed "in progress" (root cause, 2026-10-14)
@@ -255,7 +266,7 @@ repository's Pages site; nothing in the repository's files is wrong.
 - Waiting half an hour.
 
 **What works.** A fresh repository. Pages state is per repository site, so the same commits
-pushed to `ligrimp-lang/divertoday-site`, with Pages enabled there, deployed in under a minute —
+pushed to `ligrimp-lang/divertoday-site` (now `ligrimp-lang.github.io`), with Pages enabled there, deployed in under a minute —
 by then the DNS already resolved to GitHub, so the health check passed on the first try. Before
 enabling Pages on the new repository, `DELETE repos/<old>/pages` on the stuck one so the domain
 is free (a custom domain can be bound to only one Pages site), then archive the old one. That is
@@ -269,8 +280,7 @@ If the symptom above ever appears anyway, skip the cancels and go straight to th
 
 ## Not done yet / next
 
-- "Enforce HTTPS" in the Pages settings, once GitHub has issued the certificate for the domain
-  (`gh api -X PUT repos/ligrimp-lang/divertoday-site/pages -F https_enforced=true`).
+- "Enforce HTTPS": done 2026-10-14 (`https_enforced` is true on `repos/ligrimp-lang/ligrimp-lang.github.io/pages`).
 - Dive log's button when it is on sale (above).
 - Google Search Console: **done 2026-10-15.** URL-prefix property `https://diver.today/` in
   Rustam's Google account, verified by the HTML tag (`google-site-verification` meta in the head
