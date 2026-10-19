@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What are gradient factors? — diver.today</title>
+<meta name="description" content="Gradient factors in plain words: what the two numbers are a fraction of, what GF low and GF high each do to a decompression schedule, and why the common pairs are conventions.">
+<link rel="canonical" href="https://diver.today/gradient-factors-explained/">
+<meta name="theme-color" content="#0b0f14">
+<link rel="icon" href="../img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css?v=20261019">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="diver.today">
+<meta property="og:title" content="What are gradient factors? — diver.today">
+<meta property="og:description" content="Gradient factors in plain words: what the two numbers are a fraction of, what GF low and GF high each do to a decompression schedule, and why the common pairs are conventions.">
+<meta property="og:url" content="https://diver.today/gradient-factors-explained/">
+<meta property="og:image" content="https://diver.today/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What are gradient factors? — diver.today">
+<meta name="twitter:description" content="Gradient factors in plain words: what the two numbers are a fraction of, what GF low and GF high each do to a decompression schedule, and why the common pairs are conventions.">
+<meta name="twitter:image" content="https://diver.today/img/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "What are gradient factors?",
+  "description": "Gradient factors in plain words: what the two numbers are a fraction of, what GF low and GF high each do to a decompression schedule, and why the common pairs are conventions.",
+  "datePublished": "2026-10-19",
+  "dateModified": "2026-10-19",
+  "inLanguage": "en-GB",
+  "author": {
+    "@type": "Person",
+    "name": "Rustam Ismailov"
+  },
+  "mainEntityOfPage": "https://diver.today/gradient-factors-explained/",
+  "image": "https://diver.today/img/og.png"
+}
+</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../">diver<b>.</b>today</a>
+  </div>
+</header>
+
+<main>
+<article class="prose">
+<h1>What are gradient factors?</h1>
+<p class="byline">Rustam Ismailov, 19 October 2026</p>
+<p>Gradient factors are two percentages, written like 30/70 or 40/85, that you set on a dive computer or planner that uses the Bühlmann algorithm. They make the algorithm more conservative, and they do it in a particular way. It helps to know what they are a fraction of.</p>
+
+<h2>The M-value</h2>
+<p>Bühlmann&rsquo;s model treats your body as sixteen imaginary compartments that take up nitrogen at different speeds, from a few minutes to over ten hours. For each one the model has an M-value: the highest pressure of dissolved inert gas (nitrogen, and helium on trimix) that compartment may hold at a given depth. The deeper you are, the higher the allowed value, so a compartment that is fine at depth can be over its limit at the surface. Ascending, with stops, is the business of letting each compartment drop under its line.</p>
+<p>Plain M-values are an upper limit, not a comfortable setting. Doppler studies found silent bubbles after dives that stayed inside the limits, and that is why people wanted a margin.</p>
+
+<h2>What the two numbers are</h2>
+<p>Erik Baker&rsquo;s gradient factors, from the late 1990s, are a way of asking for that margin. Take the gap between the pressure around you and the M-value. That gap is the supersaturation the model allows. A gradient factor says how much of the gap you let yourself use. GF 100 is all of it, which is the plain M-value. GF 70 is seventy percent of the way there.</p>
+<p>There are two numbers because the margin is not wanted equally everywhere. GF low applies at your first stop, the deepest one. GF high applies at the surface. Between them the planner draws a straight line. So 30/70 means: the first stop is where the leading compartment reaches 30 percent of the gap, and the limit then rises in a straight line to 70 percent at the surface.</p>
+
+<h2>What each one does to the dive</h2>
+<p>GF low decides where the stops begin. Lower it and the model wants the first stop deeper, because it wants the fast compartments well away from their limits early. You get stops that start deeper and an ascent that takes longer. Raise it and the first stop moves up.</p>
+<p>GF high decides how the dive ends. Lower it and the shallow stops last longer, the total runtime grows, and you reach the surface with less dissolved gas in you. Raise it and they shorten. On a long decompression dive most of the extra minutes usually come from GF high, and the depth of the first stop from GF low. Whether deep stops do anything useful is still argued over, and I will not settle it here.</p>
+
+<h2>Conventions, not physics</h2>
+<p>30/70, 40/85, 50/80: you will hear them in every dive shop. They are settings that people have found acceptable, often because a computer maker shipped them as a default or a team standardised on one. Nobody has measured the right pair. A conservative pair lowers the modelled risk without removing it; a liberal pair raises it.</p>
+<p>Two practical things follow. The pair you plan with has to be the pair your computer is set to, or the plan and the computer will disagree on the day. And numbers do not carry across algorithms: Pure VPM and RGBM do not use gradient factors (Shearwater&rsquo;s VPM-B/GFS borrows a GF high), and a 30/70 Bühlmann schedule is not comparable to either. I will not suggest a pair. Your training, your agency, your age and fitness and your computer&rsquo;s settings do that.</p>
+
+<h2>What a planner is for</h2>
+<p>A planner that takes a pair and returns a runtime is only doing arithmetic. What helps is planning the same dive at two pairs and seeing what each one costs: how much deeper the first stop is, how many more minutes you spend shallow, how much more gas you carry.</p>
+<p>Time to Surface is a decompression planner for dives up to 56 metres on Bühlmann ZH-L16C, and the gradient factors are set per plan. Plan the dive twice with different pairs and compare the stops, the runtime and the gas. It plans before the dive; in the water you dive your computer.</p>
+
+<aside class="closing">
+  <img src="../img/time-to-surface.png" alt="" width="72" height="72">
+  <div>
+    <h2>Time to Surface</h2>
+    <p>Decompression planner for dives up to 56&nbsp;metres, Bühlmann ZH-L16C with your own gradient factors.</p>
+  </div>
+  <div class="actions">
+    <a class="store" href="https://apps.apple.com/app/id6803187271">Download on the App Store</a>
+  </div>
+</aside>
+</article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Rustam Ismailov</span>
+    <span>Apple, iPhone, Mac and App Store are trademarks of Apple Inc. Shearwater is a trademark of Shearwater Research Inc. GoPro is a trademark of GoPro, Inc.</span>
+  </div>
+</footer>
+
+</body>
+</html>

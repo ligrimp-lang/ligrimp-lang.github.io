@@ -124,3 +124,30 @@ footer a:hover { color: var(--ink); }
 @media (max-width: 760px), (pointer: coarse) and (max-height: 520px) {
   .top { position: static; }
 }
+
+/* question pages */
+.prose { max-width: 728px; margin: 0 auto; padding: 72px 24px 8px; }
+.prose h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.12; letter-spacing: -0.025em; font-weight: 650; margin: 0 0 14px; }
+.prose .byline { margin: 0 0 40px; color: var(--dim); font-size: 14px; line-height: 1.4; }
+.prose h2 { font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; font-weight: 650; margin: 2.2em 0 .6em; }
+.prose p { margin: 0 0 1.2em; font-size: 18px; line-height: 1.7; }
+.prose p a { color: var(--accent); border-bottom: 1px solid var(--rule); }
+.prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.4em; font-size: 16px; font-variant-numeric: tabular-nums; }
+.prose th, .prose td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); }
+.prose th { color: var(--dim); font-weight: 500; font-size: 14px; }
+.prose th.n, .prose td.n { text-align: right; padding-right: 0; }
+.prose tbody tr:last-child td { font-weight: 600; border-bottom: 0; }
+.closing { display: grid; grid-template-columns: 72px 1fr; gap: 18px; align-items: center; margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--rule); }
+.closing img { width: 72px; height: 72px; border-radius: 22%; }
+.prose .closing h2 { margin: 0; font-size: 24px; }
+.prose .closing p { margin: 4px 0 0; font-size: 16px; line-height: 1.5; color: var(--dim); }
+.prose .closing .actions, .prose .closing .note { grid-column: 1 / -1; }
+.prose .closing .note { margin: 0; }
+main + footer { margin-top: 56px; }
+@media (max-width: 760px) {
+  .prose { padding: 40px 24px 0; }
+  .prose h2 { font-size: 20px; }
+  .prose p { font-size: 17px; }
+  .closing { grid-template-columns: 60px 1fr; margin-top: 40px; }
+  .closing img { width: 60px; height: 60px; }
+}

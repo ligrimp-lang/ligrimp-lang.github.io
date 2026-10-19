@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How do I get my dives off a Shearwater onto my iPhone? — diver.today</title>
+<meta name="description" content="Getting dives from a Shearwater computer onto an iPhone over Bluetooth, what the computer logs, what a log app should leave alone, and how two computers&rsquo; copies of one dive are merged.">
+<link rel="canonical" href="https://diver.today/shearwater-dives-on-iphone/">
+<meta name="theme-color" content="#0b0f14">
+<link rel="icon" href="../img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="stylesheet" href="../style.css?v=20261019">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="diver.today">
+<meta property="og:title" content="How do I get my dives off a Shearwater onto my iPhone? — diver.today">
+<meta property="og:description" content="Getting dives from a Shearwater computer onto an iPhone over Bluetooth, what the computer logs, what a log app should leave alone, and how two computers&rsquo; copies of one dive are merged.">
+<meta property="og:url" content="https://diver.today/shearwater-dives-on-iphone/">
+<meta property="og:image" content="https://diver.today/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How do I get my dives off a Shearwater onto my iPhone? — diver.today">
+<meta name="twitter:description" content="Getting dives from a Shearwater computer onto an iPhone over Bluetooth, what the computer logs, what a log app should leave alone, and how two computers&rsquo; copies of one dive are merged.">
+<meta name="twitter:image" content="https://diver.today/img/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How do I get my dives off a Shearwater onto my iPhone?",
+  "description": "Getting dives from a Shearwater computer onto an iPhone over Bluetooth, what the computer logs, what a log app should leave alone, and how two computers’ copies of one dive are merged.",
+  "datePublished": "2026-10-19",
+  "dateModified": "2026-10-19",
+  "inLanguage": "en-GB",
+  "author": {
+    "@type": "Person",
+    "name": "Rustam Ismailov"
+  },
+  "mainEntityOfPage": "https://diver.today/shearwater-dives-on-iphone/",
+  "image": "https://diver.today/img/og.png"
+}
+</script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../">diver<b>.</b>today</a>
+  </div>
+</header>
+
+<main>
+<article class="prose">
+<h1>How do I get my dives off a Shearwater onto my iPhone?</h1>
+<p class="byline">Rustam Ismailov, 19 October 2026</p>
+<p>Over Bluetooth, mostly. Shearwater&rsquo;s current computers have a Bluetooth radio, and a phone app can ask the computer for the dives it holds. There are two ways in that I know of, and one thing to watch, which is what the app does to the record once it has it.</p>
+
+<h2>What your computer logs</h2>
+<p>A Shearwater writes down far more than a depth and a time. It records depth against time, the water temperature, which gas you were breathing and when you switched, the stops it required and the stops you did on a decompression dive, the oxygen clock and, if you carry transmitters, the pressure in each cylinder. It knew the time to surface at every moment. A good log draws all of that, not a summary of it.</p>
+
+<h2>The two ways in</h2>
+<p>The first is Bluetooth straight from the computer: turn Bluetooth on at the computer, open the app, and new dives come in. No cable, no account, no typing. Shearwater&rsquo;s own app, Shearwater Cloud, does this too, and if you want the manufacturer&rsquo;s own tools it is the right choice.</p>
+<p>The second is for dives that are already in Shearwater Cloud. You can export your account from there, and Dive log reads the file. It goes through the same reader as Bluetooth, so a dive that arrives both ways is recognised as one dive, not two. This came after the build that is in review, so it arrives in the first update.</p>
+<p>A word on which computers. I have tested it on my own Perdix 2, and it is written for Shearwater computers only. Other Bluetooth models, apart from the Perdix 3, speak the same language on paper and I have not had one in my hands to prove it. In October 2026 the Perdix 3 does not connect over Bluetooth, because Shearwater has not yet published how; they have said an interface is in development.</p>
+
+<h2>What a log app should leave alone</h2>
+<p>Dive log draws what the computer recorded; it does not smooth or correct it. What a log may add is what the computer cannot know: the site, your buddy, notes, a rating, which cylinders you had. It is also not a dive computer. It cannot tell you that a dive was fine. Your computer and your training own that.</p>
+
+<h2>Two computers, one dive</h2>
+<p>If you carry a backup computer, the same dive is written down twice, with slightly different numbers, and clocks that may be a minute or an hour apart. Merging by the clock fails, so Dive log matches the two by the shape of the depth trace instead. A close match is joined on its own. A borderline one it asks you about once. The main computer&rsquo;s record leads, the backup&rsquo;s trace is drawn beside it, and a gas switch that one of them missed is flagged. This also came after the build that is in review, so it arrives in the first update.</p>
+
+<h2>The app I wrote for it</h2>
+<p>Dive log is that app. It is free, there is no account, and your log stays on your iPhone and in your iCloud. It is coming to the App Store: Apple is reviewing it now, and the button below links to its listing, which will work the day it is approved. I will change this page when it does.</p>
+
+<aside class="closing">
+  <img src="../img/dive-log.png" alt="" width="72" height="72">
+  <div>
+    <h2>Dive log</h2>
+    <p>Every dive from your Shearwater, drawn in full, as the computer recorded it. Free, private, no account.</p>
+  </div>
+  <div class="actions">
+    <a class="store soon" href="https://apps.apple.com/app/id6822452235">Coming soon on the App Store</a>
+  </div>
+  <p class="note">In App Review. The link works the day Apple approves it.</p>
+</aside>
+</article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Rustam Ismailov</span>
+    <span>Apple, iPhone, Mac and App Store are trademarks of Apple Inc. Shearwater is a trademark of Shearwater Research Inc. GoPro is a trademark of GoPro, Inc.</span>
+  </div>
+</footer>
+
+</body>
+</html>

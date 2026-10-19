@@ -18,6 +18,7 @@ and search. **This file is the present tense; read it before changing anything.*
 | Domain | `diver.today` at Namecheap. Advanced DNS holds four `A` records on `@` → 185.199.108.153 / .109 / .110 / .111 and `CNAME www` → `ligrimp-lang.github.io` (set by Rustam, 2026-10-14). The `CNAME` file in this repo tells GitHub the domain |
 | Search | `robots.txt`, `sitemap.xml`, canonical `https://diver.today/`, JSON-LD `WebSite` + `ItemList` of five `SoftwareApplication`s, Open Graph and Twitter cards |
 | Preview | `.claude/launch.json` starts `python3 -m http.server 8765` for the browser pane |
+| Question pages | Five articles for Google, one per app, each a folder with its own `index.html`: `weight-for-scuba-diving/`, `minimum-gas-rock-bottom/`, `gradient-factors-explained/`, `blue-gopro-dive-footage/`, `shearwater-dives-on-iphone/`. Linked from the home page under each app and listed in `sitemap.xml`; their CSS is the `/* question pages */` block at the end of `style.css`. See "The question pages" below |
 | Promotion | `docs/promotion-posts-2026-10-15.md` — where to post and the texts, in Rustam's voice, for him to post himself; not on the web |
 
 ## The apps on the page
@@ -169,6 +170,32 @@ and shapes — `video/<slug>-wide.mp4` at 1920×1080 and `video/<slug>-tall.mp4`
 (4:5), H.264, no audio track, `-movflags +faststart`, roughly 7 MB and 3 MB — plus the two
 posters in `img/`. The page needs no change; the generator will overwrite them the next time it
 runs for that app, so note the replacement in this file.
+
+## The question pages (2026-10-19)
+
+Store search is nouns; Google is questions. On 2026-10-19 Rustam asked for the findability proposal
+(`docs/search-findability-proposal-2026-10-19.md`) to be implemented in full, and the one part that
+reaches a diver who does not yet know an app exists is an article that answers the question they
+type, honestly, and only then names the app. Five pages, one per app, written in his voice (the
+promotion posts are the reference for it), each checked by a clean-context instructor-level review
+for diving and physics correctness before publishing:
+
+| Page | Question | App |
+|---|---|---|
+| `weight-for-scuba-diving/` | How much weight do I need for scuba diving? | Weights Check |
+| `minimum-gas-rock-bottom/` | What is minimum gas (rock bottom) and how do I work it out? | Turn Pressure |
+| `gradient-factors-explained/` | What are gradient factors? | Time to Surface |
+| `blue-gopro-dive-footage/` | Why is my GoPro dive footage blue, and how do I fix it? | Surface Interval |
+| `shearwater-dives-on-iphone/` | How do I get my dives off a Shearwater onto my iPhone? | Dive log |
+
+Rules for them: no number is given as a verdict for the reader's own dive (weights, gas, gradient
+factors appear only in worked examples labelled as such); every claim about an app is one its
+App Store listing makes, and the Dive log page says which features arrive in the first update after
+the build that is in review (the Shearwater Cloud import and the two-computer merge); no scripts,
+no CDN fonts, no analytics; the `?v=` on the stylesheet link is bumped on all six pages together.
+The Dive log page carries a dated note about the Perdix 3 not yet connecting over Bluetooth
+("In October 2026"); update it when Shearwater's interface ships. Search Console shows within a few
+weeks which pages draw queries; that is the signal for writing more or rewriting one.
 
 ## What was decided and why
 
