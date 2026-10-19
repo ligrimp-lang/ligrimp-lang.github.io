@@ -19,7 +19,7 @@ and search. **This file is the present tense; read it before changing anything.*
 | Search | `robots.txt`, `sitemap.xml`, canonical `https://diver.today/`, JSON-LD `WebSite` + `ItemList` of five `SoftwareApplication`s, Open Graph and Twitter cards |
 | Preview | `.claude/launch.json` starts `python3 -m http.server 8765` for the browser pane |
 | Question pages | Five articles for Google, one per app, each a folder with its own `index.html`: `weight-for-scuba-diving/`, `minimum-gas-rock-bottom/`, `gradient-factors-explained/`, `blue-gopro-dive-footage/`, `shearwater-dives-on-iphone/`. Linked from the home page under each app and listed in `sitemap.xml`; their CSS is the `/* question pages */` block at the end of `style.css`. See "The question pages" below |
-| Promotion | `docs/promotion-posts-2026-10-15.md` — where to post and the texts, in Rustam's voice, for him to post himself; not on the web |
+| Promotion | **This project is the home for app promotion** (Rustam, 2026-10-19). Start at `docs/promotion-knowledge.md`: where every number and listing lives, each app's store position, what was learned, what is open, and the weekly loop. Beside it: `docs/promotion-posts-2026-10-15.md` (where to post and the texts, in Rustam's voice, for him to post himself) and `docs/search-findability-proposal-2026-10-19.md` (the proposal that was implemented that day). None of it is on the web |
 
 ## The apps on the page
 
