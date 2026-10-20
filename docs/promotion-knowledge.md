@@ -31,7 +31,17 @@ won by popularity, not wording.
 | Surface Interval | *surface interval*, *dive videos*, *dive video* | *snorkel video* #7 US | *underwater color correction* #74 US although the US store suggests that phrase; *underwater video editor* absent | subtitle → `Underwater color fix & reels` (replaces his 2026-09-28 choice); keywords: out `underwater,color,reel`, in `correction,assembly,blue`; goes out with 1.7.2 |
 | Dive log | — (in review since 2026-10-14) | — | *dive log* is the most crowded term of the five | terms file written, app added to the Monday job, rating request after the second import |
 
-## The page since 2026-10-20
+## The page since 2026-10-20 (reworked 2026-10-21)
+
+Rustam's feedback of 2026-10-21, all applied: the hero says "Apps for divers, today and every day" with bigger
+icons; the Time to Surface video tells one dive (the Canyon in Dahab) with an international four-diver team and
+signatures that look signed; the dive-pro section is bright, its video light, the same six steps shown in three
+fictional dive-centre brands (red, neon yellow, black) with typographic wordmarks and heroes from the internet
+whose dominant colour is the brand's; Surface Interval shows iPhone and Mac on stock footage from Pexels; Dive
+log's four divers each have a name, a colour and a hero of that colour; the iCloud section says all data is in
+your iCloud, across devices and apps, entered once, and names the single subscription for personalisation. Two
+rules from him that day: no pictures of him in a wetsuit, and no "nothing on a server of ours" sentences.
+
 
 The Time to Surface and Dive log videos are journeys (one phone, the whole plan end to end; the log from
 import to "make it yours"), and the page has two sections that are not apps: **Time to Surface for dive

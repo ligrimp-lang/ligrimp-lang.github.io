@@ -12,7 +12,7 @@ and search. **This file is the present tense; read it before changing anything.*
 | | |
 |---|---|
 | The page | `index.html` (one file, inline script), `style.css` (`?v=` on its link is the cache-buster: bump it when the CSS changes) |
-| Media | `img/` icons at 512, favicon, `og.png` (1200×630), posters; `video/` twelve MP4s, `<slug>-wide.mp4` (1920×1080, desktops) and `<slug>-tall.mp4` (864×1080, 4:5, phones) — five apps plus `time-to-surface-pro`, the dive-professional cut of Time to Surface |
+| Media | `img/` icons at 512, favicon, `og.png` (1200×630), posters; `video/` twelve MP4s, `<slug>-wide.mp4` (1920×1080, desktops) and `<slug>-tall.mp4` (864×1080, 4:5, phones) — five apps plus `time-to-surface-pro`, the dive-pro cut of Time to Surface (light, for its bright section) |
 | Generator | `tools/build-media.py` — makes all of `img/` and `video/` from the app repositories beside this one. Needs ffmpeg and Pillow. `build/` is its scratch, git-ignored |
 | Hosting | GitHub Pages, repo `ligrimp-lang/ligrimp-lang.github.io` (the account's **user site**, renamed from `divertoday-site` on 2026-10-19 by Rustam's hand; see "Everything under diver.today" below), branch `main`, folder `/`. Push to `main` and it deploys in about a minute. **Everything in this repository is on the web unless `_config.yml` excludes it** — the notes (`CLAUDE.md`, `README.md`, `docs/`), `tools/` and `build/` are excluded there; add any new non-site folder to that list before committing it |
 | Domain | `diver.today` at Namecheap. Advanced DNS holds four `A` records on `@` → 185.199.108.153 / .109 / .110 / .111 and `CNAME www` → `ligrimp-lang.github.io` (set by Rustam, 2026-10-14). The `CNAME` file in this repo tells GitHub the domain |
@@ -52,13 +52,18 @@ A change in what an app keeps in iCloud also changes `privacy/index.html` here. 
 version that is not on sale yet waits for the version to go to review (Rustam's word travels with the
 request); the live store version must not be described falsely meanwhile.
 
-## The page's sections (2026-10-20)
+## The page's sections (2026-10-20, reworked on his feedback 2026-10-21)
 
-Hero, then Time to Surface, **Time to Surface for dive professionals** (`#dive-professionals`, the same app's
-second proposition: signed team plans in the dive centre's brand, its own video `time-to-surface-pro`, the
-App Store link and the per-app site's `team.html`), Surface Interval, Dive log, Turn Pressure, Weights Check,
-then **One iCloud, five apps** (`#one-icloud`: what the family shares through `iCloud.net.ismailov.divertoday`,
-each line a claim from the apps' 1.8/1.9 What's New, and the footnote every asterisk on the page points at).
+Hero ("Apps for divers, today and every day.", the five icons at 96 px), then Time to Surface, **Time to Surface
+for dive pros** (`#dive-professionals`, the same app's second proposition: signed team plans in the dive centre's
+brand, its own video `time-to-surface-pro`, the App Store link and the per-app site's `team.html`; **a bright
+section** — `.app.pro` overrides the colour tokens to a light aqua, and its video is rendered on the light
+background, Rustam 2026-10-21: *"make the background bright … the app itself bright and various"*), Surface
+Interval, Dive log, Turn Pressure, Weights Check, then **One iCloud, five apps** (`#one-icloud`: all data in the
+diver's own iCloud, on every device and in every app, entered once; the four lines are claims from the apps'
+1.8/1.9 What's New, the last one the Diver.Today App Family subscription launching for personalisation across
+the apps; **no sentence about "no server of ours"** — he called it word salad; and the footnote every asterisk
+on the page points at).
 The header menu names all seven. **The asterisk** (`<a class="soon-mark" href="#in-review">*</a>`) marks a
 feature that is submitted to Apple and not yet on sale (Rustam, 2026-10-20: *"add asterisks to the features
 that coming soon within next days"*): Time to Surface 1.8, Turn Pressure 1.9 and Weights Check 1.9, all in
@@ -134,21 +139,36 @@ Surface promo Rustam had made on 2026-10-10 (`turn_pressure/build/promo/`). Scen
 are the `APPS` table at the top of the generator; the screenshots are read from each app's
 `design/screenshots/<app>/` (1320×2868, the 6.9" set). Fonts are SF Pro from the system.
 
-**Time to Surface and Dive log are journeys** (2026-10-20; see "A video can be a journey" below), and their
-shots are site sets of their own, taken on the builds in review by Debug-only launch arguments that live on a
-`site-shots` branch in each app's repository (worktrees `../turn_pressure-site-shots` and
-`../sharewater_dive_log-site-shots`, neither merged into main — the app sessions decide; the screenshot
-folders themselves are committed on main). `turn_pressure/design/screenshots/time-to-surface-site/`: the
-journey `a1`–`a10` (the swim 10 m/15 min, 45 m/10 min, a second deep segment 51 m/4 min on **18/45** — at 51 m
-the app refuses 21/35, 1.28 bar of oxygen — EAN50 in an AL80, one diver at 18 L/min; `a3-page/` the whole plan
-page every 500 points by `-scrollY`; `a9` the send sheet with the team Lena, Anna, Marco by `-sendTeam`; `a10`
-the free sent page as the app writes it), the dive-professional story `b1`–`b6` in the sample brand "Blue Deep
-Divers" (`-seedBrand YES -entitled YES`), and `brand-<green|red|orange|black>-{app,document}` with four
-**fictional** dive centres (Deep Stop Dive Centre, Blue Deep Divers, Hangtime Technical, North Reef Tec; logos
-drawn, heroes cut from the reef clips; `-seedBrandName/-Line1/-Line2/-Colour/-Logo/-Hero`). Dive log's set
-gained `7-search` ("trimix"), `8-tags` (dive 273 tagged by `-seedTags YES`) and `me-<1–4>-{log,dive,card,card-picture}`
-for four fictional divers (Lena Voss, Marco Rinaldi, Ann Keller, Tomas Berg) — individuals, not companies, as
-he asked. The same six brand arguments exist in both apps.
+**Time to Surface, Dive log and Surface Interval are journeys** (2026-10-20, second take 2026-10-21 on his
+feedback; see "A video can be a journey" below), and their shots are site sets of their own, taken on the builds
+in review by Debug-only launch arguments that live on a `site-shots` branch in each app's repository (worktrees
+`../turn_pressure-site-shots` and `../sharewater_dive_log-site-shots`, neither merged into main — the app
+sessions decide; the screenshot folders themselves are committed on main, Surface Interval's script too).
+
+- `turn_pressure/design/screenshots/time-to-surface-site/`: **the Canyon in Dahab told as one dive** (`a1`–`a10`:
+  the swim 10 m/15 min across the plateau, 45 m/10 min, 51 m/4 min on **18/45** — at 51 m the app refuses 21/35,
+  1.28 bar of oxygen — EAN50 in an AL80, one diver at 18 L/min; `a3-page/` the whole plan page every 500 points by
+  `-scrollY`; `a9` the send sheet; `a10` the free sent page). The team is **Tom Becker (lead), Aisha Rahman, Luca
+  Moretti, Emma Clarke** (`-sendTeam`, `-seedTeam`), with **real-looking signatures** from `brands/signatures.json`
+  (pen strokes generated to look like a quick hand, loaded by `-seedSignatures`; `-signingPrefill` puts one on the
+  pad; `-seedSigned N`). The dive-pro story is the same six steps in **three fictional brands**, `b1`–`b6`-`<red|
+  yellow|black>`-`{plan,settings,send,signing,team,document}`: Deep Stop Dive Centre (red), Hangtime Technical
+  (neon yellow, which the kit's contrast rule pulls to an olive on controls — the hero carries the yellow), North
+  Reef Tec (black). **Logos are typographic wordmarks** (his 2026-10-21 examples: Lagona Divers, Scuba Seekers,
+  H2O Divers — "not the ugly ones you made up"), wide (3:1 to 4.5:1 fills the app's pill; squarer marks come out
+  tiny), and **every hero is an Unsplash picture whose dominant colour is the brand's colour** (red soft coral,
+  yellow tang, a torch in the dark; `brands/SOURCES.md`). Never his own footage: *"don't use this picture or
+  similar of me in wetsuit"*. The documents are taken with an empty brand name so the wordmark is not doubled.
+- `sharewater_dive_log/design/screenshots/dive-log-site/`: `7-search`, `8-tags`, and `me-<1–4>-{log,dive,card,
+  card-picture}` for four fictional divers — **Aiko Tanaka (orange), Lucas Ferreira (blue), Nadia Haddad (green),
+  Marco Rinaldi (purple)** — each with a hero whose dominant colour is their colour, and **the name as a wordmark
+  in place of a logo** (`brands/me-N-name.png`; without a logo the app prints "Dive log"). The card carries the
+  hero, as the shipping app draws it; a Debug `-seedBrandCardPicture` exists on the branch and is **not used**,
+  because the site must not show a card the app cannot make.
+- `surface_interval/design/screenshots/surface-interval-site/` (`scripts/site-screenshots.sh`, six iPhone shots)
+  and `surface_interval_desktop/design/screenshots/site/` (`tools/screen-tour.sh … site` with `SI_TOUR_CLIPS`,
+  Mac windows at 2×, no shadow): both on **four Pexels clips** in `surface_interval/reference-footage/pexels/`
+  (git-ignored, `SOURCES.md` there), his "mediocre" footage replaced. The journey shows iPhone then Mac.
 
 **Dive log is the exception** (2026-10-17, Rustam's six key features in his order: the dive on one
 page, super fast navigation, import once from any computer with the merge, SAC per dive and over
@@ -173,8 +193,11 @@ phone was. Each step carries `pill`, `head`, `sub` and an optional `hold` (`JOUR
 `XFADE` 0.6 s). The fixed chrome of a scrolling page is the app's `chrome` dict (`DIVE_LOG_CHROME`;
 `STATUS_BAR_CHROME` keeps only the status bar). A journey writes about a thousand full-frame PNGs per
 cut into `build/<slug>/<cut>/` (held frames are hard links) and takes about two minutes per cut.
-Time to Surface, its dive-professional cut (`time-to-surface-pro`, the same icon, an `outro` line of its
-own) and Dive log are journeys; the other three keep scenes.
+Time to Surface, its dive-pro cut (`time-to-surface-pro`, the same icon, an `outro` line of its own,
+`theme="light"`: rendered on `build/bg-light.mp4` with dark captions, for the bright section), Dive log and
+Surface Interval are journeys; Turn Pressure and Weights Check keep scenes. A shot named by an absolute path
+may come from another repository (Surface Interval's Mac windows); a shot wider than tall is drawn as a Mac
+window under a banner caption. `bg` builds both backgrounds.
 
 **A scene can scroll a whole page.** When a scene's stem is a folder of pieces (`00.png`, `01.png`, …
 the same screen 500 points further down each time), the generator stitches them, keeps the status
@@ -357,6 +380,8 @@ If the symptom above ever appears anyway, skip the cancels and go straight to th
 
 - "Enforce HTTPS": done 2026-10-14 (`https_enforced` is true on `repos/ligrimp-lang/ligrimp-lang.github.io/pages`).
 - Dive log's button when it is on sale (above), and the asterisks as each version is approved ("The page's sections").
+- The site-shots branches in turn_pressure and sharewater_dive_log are unmerged and the app repos' screenshot
+  commits unpushed (2026-10-21); the app sessions merge or drop them.
 - Google Search Console: **done 2026-10-15.** URL-prefix property `https://diver.today/` in
   Rustam's Google account, verified by the HTML tag (`google-site-verification` meta in the head
   of `index.html`; **keep it there**, removing it un-verifies the property), `sitemap.xml`
