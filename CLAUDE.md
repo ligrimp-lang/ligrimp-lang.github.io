@@ -63,7 +63,8 @@ Interval, Dive log, Turn Pressure, Weights Check, then **One iCloud, five apps**
 diver's own iCloud, on every device and in every app, entered once; the four lines are claims from the apps'
 1.8/1.9 What's New, the last one the Diver.Today App Family subscription launching for personalisation across
 the apps; **no sentence about "no server of ours"** — he called it word salad; and the footnote every asterisk
-on the page points at).
+on the page points at: his words, *"New feature availability comes late October 2026, with ongoing Apple review"*,
+no version numbers, no dates of submission).
 The header menu names all seven. **The asterisk** (`<a class="soon-mark" href="#in-review">*</a>`) marks a
 feature that is submitted to Apple and not yet on sale (Rustam, 2026-10-20: *"add asterisks to the features
 that coming soon within next days"*): Time to Surface 1.8, Turn Pressure 1.9 and Weights Check 1.9, all in
@@ -168,7 +169,14 @@ sessions decide; the screenshot folders themselves are committed on main, Surfac
 - `surface_interval/design/screenshots/surface-interval-site/` (`scripts/site-screenshots.sh`, six iPhone shots)
   and `surface_interval_desktop/design/screenshots/site/` (`tools/screen-tour.sh … site` with `SI_TOUR_CLIPS`,
   Mac windows at 2×, no shadow): both on **four Pexels clips** in `surface_interval/reference-footage/pexels/`
-  (git-ignored, `SOURCES.md` there), his "mediocre" footage replaced. The journey shows iPhone then Mac.
+  (git-ignored, `SOURCES.md` there), his "mediocre" footage replaced. **The clips must be shallow, sunlit and blue
+  as a GoPro leaves them** (Rustam, 2026-10-21: the first, already-graded clips showed "almost no visible
+  difference" between Original and Restored; they are kept in `pexels/first-take/`). The captions say the best
+  moments are chosen automatically and the reel is assembled to carry them. The journey shows iPhone then Mac.
+- **Retaking Time to Surface's documents**: the shot helper must let the previous process die (two seconds, not
+  half a second) before it copies the base state in and launches again, and wait about 20 s before copying
+  `Documents/plan-picture.png`; with the Mac tour and a simulator build running alongside, a quicker loop
+  produced documents signed with the old wave scribble while the team screen of the same seed was right.
 
 **Dive log is the exception** (2026-10-17, Rustam's six key features in his order: the dive on one
 page, super fast navigation, import once from any computer with the merge, SAC per dive and over

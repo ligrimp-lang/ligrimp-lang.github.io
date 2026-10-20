@@ -108,12 +108,12 @@ APPS = [
          journey=[
             dict(shot="1-home", pill="Your dives", head="Every dive in its own folder",
                  sub="Add the videos of a dive; the folder is named for the day, rename it to the site.", hold=4.4),
-            dict(shot="2-folder", pill="One button", head="Make a reel of the whole dive",
-                 sub="Or pick the videos you want in it."),
-            dict(shot="3-making", pill="Colour", head="The colour is measured, not guessed",
-                 sub="Every video read for what the water took: shallow, mid, deep or night."),
-            dict(shot="4-reel-ready", pill="The reel", head="Your dive, cut down to a reel",
-                 sub="Colour restored, trimmed, in order, with music. One tap made it.", hold=4.6),
+            dict(shot="2-folder", pill="One button", head="One button makes the reel",
+                 sub="Of the whole dive, or of the videos you pick."),
+            dict(shot="3-making", pill="Best moments", head="The best moments are chosen for you",
+                 sub="Every video is read, the moments worth keeping found, the colour measured: shallow, mid, deep or night.", hold=4.6),
+            dict(shot="4-reel-ready", pill="The reel", head="A reel that carries the best of the dive",
+                 sub="The moments trimmed and put in order, colour restored, music under them. Nothing to edit.", hold=4.8),
             dict(shot=f"{PROJECTS}/surface_interval_desktop/design/screenshots/site/1-home", pill="On the Mac",
                  head="The same app on your Mac", sub="The same folders, the same reels, the same colour engine, on the big screen.", hold=4.6),
             dict(shot=f"{PROJECTS}/surface_interval_desktop/design/screenshots/site/3-reel", pill="Reels",
@@ -450,7 +450,10 @@ class Stage:
             W, H = self.fmt["W"], self.fmt["H"]; top = 330 if self.tall else 270
             h = min(self.fmt["phone_h"], H - top - 40, int((W - 120) / self.aspect(stem)))
             it, pad = self.item(stem, h); f.alpha_composite(it, ((W - it.width) // 2, top - pad)); return f
-        it, pad = self.item(stem, self.fmt["phone_h"])
+        h = self.fmt["phone_h"]
+        if self.is_paper(stem):                          # a sent page is shown whole, signatures included
+            h = min(h, self.fmt["H"] - self.py - self.pad - 24)
+        it, pad = self.item(stem, h)
         f.alpha_composite(it, (self.px + (self.ph_w - it.width) // 2, self.py)); return f
     def page(self, stem, at_pt):
         folder = os.path.join(self.app["shots"], stem)
@@ -466,7 +469,8 @@ class Stage:
         aspects = [Image.open(self.path(s)).size for s in stems]
         aspects = [w / h for w, h in aspects]
         h = int((W - 120 - gap * (n - 1)) / sum(aspects))
-        h = min(h, H - top + int(0.3 * H), self.fmt["phone_h"])   # may run off the bottom, as the phone does
+        h = min(h, H - top + int(0.3 * H), self.fmt["phone_h"])   # phones may run off the bottom, as the phone does
+        if all(self.is_paper(s) for s in stems): h = min(h, H - top - 24)   # sent pages are shown whole
         widths = [round(a * h) for a in aspects]
         x = (W - sum(widths) - gap * (n - 1)) // 2
         for s, w in zip(stems, widths):
