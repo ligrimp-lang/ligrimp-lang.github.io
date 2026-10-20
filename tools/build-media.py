@@ -10,7 +10,7 @@ Sources are the screenshots each app's ship tooling already captures for the App
 their approved captions, and the icon in each app's asset catalogue. Nothing here is edited by
 hand: change the table below, rerun, commit the outputs.
 """
-import os, sys, subprocess, math, shutil, glob
+import glob, os, sys, subprocess, math, shutil, glob
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import numpy as np
 
@@ -35,6 +35,11 @@ def font(size, weight="Regular"):
 ACCENT = (79, 209, 197)      # one teal for the whole family
 INK = (240, 243, 245)
 DIM = (168, 178, 186)
+# A video is dark (the family's look) or light (`theme="light"`: the dive-professional cut, so its section
+# of the page can be bright). The palette in force while a video is built:
+PALETTES = {"dark": dict(ink=(240, 243, 245), dim=(168, 178, 186), bg="bg.mp4"),
+            "light": dict(ink=(14, 22, 28), dim=(74, 88, 96), bg="bg-light.mp4")}
+P = dict(PALETTES["dark"])
 
 # What stays put while a page scrolls, in points down a 956-point screen: Dive log's status bar, button
 # strip and tab bar; or only a status bar. See stitch().
@@ -53,57 +58,68 @@ APPS = [
          icon=f"{PROJECTS}/turn_pressure/Apps/TimeToSurface/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
          shots=f"{PROJECTS}/turn_pressure/design/screenshots/time-to-surface-site", chrome=STATUS_BAR_CHROME,
          journey=[
-            dict(shot="a1-swim", pill="The swim", head="Swim out at 10 m for 15 minutes",
-                 sub="A swim to the drop-off before the dive, on back gas or the bottle. Then 45 m for 10 minutes.", hold=4.4),
-            dict(shot="a2-second", pill="Deeper", head="Then 51 m for 4 minutes",
-                 sub="A second deep segment, the move down inside it. 18/45 on the back, EAN50 to come up on."),
-            dict(page="a3-page", at=2472, pill="The deco", head="58 minutes, 19 of them deco",
-                 sub="Total duration, first stop at 24 m, CNS — from the schedule it actually solved."),
-            dict(page="a3-page", at=3022, pill="The profile", head="The dive you planned, drawn",
-                 sub="The swim, the drop, both segments, the switch at 21 m, every stop."),
-            dict(page="a3-page", at=3246, to=3720, pill="Minute by minute", head="Every line of the runtime",
+            dict(shot="a1-swim", pill="The Canyon, Dahab", head="Let's plan the Canyon",
+                 sub="First a 15-minute swim at 10 m across the plateau to the drop-off, on back gas.", hold=4.6),
+            dict(shot="a2-second", pill="Down the Canyon", head="45 m for 10 minutes, then 51 m for 4",
+                 sub="Down the Canyon, then a look at its floor. 18/45 on the back, EAN50 for the way up.", hold=4.4),
+            dict(page="a3-page", at=2472, pill="The answer", head="58 minutes, 19 of them in deco",
+                 sub="First stop at 24 m, CNS 27 %: Bühlmann ZH-L16C with your gradient factors, 20/85 here."),
+            dict(page="a3-page", at=3022, pill="The profile", head="The dive, drawn",
+                 sub="The swim, the drop, the floor, the switch to EAN50 at 21 m, every stop."),
+            dict(page="a3-page", at=3246, to=3720, pill="Minute by minute", head="The runtime, stop by stop",
                  sub="Where each stop begins and ends, and what to do there.", hold=5.2),
-            dict(page="a3-page", at=4178, pill="The gas", head="190 bar on the back, 140 in the bottle",
-                 sub="Fill, minimum gas at each depth, the switch reading, and what five minutes cost."),
-            dict(shot="a9-send", pill="The team", head="Name the team, save and sign",
-                 sub="The site, the date, the dive lead and the divers."),
-            dict(shot="a10-picture", pill="One page", head="The whole plan on one page",
-                 sub="A picture or a PDF, signed by the team, for your buddy or the dive centre.", hold=4.4),
+            dict(page="a3-page", at=4178, pill="The gas", head="190 bar of 18/45, 140 bar of EAN50",
+                 sub="Minimum gas at 45 and 51 m, the pressure to switch on, and what five minutes more cost."),
+            dict(shot="a9-send", pill="The team", head="Name the team, send it for signatures",
+                 sub="Tom Becker leads; Aisha, Luca and Emma dive with him."),
+            dict(shot="a10-picture", pill="One page", head="The whole plan, signed by all four",
+                 sub="A picture or a PDF, for the team and for the dive centre.", hold=4.8),
          ]),
     # The second proposition of the same app (Rustam, 2026-10-20): a dive professional's brand, the
     # signed plan, the page for the dive centre, and four sample brands. Same icon; not an app of its own,
     # so no icon or og entry (`second=True`).
     dict(slug="time-to-surface-pro", name="Time to Surface", tagline="Signed team dive plans, in your brand",
-         outro="For dive leads, instructors and dive centres", second=True,
+         outro="For dive leads, instructors and dive centres", second=True, theme="light",
          icon=f"{PROJECTS}/turn_pressure/Apps/TimeToSurface/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
          shots=f"{PROJECTS}/turn_pressure/design/screenshots/time-to-surface-site", chrome=STATUS_BAR_CHROME,
          journey=[
-            dict(shot="b2-branded-plan", pill="Your app", head="Time to Surface, in your dive centre's look",
-                 sub="Your hero picture, your colour, your logo in place of the app's name.", hold=4.4),
-            dict(shot=["b1-brand-settings", "b1-your-app"], pill="Your brand", head="Logo, pictures, colour: set once",
-                 sub="In Settings, kept in your own iCloud. One subscription covers every Diver.Today app.", hold=6.0),
-            dict(shot="b3-send", pill="The team", head="Plan the dive, name the team",
-                 sub="Site, date, the dive lead and the divers, from your buddies or typed."),
-            dict(shot="b4-signing", pill="Signatures", head="Each diver signs on the phone",
-                 sub="One person per screen, under one line: we have reviewed this plan as a team and agree to dive it."),
-            dict(shot="b5-team", pill="The round", head="Who has signed, who has not",
+            dict(gallery=["b1-red-plan", "b1-yellow-plan", "b1-black-plan"], pill="Your app",
+                 head="Time to Surface in your dive centre's look", sub="Your logo, your picture, your colour. Three dive centres, one app.", hold=5.0),
+            dict(shot="b2-red-settings", pill="Your brand", head="Set it once, in Settings",
+                 sub="Logo, pictures, colour, name and two lines. On the app and on every page it sends."),
+            dict(shot="b3-yellow-send", pill="The team", head="Plan the dive, name the team",
+                 sub="Tom Becker leads; Aisha, Luca and Emma dive with him. Send it for signatures."),
+            dict(shot="b4-black-signing", pill="Signatures", head="Each diver signs on the phone",
+                 sub="The plan in front of them, their signature under one line: we have reviewed this plan as a team and agree to dive it."),
+            dict(shot="b5-red-team", pill="The round", head="Who has signed, who has not",
                  sub="Pick the round up later. A signature belongs to its person."),
-            dict(shot="b6-document", pill="The page", head="One page for the dive centre to check and keep",
-                 sub="Your logo and details on top, the plan, the gas, every signature. A picture or an A4 PDF.", hold=4.8),
-            dict(gallery=["brand-green-app", "brand-red-app", "brand-orange-app", "brand-black-app"],
-                 pill="Your look", head="Green, red, orange or black", sub="Your logo and your pictures, on the app.", hold=4.4),
-            dict(gallery=["brand-green-document", "brand-red-document", "brand-orange-document", "brand-black-document"],
-                 pill="Your forms", head="The same plan, four brands", sub="Every page you send carries your name.", hold=4.4),
+            dict(shot="b6-yellow-document", pill="The page", head="One page the dive centre checks and keeps",
+                 sub="Your logo on top, the schedule, the gases, the gas plan, four signatures. A picture or an A4 PDF.", hold=4.8),
+            dict(gallery=["b6-red-document", "b6-yellow-document", "b6-black-document"],
+                 pill="Your forms", head="The same plan, three brands", sub="Every page you send carries your name.", hold=4.6),
          ]),
+    # A journey since 2026-10-21 (Rustam: "show both iOS and Mac applications, use nice pictures"): the iPhone
+    # shots are the site set `design/screenshots/surface-interval-site/` in the app's repo and the Mac
+    # windows are `design/screenshots/site/` in surface_interval_desktop, both on four Pexels clips
+    # (`reference-footage/pexels/SOURCES.md`), none of his own footage.
     dict(slug="surface-interval", name="Surface Interval", tagline="Dive video colour and reels, on iPhone and Mac",
          icon=f"{PROJECTS}/surface_interval/App/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
-         shots=f"{PROJECTS}/surface_interval/design/screenshots/surface-interval",
-         scenes=[
-            ("1-reel-ready", "The reel", "Your dive, cut down to a reel", "Colour corrected, trimmed, in order, with music. One tap made it."),
-            ("2-making", "Colour", "The colour is measured, not guessed", "Every video read for what the water took — shallow, mid, deep or night."),
-            ("3-home", "Folders", "Every dive in its own folder", "Named for the day, renamed to the site you dived."),
-            ("4-folder", "One button", "One button, one choice", "Make a reel of the whole folder, or pick the videos you want in it."),
-            ("5-select", "Your pick", "Or pick the ones you want in it", "A reel of a few chosen videos, kept in the order they were shot."),
+         shots=f"{PROJECTS}/surface_interval/design/screenshots/surface-interval-site", chrome=STATUS_BAR_CHROME,
+         journey=[
+            dict(shot="1-home", pill="Your dives", head="Every dive in its own folder",
+                 sub="Add the videos of a dive; the folder is named for the day, rename it to the site.", hold=4.4),
+            dict(shot="2-folder", pill="One button", head="Make a reel of the whole dive",
+                 sub="Or pick the videos you want in it."),
+            dict(shot="3-making", pill="Colour", head="The colour is measured, not guessed",
+                 sub="Every video read for what the water took: shallow, mid, deep or night."),
+            dict(shot="4-reel-ready", pill="The reel", head="Your dive, cut down to a reel",
+                 sub="Colour restored, trimmed, in order, with music. One tap made it.", hold=4.6),
+            dict(shot=f"{PROJECTS}/surface_interval_desktop/design/screenshots/site/1-home", pill="On the Mac",
+                 head="The same app on your Mac", sub="The same folders, the same reels, the same colour engine, on the big screen.", hold=4.6),
+            dict(shot=f"{PROJECTS}/surface_interval_desktop/design/screenshots/site/3-reel", pill="Reels",
+                 head="Reels made on the Mac", sub="From the dive's folder, 4K if you want it, ready to save or post.", hold=4.6),
+            dict(shot=f"{PROJECTS}/surface_interval_desktop/design/screenshots/site/4-play", pill="Colour",
+                 head="Colour by Surface Interval", sub="The reef as you saw it, not as the water left it.", hold=4.6),
          ]),
     # The journey (2026-10-20): his six key features in his 2026-10-17 order, then tags and buddies, search,
     # and "make it yours" — four fictional divers' brands (name, picture, colour) on the app and on the card.
@@ -130,9 +146,9 @@ APPS = [
             dict(shot="6-card", pill="Share", head="A card of your dive, for social media",
                  sub="Picture or video, story-sized, every word kept in a feed post."),
             dict(shot=["me-1-log", "me-2-log", "me-3-log", "me-4-log"], pill="Yours", head="Make it yours",
-                 sub="Your name, your picture, your colour, on the app.", hold=7.2),
+                 sub="Your name, your picture, your colour, on the app. Aiko's orange, Lucas's blue, Nadia's green, Marco's purple.", hold=7.6),
             dict(gallery=["me-1-card-picture", "me-2-card-picture", "me-3-card-picture", "me-4-card-picture"],
-                 pill="Yours", head="And on every card you share", sub="Your picture and your name. No app name, no store link.", hold=4.6),
+                 pill="Yours", head="And on every card you share", sub="Your picture and your name, in your colour. No app name, no store link.", hold=4.8),
          ]),
     dict(slug="turn-pressure", name="Turn Pressure", tagline="Recreational dive planner for iPhone",
          icon=f"{PROJECTS}/turn_pressure/App/Resources/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
@@ -203,6 +219,17 @@ def phone(path, height):
     w = round(shot.width * height / shot.height)
     shot = shot.resize((w, height), Image.LANCZOS)
     canvas, mask, pad, bezel = phone_chrome(w, height)
+    shot.putalpha(mask)
+    canvas = canvas.copy()
+    canvas.alpha_composite(shot, (pad + bezel, pad + bezel))
+    return canvas, pad
+
+def window(path, height):
+    """A Mac window (a screenshot wider than tall): small corners, no bezel, the same shadow."""
+    shot = (path if isinstance(path, Image.Image) else Image.open(path)).convert("RGBA")
+    w = round(shot.width * height / shot.height)
+    shot = shot.resize((w, height), Image.LANCZOS)
+    canvas, mask, pad, bezel = phone_chrome(w, height, radius_k=0.018, bezel=0)
     shot.putalpha(mask)
     canvas = canvas.copy()
     canvas.alpha_composite(shot, (pad + bezel, pad + bezel))
@@ -343,11 +370,11 @@ def caption_layer(fmt, index, pill, headline, sub, left, banner=False):
     draw_spaced(d, (px + 18, y + 9), label, f_pill, (8, 24, 28), 2.2)
     y += 44 + 24
     for ln in head_lines:
-        d.text((place(ln, f_head), y), ln, font=f_head, fill=INK); y += head_lh
+        d.text((place(ln, f_head), y), ln, font=f_head, fill=P['ink']); y += head_lh
     if sub_lines:
         y += 18
         for ln in sub_lines:
-            d.text((place(ln, f_sub), y), ln, font=f_sub, fill=DIM); y += sub_lh
+            d.text((place(ln, f_sub), y), ln, font=f_sub, fill=P['dim']); y += sub_lh
     return layer
 
 def title_layer(fmt, app):
@@ -358,7 +385,7 @@ def title_layer(fmt, app):
         icon = app_icon(app["icon"], 250)
         layer.alpha_composite(icon, ((W - 250)//2, H//2 - 300))
         f_name, f_tag = font(84, "Semibold"), font(36, "Regular")
-        for text, f, fill, dy in [(app["name"], f_name, INK, 0), (app["tagline"], f_tag, ACCENT, 110)]:
+        for text, f, fill, dy in [(app["name"], f_name, P['ink'], 0), (app["tagline"], f_tag, ACCENT, 110)]:
             d.text(((W - d.textlength(text, font=f))//2, H//2 + dy), text, font=f, fill=fill)
         return layer
     icon = app_icon(app["icon"], 230)
@@ -369,7 +396,7 @@ def title_layer(fmt, app):
     x = (W - total_w) // 2
     layer.alpha_composite(icon, (int(x), (H - 230)//2))
     tx = x + 230 + 56
-    d.text((tx, H//2 - 92), app["name"], font=f_name, fill=INK)
+    d.text((tx, H//2 - 92), app["name"], font=f_name, fill=P['ink'])
     d.text((tx + 4, H//2 + 30), app["tagline"], font=f_tag, fill=ACCENT)
     return layer
 
@@ -380,7 +407,7 @@ def outro_layer(fmt, app):
     icon = app_icon(app["icon"], 150)
     layer.alpha_composite(icon, ((W-150)//2, H//2 - 230))
     f_name, f_line, f_url = font(66, "Semibold"), font(34, "Regular"), font(30, "Medium")
-    for text, f, fill, dy in [(app["name"], f_name, INK, -40), (app.get("outro", "Free on the App Store"), f_line, DIM, 50), ("diver.today", f_url, ACCENT, 120)]:
+    for text, f, fill, dy in [(app["name"], f_name, P['ink'], -40), (app.get("outro", "Free on the App Store"), f_line, P['dim'], 50), ("diver.today", f_url, ACCENT, 120)]:
         tw = d.textlength(text, font=f)
         d.text(((W - tw)//2, H//2 + dy), text, font=f, fill=fill)
     return layer
@@ -409,14 +436,21 @@ class Stage:
         self.px = (W - self.ph_w) // 2 if self.tall else W - 330 - self.ph_w + pad
         self.py = fmt["phone_top"] - pad
     def blank(self): return Image.new("RGBA", (self.fmt["W"], self.fmt["H"]), (0, 0, 0, 0))
-    def path(self, stem): return os.path.join(self.app["shots"], stem + ".png")
+    def path(self, stem): return stem + ".png" if stem.startswith("/") else os.path.join(self.app["shots"], stem + ".png")
+    def aspect(self, stem):
+        im = Image.open(self.path(stem)); return im.width / im.height
+    def is_window(self, stem): return self.aspect(stem) > 1.0      # a Mac window
     def is_paper(self, stem):
-        im = Image.open(self.path(stem)); a = im.width / im.height
-        return not (0.40 < a < 0.52)                   # a 6.9" screen is 0.46; anything else is a shared picture
+        a = self.aspect(stem); return not (0.40 < a < 0.52) and a <= 1.0   # a 6.9" screen is 0.46; a shared picture otherwise
     def item(self, stem, height):
-        return (paper if self.is_paper(stem) else phone)(self.path(stem), height)
+        return (window if self.is_window(stem) else paper if self.is_paper(stem) else phone)(self.path(stem), height)
     def still(self, stem):
-        it, pad = self.item(stem, self.fmt["phone_h"]); f = self.blank()
+        f = self.blank()
+        if self.is_window(stem):                        # a window sits under a banner caption, centred, as wide as fits
+            W, H = self.fmt["W"], self.fmt["H"]; top = 330 if self.tall else 270
+            h = min(self.fmt["phone_h"], H - top - 40, int((W - 120) / self.aspect(stem)))
+            it, pad = self.item(stem, h); f.alpha_composite(it, ((W - it.width) // 2, top - pad)); return f
+        it, pad = self.item(stem, self.fmt["phone_h"])
         f.alpha_composite(it, (self.px + (self.ph_w - it.width) // 2, self.py)); return f
     def page(self, stem, at_pt):
         folder = os.path.join(self.app["shots"], stem)
@@ -448,7 +482,7 @@ def journey_layers(app, fmt, work):
     captions = []                    # (index, pill, head, sub, start, duration, banner)
     prev = None
     for i, step in enumerate(steps):
-        banner = "gallery" in step
+        banner = "gallery" in step or ("shot" in step and not isinstance(step["shot"], list) and stage.is_window(step["shot"]))
         if "gallery" in step: imgs = [stage.gallery(step["gallery"])]
         elif "page" in step: imgs = [stage.page(step["page"], step["at"])]
         else: imgs = [stage.still(s) for s in (step["shot"] if isinstance(step["shot"], list) else [step["shot"]])]
@@ -481,7 +515,8 @@ def journey_layers(app, fmt, work):
             frames.append((imgs[0], round(hold * FPS))); prev = imgs[0]
         end = sum(n for _, n in frames) / FPS
         captions.append((i + 1, step["pill"], step["head"], step.get("sub", ""), start, end - start, banner))
-    # write the frames; a held frame is one file and hard links
+    # write the frames; a held frame is one file and hard links (the last run's frames go first)
+    for old in glob.glob(os.path.join(work, "journey-*.png")): os.remove(old)
     k = 0
     for im, n in frames:
         p = os.path.join(work, f"journey-{k:04d}.png"); im.save(p, compress_level=1)
@@ -496,6 +531,13 @@ def build_bg():
     inputs = []
     for c in BG_CLIPS: inputs += ["-i", c]
     fc = "[0:v][1:v]concat=n=2:v=1:a=0,scale=1920:1080,setpts=1.5*PTS,gblur=sigma=28,eq=brightness=-0.22:saturation=1.0:contrast=1.06,fps=30,format=yuv420p[v]"
+    run(["ffmpeg", "-y", "-v", "error"] + inputs + ["-filter_complex", fc, "-map", "[v]", "-t", "40", "-c:v", "libx264", "-preset", "medium", "-crf", "16", out])
+    print("bg ->", out)
+    # the light one: the same reef, washed towards white, for a video on a bright section of the page
+    out = os.path.join(BUILD, "bg-light.mp4")
+    fc = ("[0:v][1:v]concat=n=2:v=1:a=0,scale=1920:1080,setpts=1.5*PTS,gblur=sigma=34,eq=brightness=0.14:saturation=0.9:contrast=0.85,"
+          "format=rgba,colorchannelmixer=aa=0.30[reef];color=c=0xf1faf8:s=1920x1080:r=30,format=rgba[paper];"
+          "[paper][reef]overlay=shortest=1,fps=30,format=yuv420p[v]")
     run(["ffmpeg", "-y", "-v", "error"] + inputs + ["-filter_complex", fc, "-map", "[v]", "-t", "40", "-c:v", "libx264", "-preset", "medium", "-crf", "16", out])
     print("bg ->", out)
 
@@ -517,8 +559,8 @@ def build_icons():
     d = ImageDraw.Draw(og)
     f_big, f_small = font(64, "Semibold"), font(28, "Regular")
     d.text((80, 90), "diver.today", font=font(30, "Medium"), fill=ACCENT)
-    d.text((80, 140), "Five iPhone apps for divers", font=f_big, fill=INK)
-    d.text((80, 230), "Gas planning · decompression · weighting · Shearwater log · dive videos", font=f_small, fill=DIM)
+    d.text((80, 140), "Five iPhone apps for divers", font=f_big, fill=P['ink'])
+    d.text((80, 230), "Gas planning · decompression · weighting · Shearwater log · dive videos", font=f_small, fill=P['dim'])
     x = 80
     for app in APPS:
         if app.get("second"): continue
@@ -529,6 +571,7 @@ def build_icons():
 def build_video(app, name, fmt):
     W, H = fmt["W"], fmt["H"]
     slug = app["slug"]
+    P.clear(); P.update(PALETTES[app.get("theme", "dark")])
     work = os.path.join(BUILD, slug, name); os.makedirs(work, exist_ok=True)
     layers = []   # (path, start, duration, x, y_expr)
     t = 0.0
@@ -561,7 +604,7 @@ def build_video(app, name, fmt):
         t += d
     p = os.path.join(work, "outro.png"); outro_layer(fmt, app).save(p); layers.append((p, t, OUTRO_D, 0, "0")); t += OUTRO_D
     total = t
-    cmd = ["ffmpeg", "-y", "-v", "error", "-stats", "-stream_loop", "-1", "-i", os.path.join(BUILD, "bg.mp4")]
+    cmd = ["ffmpeg", "-y", "-v", "error", "-stats", "-stream_loop", "-1", "-i", os.path.join(BUILD, P["bg"])]
     bg_fit = f"[0:v]scale=-2:{H},crop={W}:{H}[bg]" if W < H else f"[0:v]scale={W}:{H}[bg]"
     fc = [bg_fit]
     for k, (path, st, du, x, yexpr) in enumerate(layers, 1):
