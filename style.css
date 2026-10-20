@@ -55,10 +55,10 @@ img { display: block; }
   max-width: 14ch;
 }
 .hero p { font-size: clamp(18px, 2.2vw, 22px); color: var(--dim); max-width: 40ch; margin: 0 0 40px; }
-.icons { list-style: none; margin: 0; padding: 0; display: flex; gap: 14px; flex-wrap: wrap; }
+.icons { list-style: none; margin: 0; padding: 0; display: flex; gap: 18px; flex-wrap: wrap; }
 .icons a { display: block; border-radius: 22%; transition: transform .25s ease; }
 .icons a:hover { transform: translateY(-3px); }
-.icons img { width: 64px; height: 64px; border-radius: 22%; }
+.icons img { width: 96px; height: 96px; border-radius: 22%; box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
 
 /* App sections */
 .app { padding: 56px 0 24px; }
@@ -101,7 +101,19 @@ img { display: block; }
 .more:hover { color: var(--ink); border-color: var(--dim); }
 .note { margin: 14px 0 0; color: var(--dim); font-size: 14px; }
 
-/* The second proposition of the same app, and the family section */
+/* The second proposition of the same app — on a bright section of its own — and the family section */
+.app.pro {
+  --bg: #eaf6f3; --bg-2: #dcefeb; --ink: #0c1b1f; --dim: #48616a; --rule: #c6ddd8; --accent-ink: #082124;
+  background: linear-gradient(180deg, #f3faf8 0%, #e2f2ee 100%);
+  color: var(--ink);
+  border-top: 1px solid #c6ddd8; border-bottom: 1px solid #1d242c;
+}
+.app.pro + .app { border-top: 0; }
+.app.pro .stage::after { background: linear-gradient(to bottom, transparent, #e9f5f2); }
+.app.pro .store { background: var(--ink); color: #f3faf8; }
+.app.pro .store:hover { background: #000; }
+.app.pro .more { border-color: #b7d2cc; }
+.app.pro .soon-mark { color: #0f8f84; }
 .app.pro .title h2 { font-size: 26px; }
 .soon-mark { color: var(--accent); font-weight: 600; margin-left: 1px; }
 .family { border-top: 1px solid var(--rule); padding: 72px 0 56px; }
@@ -128,8 +140,8 @@ footer a:hover { color: var(--ink); }
   .hero { padding: 64px 0 40px; }
   .meta { grid-template-columns: 1fr; gap: 20px; padding-top: 24px; padding-bottom: 20px; }
   .stage { aspect-ratio: 4 / 5; }
-  .icons { gap: 11px; }
-  .icons img { width: 56px; height: 56px; }
+  .icons { gap: 12px; }
+  .icons img { width: 72px; height: 72px; }
   .title img { width: 60px; height: 60px; }
   .title h2 { font-size: 26px; }
   .blurb { font-size: 17px; }
