@@ -10,7 +10,7 @@ by text; a young US male voice; a cat, simple and unusual).
     python3 tools/pilot-episode.py short           # 1080x1920, Short / Reel
 Outputs in build/pilot/: sac-rate-<cut>.mp4, sac-rate-thumb.png.
 """
-import os, re, sys, hashlib, subprocess, importlib.util
+import os, re, sys, json, hashlib, subprocess, importlib.util
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +23,13 @@ WORK = os.path.join(BUILD, "pilot"); os.makedirs(WORK, exist_ok=True)
 CLIPS = f"{PROJECTS}/surface_interval/reference-footage/clips"
 SHOTS = {"dive-log": (f"{PROJECTS}/sharewater_dive_log/design/screenshots/dive-log-site", "DIVE LOG", "img/dive-log.png"),
          "turn-pressure": (f"{PROJECTS}/turn_pressure/design/screenshots/turn-pressure", "TURN PRESSURE", "img/turn-pressure.png")}
-VOICE, RATE = "Eddy (English (US))", 168
+# The voice: "kokoro:<voice>" runs the Kokoro neural model in build/kokoro-venv (tools/kokoro-say.py; American
+# male voices am_puck, am_michael, am_fenrir, am_adam, am_echo…), "say:<name>" a macOS system voice. Rustam,
+# 2026-10-28, on the system voice: "terrible metallic", so Kokoro is the default. PILOT_VOICE overrides.
+VOICE = os.environ.get("PILOT_VOICE", "kokoro:am_puck")
+RATE, SPEED = 168, 1.0           # the macOS rate; Kokoro's speed
+KOKORO_PY = os.path.join(bm.ROOT, "build", "kokoro-venv", "bin", "python")
+SPOKEN = [(r"\bSAC\b", "sack"), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
 GAP, PAD, FADE = 0.35, 1.0, 0.5          # between sentences; after a segment's last sentence; layer fades
 FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80),
        "short": dict(W=1080, H=1920, phone_h=880, phone_top=540, drift=90)}
@@ -65,15 +71,36 @@ SEGMENTS = [
 def sentences(text):
     return [s.strip() for s in re.split(r'(?<=[.?!;])\s+', text.strip()) if s.strip()]
 
+def spoken(text):
+    for pat, rep in SPOKEN: text = re.sub(pat, rep, text)
+    return text
+
+def wav_path(text):
+    return os.path.join(WORK, "s-" + hashlib.sha1((VOICE + str(RATE) + str(SPEED) + text).encode()).hexdigest()[:12] + ".wav")
+
+def synthesise(texts):
+    """Every sentence not yet on disk, as 48 kHz stereo wav, in one go (Kokoro loads once)."""
+    todo = [t for t in dict.fromkeys(texts) if not os.path.exists(wav_path(t))]
+    if not todo: return
+    engine, _, name = VOICE.partition(":")
+    raws = []
+    if engine == "kokoro":
+        jobs = [[spoken(t), wav_path(t)[:-4] + ".raw.wav"] for t in todo]
+        jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
+        subprocess.run([KOKORO_PY, os.path.join(HERE, "kokoro-say.py"), jp, name, str(SPEED)], check=True, stdout=subprocess.DEVNULL)
+        raws = [r for _, r in jobs]
+    else:
+        for t in todo:
+            r = wav_path(t)[:-4] + ".aiff"; raws.append(r)
+            subprocess.run(["say", "-v", name, "-r", str(RATE), "-o", r, spoken(t)], check=True)
+    for t, r in zip(todo, raws):
+        subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", r, "-ar", "48000", "-ac", "2", "-c:a", "pcm_s16le", wav_path(t)], check=True)
+        os.remove(r)
+
 def say(text):
-    """One sentence as 48 kHz stereo wav, cached by its text. Returns (path, seconds)."""
-    key = hashlib.sha1((VOICE + str(RATE) + text).encode()).hexdigest()[:12]
-    wav = os.path.join(WORK, f"s-{key}.wav")
-    if not os.path.exists(wav):
-        aiff = wav[:-4] + ".aiff"
-        subprocess.run(["say", "-v", VOICE, "-r", str(RATE), "-o", aiff, text], check=True)
-        subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", aiff, "-ar", "48000", "-ac", "2", "-c:a", "pcm_s16le", wav], check=True)
-        os.remove(aiff)
+    """One sentence's wav and its length in seconds (synthesise() has run for it)."""
+    wav = wav_path(text)
+    if not os.path.exists(wav): synthesise([text])
     d = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", wav]).strip())
     return wav, d
 
@@ -86,6 +113,7 @@ def silence(d):
 def timeline(cut):
     """Segments of this cut with their sentences timed: seg['dur'], seg['subs'] = [(start, end, text)] relative to the segment."""
     segs = [dict(s) for s in SEGMENTS if cut == "wide" or s.get("short")]
+    synthesise([sent for s in segs for sent in sentences(s.get("short_voice") if cut == "short" and s.get("short_voice") else s["voice"])])
     for s in segs:
         text = s.get("short_voice") if cut == "short" and s.get("short_voice") else s["voice"]
         t, subs, audio = 0.6, [], [silence(0.6)]
@@ -290,7 +318,7 @@ def build(cut):
     alst = os.path.join(WORK, f"{cut}-audio.txt"); open(alst, "w").write("".join(f"file '{p}'\n" for s in segs for p in s["audio"]))
     audio = os.path.join(WORK, f"{cut}-voice.wav"); run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", alst, "-c:a", "pcm_s16le", audio])
     out = os.path.join(WORK, f"sac-rate-{cut}.mp4")
-    run(["ffmpeg", "-y", "-v", "error", "-i", video, "-i", audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-pix_fmt", "yuv420p",
+    run(["ffmpeg", "-y", "-v", "error", "-i", video, "-i", audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000", "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-pix_fmt", "yuv420p",
          "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", "-shortest", out])
     total = sum(s["dur"] for s in segs)
     print(f"{cut}: {total:.1f}s, {len(segs)} segments ->", out)

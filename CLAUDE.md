@@ -289,9 +289,14 @@ review, `wide` renders 1920×1080 for YouTube, `short` 1080×1920 for Shorts and
 `build/pilot/`, git-ignored). It reuses the site generator's phone, caption and font helpers. His rules from that
 day, built in: **the cat** is the diver of every worked example (drawn in `cat()`, line art in the family's ink
 and teal, bubbles rising on the cards), **every spoken sentence is on screen** while it is said (each sentence is
-synthesised on its own with `say`, so its start is known), and the voice is **a pleasant young US male** — the
-pilot uses the youngest US male voice installed (`Eddy (English (US))`) as a stand-in until he picks a premium
-system voice or a speech service. The words passed a clean-context instructor review before rendering (gas
+synthesised on its own with `say`, so its start is known), and the voice is **a pleasant young US male**. The
+macOS system voices were tried first and he called the result "terrible metallic", so the narration comes from
+**Kokoro** (hexgrad/Kokoro-82M, Apache-2.0, a neural model that runs on this Mac): `build/kokoro-venv/` is a
+Python 3.12 virtual environment (Homebrew `python@3.12`; Kokoro pins an older numpy that has no 3.13 build) with
+`kokoro` and `soundfile`, plus Homebrew `espeak-ng` for its fallback; `tools/kokoro-say.py` synthesises a list of
+sentences in one process; the model weights download from Hugging Face on first use. The default voice is `am_puck`
+(`PILOT_VOICE=kokoro:<voice>` or `say:<name>` overrides); samples of six voices are in `build/pilot/samples/`
+for his choice. `SPOKEN` maps what is said, not shown ("SAC" is said "sack"). The words passed a clean-context instructor review before rendering (gas
 compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷ 33 + 1; claims about the apps
 stay within their listings; the outro's "free" and "one iCloud" are the site's own words). Nothing is published:
 no channel, no account; those wait for his verdict on the pilot.

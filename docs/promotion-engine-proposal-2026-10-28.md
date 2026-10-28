@@ -94,9 +94,9 @@ What is designed to keep it from looking generated:
   same captions, the same family look, so the channel and the site are one object.
 - **A voice he chose, and every word on screen.** His instruction on 2026-10-28: a very pleasant young
   US male voice (not his own), and the narration duplicated as text. So every spoken sentence is
-  synthesised on its own, its length measured, and drawn as a line of text while it is said. The pilot
-  uses the youngest US male voice installed on the Mac as a stand-in; a properly pleasant one is a
-  downloaded premium system voice or a paid speech service, his pick after he hears the pilot. His
+  synthesised on its own, its length measured, and drawn as a line of text while it is said. The macOS system voices failed his ear ("terrible metallic"), so the narration comes from Kokoro, a
+  free neural speech model running on the Mac, in one of its young American male voices; he picks which
+  from six samples. A paid speech service stays the upgrade if even that is not pleasant enough. His
   on-camera intros remain the strongest trust lever and stay on offer.
 - **The cat.** His idea the same day: explain the formula simply and unusually, with a cat. The cat is
   the diver of every worked example, drawn in the family's line and teal, breathing bubbles on the
@@ -237,9 +237,9 @@ Five of these have a reviewed page already, so the first five videos cost only t
 
 1. ~~Go, or Instagram first~~ **Decided 2026-10-28: go, with Instagram and YouTube as equals**; the
    pilot episode comes first and his verdict on it gates the accounts.
-2. **The voice**: decided 2026-10-28, a pleasant young US male voice. Which one: a premium system voice
-   he downloads once in System Settings (free) or a paid speech service (a few dollars a month), after
-   he hears the pilot's stand-in. His recorded intros stay optional.
+2. **The voice**: decided 2026-10-28, a pleasant young US male voice; the Mac's own voices were rejected
+   the same evening. Kokoro (free, local) is in; which of its six American male voices is his pick from the
+   samples, and a paid speech service is the upgrade if none pleases. His recorded intros stay optional.
 3. **Allow a small inline script on the question pages** for the calculators; the design counts on it.
 4. **The veto**: his weekly publish click until the audit, then 48 hours of silence; or no veto after.
 5. **Publishing from this Mac**: the upload script runs inside the weekly job and he applies for the
