@@ -290,13 +290,18 @@ C × A × T**, consumption × ambient pressure × time = the gas a dive needs, a
 shapes: `gas-for-the-dive` (the cat: litres and bar for a planned dive, ends on Turn Pressure), `sac-rate` (the C,
 from a logged dive, ends on Dive log) and `minimum-gas` (the same cat for two stressed divers, the same method and
 figures as the `minimum-gas/` page, ends on Turn Pressure). `tools/pilot-episode.py <episode|all>
-script|time|wide|short|all`: `script` dumps the words for the instructor review, `time` synthesises the voice and
+script|time|wide|short|all`: `script` dumps the words for Rustam's read and the instructor review, `time` synthesises the voice and
 prints each episode's length (about 125 words fit), `wide` renders 1920×1080 for YouTube and the page, `short`
 1080×1920 for Shorts and Reels; outputs and thumbnails in `build/pilot/`, git-ignored. Episodes are the `EPISODES`
 table at the top; a new one is a new entry. His second rule that day, on the second take (*"its just confusing … you cannot
 throw the information without setting up a context"*): **every episode is a story**, the problem the diver has first, then the
 definitions (C is consumption, the SAC rate; **A is the average pressure**, from the average depth the diver plans; T the time of the
-dive or of one segment), then one worked example, then the practical wrap-up into bar by the cylinder. An episode opens on one of the reef clips in
+dive or of one segment), then one worked example, then the practical wrap-up into bar by the cylinder. His third verdict that day, on the
+story take (*"LLM generated content that has a word salad and cannot build narrative"*; "CAT" said as letters, sentences that only sounded good,
+numbers thrown bare at the viewer): the voice had been written to match the screens. So **the voice is written first**, as one person talking
+to another, whole sentences each following from the last, every number inside a sentence that says what it is and why; a card then carries
+only its title and the figure, the subtitle the sentence; "cat" is said as the word; over length, cut scope, not words; and **nothing is rendered
+before he has read the words** (`script`, or the voice as prose), with a cold read for comprehension before the arithmetic review. An episode opens on one of the reef clips in
 `surface_interval/reference-footage/clips/`, sharp, so **the clip must show no diver's face** (his 2026-10-21 rule
 about pictures of him in a wetsuit; `two-divers-facing`, `diver-over-reef` and `reef-drill-deep` are him): the cat
 opens on `turtle-slope`, the SAC rate on `dolphins-blue`, minimum gas on `reef-slope`. The outro names the apps the

@@ -90,7 +90,9 @@ times time, the gas a dive needs, and nothing may run longer than a minute. So t
 under 60 seconds**: the cat itself (how much gas a dive needs, in litres and bar), the SAC rate from a logged dive
 (the C), and minimum gas (the same cat for two stressed divers). The second take he called confusing, and set the
 shape of every episode: **a story**, the problem the diver has, then the definitions, then one worked example, then
-the practical wrap-up into bar by the cylinder; *"you cannot throw the information without setting up a context"*.
+the practical wrap-up into bar by the cylinder; *"you cannot throw the information without setting up a context"*. The third take he called word salad that cannot build
+narrative: the voice had been written to match the screens. So the words are now written first, as speech, and he reads
+them before anything is rendered; the rules are in `CLAUDE.md`.
 What is designed to keep it from looking generated:
 
 - **Real dives, his footage.** The b-roll is his own clips (the reef clips the site videos already use
