@@ -3,8 +3,9 @@
 consumption times ambient pressure times time, is the gas a dive needs (Rustam, 2026-10-28). Three episodes, each
 under a minute so it works as a Reel: `gas-for-the-dive` (the cat), `sac-rate` (the C, from a dive you have done),
 `minimum-gas` (the same cat for two divers in a hurry). Reuses the site generator's phone, caption and font helpers
-(tools/build-media.py). Each spoken sentence is synthesised on its own, so its start time is known and it is drawn
-as text while it is said (Rustam: the voice duplicated by text; a young US male voice; a cat, simple and unusual).
+(tools/build-media.py). The voice is synthesised in passages of connected sentences (new=True starts one), so the
+intonation carries across them; each sentence is then located in the audio (tools/align-sentences.py) and drawn as text
+while it is said (Rustam: the voice duplicated by text; a young US male voice; a cat, simple and unusual).
 
     python3 tools/pilot-episode.py gas-for-the-dive script   # the words, for the correctness review
     python3 tools/pilot-episode.py gas-for-the-dive time     # synthesise the voice and print each cut's length
@@ -29,13 +30,13 @@ SHOTS = {"dive-log": (f"{PROJECTS}/sharewater_dive_log/design/screenshots/dive-l
 # The voice: "kokoro:<voice>" runs the Kokoro neural model in build/kokoro-venv (tools/kokoro-say.py; American
 # male voices am_puck, am_michael, am_fenrir, am_adam, am_echo…), "say:<name>" a macOS system voice. Rustam,
 # 2026-10-28, on the system voice: "terrible metallic", so Kokoro is the default. PILOT_VOICE overrides.
-VOICE = os.environ.get("PILOT_VOICE", "kokoro:am_puck")
+VOICE = os.environ.get("PILOT_VOICE", "orpheus:leo")   # Rustam's pick, 2026-10-28, from samples of three engines
 RATE, SPEED = 168, 1.06          # the macOS rate; Kokoro's speed
 KOKORO_PY = os.path.join(bm.ROOT, "build", "kokoro-venv", "bin", "python")
 ORPHEUS_PY = os.path.join(bm.ROOT, "build", "orpheus-venv", "bin", "python")   # "orpheus:<leo|dan|zac>", see tools/orpheus-say.py
 CHATTERBOX_PY = os.path.join(bm.ROOT, "build", "chatterbox-venv", "bin", "python")   # "chatterbox:default[:exaggeration:cfg]", tools/chatterbox-say.py
 SPOKEN = [(r"\bSAC\b", "sack"), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
-GAP, PAD, LEAD, FADE = 0.25, 0.6, 0.3, 0.5   # between sentences; after a segment's last sentence; before its first; layer fades
+GAP, PAD, LEAD, FADE = 0.25, 0.8, 0.3, 0.5   # between sentences (unused since passages); after a passage; before the first; layer fades
 FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80),
        "short": dict(W=1080, H=1920, phone_h=880, phone_top=540, drift=90)}
 
@@ -57,19 +58,19 @@ EPISODES = {
         voice="You are planning a dive, say forty minutes at around twenty metres. Will the gas on your back cover it?"),
    dict(kind="card", cat=True, title="The cat", big="C × A × T",
         voice="Divers work that out with a cat."),
-   dict(kind="card", cat=True, title="C is consumption", big="Your SAC rate: 15 litres a minute", foot=WORKED,
+   dict(new=True, kind="card", cat=True, title="C is consumption", big="Your SAC rate: 15 litres a minute", foot=WORKED,
         voice="C is your consumption, your SAC rate: what you breathe in a minute at the surface. Say fifteen litres a minute."),
    dict(kind="card", cat=True, title="A is the average pressure", big="20 m: 1 + 2 = 3 bar",
         voice="A is the pressure at your average depth: one bar at the surface, plus one for every ten metres. Twenty metres: three bar."),
    dict(kind="card", cat=True, title="T is time", big="40 minutes",
         voice="T is the time of the dive: forty minutes."),
-   dict(kind="card", cat=True, title="Multiply", big="15 × 3 × 40 = 1,800 litres",
+   dict(new=True, kind="card", cat=True, title="Multiply", big="15 × 3 × 40 = 1,800 litres",
         voice="Fifteen, times three, times forty: eighteen hundred litres."),
    dict(kind="card", cat=True, title="Into bar", big="1,800 L ÷ 12 L = 150 bar",
         voice="Your gauge reads bar, so divide by the size of your cylinder. Twelve litres: a hundred and fifty bar."),
    dict(kind="card", cat=True, title="Plus minimum gas", big="150 bar for the dive, then your minimum gas",
         voice="That is the dive. Your minimum gas comes on top."),
-   dict(kind="phone", app="turn-pressure", shot="1-inputs", pill="Free app", head="Turn Pressure works out both for the dive you are planning", sub="The gas for the dive, and the minimum gas to keep",
+   dict(new=True, kind="phone", app="turn-pressure", shot="1-inputs", pill="Free app", head="Turn Pressure works out both for the dive you are planning", sub="The gas for the dive, and the minimum gas to keep",
         voice="Turn Pressure works out both for your dive."),
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
@@ -78,15 +79,15 @@ EPISODES = {
   segments=[
    dict(kind="footage", clip="dolphins-blue", title="The question", big="What is your SAC rate?",
         voice="Every gas plan starts with your SAC rate: what you breathe in a minute, at the surface. You get it from a dive you have done."),
-   dict(kind="card", cat=True, title="Three things from that dive", big="120 bar used, from a 12-litre cylinder", foot=WORKED,
+   dict(new=True, kind="card", cat=True, title="Three things from that dive", big="120 bar used, from a 12-litre cylinder", foot=WORKED,
         voice="Three things from that dive. The gas you used: say a hundred and twenty bar, from a twelve-litre cylinder."),
    dict(kind="card", cat=True, title="Three things from that dive", big="40 minutes · average depth 14 m",
         voice="How long: forty minutes. And the average depth your computer recorded: fourteen metres."),
-   dict(kind="card", cat=True, title="Litres a minute, at depth", big="120 × 12 = 1,440 L ÷ 40 min = 36 L/min",
+   dict(new=True, kind="card", cat=True, title="Litres a minute, at depth", big="120 × 12 = 1,440 L ÷ 40 min = 36 L/min",
         voice="A hundred and twenty bar times twelve litres: fourteen hundred and forty litres. Over forty minutes, thirty-six litres a minute."),
    dict(kind="card", cat=True, title="Back to the surface", big="14 ÷ 10 + 1 = 2.4 bar · 36 ÷ 2.4 = 15",
         voice="At fourteen metres the pressure was two point four bar, so you breathed two point four times the gas. Divide by two point four, and your SAC rate is fifteen litres a minute."),
-   dict(kind="card", cat=True, title="Make it yours", big="A few dives, averaged",
+   dict(new=True, kind="card", cat=True, title="Make it yours", big="A few dives, averaged",
         voice="Do it for a few dives and use the average."),
    dict(kind="phone", app="dive-log", shot="4-statistics", pill="Free app", head="Dive log works it out from each dive's profile and pressures", sub="And draws it over time",
         voice="Dive log works it out from each dive's profile and pressures."),
@@ -97,15 +98,15 @@ EPISODES = {
   segments=[
    dict(kind="footage", clip="reef-slope", title="The question", big="What is minimum gas?",
         voice="At the deepest point your buddy signals: out of gas. You share, and you both go up. How much must be left for that? That is minimum gas."),
-   dict(kind="card", cat=True, title="The cat, for two", big="C × A × T, for the way up",
+   dict(new=True, kind="card", cat=True, title="The cat, for two", big="C × A × T, for the way up",
         voice="Work it out with the cat: consumption times pressure times time, for two on the way up."),
    dict(kind="card", cat=True, title="C is consumption, for two", big="20 + 20 = 40 litres a minute", foot="A worked example. Courses differ on the rate for a stressed diver.",
         voice="C: two stressed divers, say twenty litres a minute each. Forty together."),
-   dict(kind="card", cat=True, title="A minute to sort it out", big="40 × 4 bar × 1 min = 160 litres", lines=["30 m: 30 ÷ 10 + 1 = 4 bar"],
+   dict(new=True, kind="card", cat=True, title="A minute to sort it out", big="40 × 4 bar × 1 min = 160 litres", lines=["30 m: 30 ÷ 10 + 1 = 4 bar"],
         voice="A minute at thirty metres to sort it out. Thirty metres is four bar: a hundred and sixty litres."),
    dict(kind="card", cat=True, title="The ascent", big="40 × 2.5 bar × 3.3 min ≈ 330 litres", lines=["30 m at 9 m/min = 3.3 min · (4 + 1) ÷ 2 = 2.5 bar"],
         voice="Then the ascent at nine metres a minute: three point three minutes at two and a half bar on average, three hundred and thirty litres."),
-   dict(kind="card", cat=True, title="Together", big="≈ 490 L ÷ 11 L = 45 bar", foot="The cat's example, not a minimum gas for your dive.",
+   dict(new=True, kind="card", cat=True, title="Together", big="≈ 490 L ÷ 11 L = 45 bar", foot="The cat's example, not a minimum gas for your dive.",
         voice="Nearly five hundred litres: from an eleven-litre cylinder, forty-five bar."),
    dict(kind="card", cat=True, title="The rule", big="At minimum gas, the dive is over",
         voice="When your gauge gets there, the dive is over, whatever the plan said."),
@@ -123,37 +124,49 @@ def spoken(text):
     for pat, rep in SPOKEN: text = re.sub(pat, rep, text)
     return text
 
-def wav_path(text):
+TEMPO = float(os.environ.get("PILOT_TEMPO", "1"))   # Orpheus and Chatterbox have no speed of their own: their passages can be sped up with ffmpeg's
+                                                       # atempo after synthesis (1.04 is not heard). Not needed since passages: Leo tells an episode in about 50 s.
+
+def base_path(text):
     return os.path.join(WORK, "s-" + hashlib.sha1((VOICE + str(RATE) + str(SPEED) + text).encode()).hexdigest()[:12] + ".wav")
 
+def wav_path(text):
+    """The sentence as used: the synthesised file, or a tempo-changed copy of it for the engines without a speed."""
+    if TEMPO == 1 or VOICE.split(":")[0] in ("kokoro", "say"): return base_path(text)
+    return os.path.join(WORK, "t-" + hashlib.sha1((VOICE + str(TEMPO) + text).encode()).hexdigest()[:12] + ".wav")
+
 def synthesise(texts):
-    """Every sentence not yet on disk, as 48 kHz stereo wav, in one go (Kokoro loads once)."""
-    todo = [t for t in dict.fromkeys(texts) if not os.path.exists(wav_path(t))]
-    if not todo: return
+    """Every sentence not yet on disk, as 48 kHz stereo wav, in one go (the model loads once); then the tempo copies."""
+    texts = list(dict.fromkeys(texts))
+    todo = [t for t in texts if not os.path.exists(base_path(t))]
     engine, _, name = VOICE.partition(":")
-    raws = []
-    if engine == "kokoro":
-        jobs = [[spoken(t), wav_path(t)[:-4] + ".raw.wav"] for t in todo]
-        jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
-        subprocess.run([KOKORO_PY, os.path.join(HERE, "kokoro-say.py"), jp, name, str(SPEED)], check=True, stdout=subprocess.DEVNULL)
-        raws = [r for _, r in jobs]
-    elif engine == "orpheus":
-        jobs = [[spoken(t), wav_path(t)[:-4] + ".raw.wav"] for t in todo]
-        jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
-        subprocess.run([ORPHEUS_PY, os.path.join(HERE, "orpheus-say.py"), jp, name], check=True, stdout=subprocess.DEVNULL)
-        raws = [r for _, r in jobs]
-    elif engine == "chatterbox":
-        jobs = [[spoken(t), wav_path(t)[:-4] + ".raw.wav"] for t in todo]
-        jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
-        subprocess.run([CHATTERBOX_PY, os.path.join(HERE, "chatterbox-say.py"), jp] + name.split(":"), check=True, stdout=subprocess.DEVNULL)
-        raws = [r for _, r in jobs]
-    else:
-        for t in todo:
-            r = wav_path(t)[:-4] + ".aiff"; raws.append(r)
-            subprocess.run(["say", "-v", name, "-r", str(RATE), "-o", r, spoken(t)], check=True)
-    for t, r in zip(todo, raws):
-        subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", r, "-ar", "48000", "-ac", "2", "-c:a", "pcm_s16le", wav_path(t)], check=True)
-        os.remove(r)
+    if todo:
+        raws = []
+        if engine == "kokoro":
+            jobs = [[spoken(t), base_path(t)[:-4] + ".raw.wav"] for t in todo]
+            jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
+            subprocess.run([KOKORO_PY, os.path.join(HERE, "kokoro-say.py"), jp, name, str(SPEED)], check=True, stdout=subprocess.DEVNULL)
+            raws = [r for _, r in jobs]
+        elif engine == "orpheus":
+            jobs = [[spoken(t), base_path(t)[:-4] + ".raw.wav"] for t in todo]
+            jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
+            subprocess.run([ORPHEUS_PY, os.path.join(HERE, "orpheus-say.py"), jp, name], check=True, stdout=subprocess.DEVNULL)
+            raws = [r for _, r in jobs]
+        elif engine == "chatterbox":
+            jobs = [[spoken(t), base_path(t)[:-4] + ".raw.wav"] for t in todo]
+            jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
+            subprocess.run([CHATTERBOX_PY, os.path.join(HERE, "chatterbox-say.py"), jp] + name.split(":"), check=True, stdout=subprocess.DEVNULL)
+            raws = [r for _, r in jobs]
+        else:
+            for t in todo:
+                r = base_path(t)[:-4] + ".aiff"; raws.append(r)
+                subprocess.run(["say", "-v", name, "-r", str(RATE), "-o", r, spoken(t)], check=True)
+        for t, r in zip(todo, raws):
+            subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", r, "-ar", "48000", "-ac", "2", "-c:a", "pcm_s16le", base_path(t)], check=True)
+            os.remove(r)
+    for t in texts:
+        if wav_path(t) != base_path(t) and not os.path.exists(wav_path(t)):
+            subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", base_path(t), "-af", f"atempo={TEMPO}", "-c:a", "pcm_s16le", wav_path(t)], check=True)
 
 def say(text):
     """One sentence's wav and its length in seconds (synthesise() has run for it)."""
@@ -168,17 +181,63 @@ def silence(d):
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-t", f"{d:.3f}", "-c:a", "pcm_s16le", p], check=True)
     return p
 
+def passages(segs):
+    """Consecutive segments whose voice is synthesised as one piece, so the intonation runs across the sentences (Rustam,
+    2026-10-28: sentence by sentence "its not possible to follow"). A segment with new=True starts a passage; the first always does."""
+    groups = []
+    for i, x in enumerate(segs):
+        if i == 0 or x.get("new"): groups.append([])
+        groups[-1].append(i)
+    return groups
+
+def align(wav, spoken_sents):
+    """Each sentence's start and end inside the passage audio, by tools/align-sentences.py (Whisper word timestamps); cached beside the wav."""
+    cache = wav[:-4] + "-" + hashlib.sha1("\n".join(spoken_sents).encode()).hexdigest()[:8] + ".align.json"
+    if not os.path.exists(cache):
+        job = os.path.join(WORK, "align-job.json"); json.dump({"wav": wav, "sentences": spoken_sents}, open(job, "w"))
+        out = subprocess.check_output([ORPHEUS_PY, os.path.join(HERE, "align-sentences.py"), job], stderr=subprocess.DEVNULL)
+        open(cache, "wb").write(out)
+    return json.load(open(cache))
+
+def cut(wav, a, b):
+    p = os.path.join(WORK, "c-" + hashlib.sha1(f"{wav}{a:.3f}{b:.3f}".encode()).hexdigest()[:12] + ".wav")
+    if not os.path.exists(p):
+        subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", f"{a:.3f}", "-t", f"{b - a:.3f}", "-i", wav, "-c:a", "pcm_s16le", p], check=True)
+    return p
+
+CARD_LEAD = 0.25   # a segment's card appears this long before its first word (within the previous sentence's silence)
+
 def timeline(ep):
-    """The episode's segments with their sentences timed: seg['dur'], seg['subs'] = [(start, end, text)] relative to the segment."""
+    """The episode's segments with their sentences timed: seg['dur'], seg['subs'] = [(start, end, text)] relative to the segment,
+    seg['audio'] the wav pieces to concatenate. Each passage is one synthesised piece, cut at the segments' first words."""
     segs = [dict(x) for x in ep["segments"]]
-    synthesise([sent for x in segs for sent in sentences(x["voice"])])
-    for x in segs:
-        t, subs, audio = LEAD, [], [silence(LEAD)]
-        for sent in sentences(x["voice"]):
-            wav, d = say(sent)
-            subs.append((t, t + d + min(GAP, 0.25), sent)); audio += [wav, silence(GAP)]; t += d + GAP
-        audio.append(silence(PAD)); t += PAD
-        x["dur"], x["subs"], x["audio"] = t, subs, audio
+    groups = passages(segs)
+    texts = [" ".join(segs[i]["voice"] for i in g) for g in groups]
+    synthesise(texts)
+    for g, text in zip(groups, texts):
+        wav, total = say(text)
+        sents = [(i, sent) for i in g for sent in sentences(segs[i]["voice"])]
+        al = align(wav, [spoken(sent) for _, sent in sents])
+        times = [(a["start"], a["end"]) for a in al["sentences"]]
+        end_of_speech = min(total, al["speech_end"] + 0.15)
+        first = {}   # segment -> index of its first sentence
+        for j, (i, _) in enumerate(sents): first.setdefault(i, j)
+        bounds = [0.0]
+        for n, i in enumerate(g[1:], 1):
+            j = first[i]; prev_end = times[j - 1][1]
+            bounds.append(max(prev_end, times[j][0] - CARD_LEAD, bounds[-1] + 0.3))
+        bounds.append(max(end_of_speech, bounds[-1] + 0.3))
+        for n, i in enumerate(g):
+            b0, b1 = bounds[n], bounds[n + 1]; x = segs[i]
+            lead = LEAD if n == 0 else 0.0; pad = PAD if n == len(g) - 1 else 0.0
+            subs = []
+            for j, (i2, sent) in enumerate(sents):
+                if i2 != i: continue
+                st, en = times[j]; nxt = times[j + 1][0] if j + 1 < len(times) else b1
+                subs.append((lead + st - b0, lead + min(en + 0.3, nxt, b1) - b0, sent))
+            x["subs"] = subs
+            x["audio"] = ([silence(LEAD)] if lead else []) + [cut(wav, b0, b1)] + ([silence(PAD)] if pad else [])
+            x["dur"] = lead + (b1 - b0) + pad
     return segs
 
 # ---------- drawing ----------

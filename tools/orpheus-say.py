@@ -6,8 +6,8 @@ Hugging Face on first use). Voices: tara, leah, jess, leo, dan, mia, zac, zoe; t
 
     orpheus-say.py jobs.json <voice>      jobs.json: [[text, out.wav], …]; 24 kHz mono wav out
 
-Each sentence is generated on its own with a token budget far above a sentence's length, because a budget that runs
-out cuts the audio mid-word without an error (the first samples did, at the default 1,200 tokens).
+Each text (a passage of a few connected sentences, up to about 25 s) is generated with a token budget far above its
+length, because a budget that runs out cuts the audio mid-word without an error (the first samples did, at the default 1,200).
 """
 import json, sys, warnings
 warnings.filterwarnings("ignore")
@@ -17,6 +17,6 @@ from mlx_audio.tts.utils import load_model
 jobs = json.load(open(sys.argv[1])); voice = sys.argv[2]
 model = load_model("mlx-community/orpheus-3b-0.1-ft-4bit")
 for text, out in jobs:
-    chunks = [np.asarray(r.audio) for r in model.generate(text=text, voice=voice, max_tokens=2400)]
+    chunks = [np.asarray(r.audio) for r in model.generate(text=text, voice=voice, max_tokens=6000)]
     sf.write(out, np.concatenate(chunks) if chunks else np.zeros(2400, dtype=np.float32), 24000)
     print(out, flush=True)

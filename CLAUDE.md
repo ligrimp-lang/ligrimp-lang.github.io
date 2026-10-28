@@ -307,8 +307,13 @@ about pictures of him in a wetsuit; `two-divers-facing`, `diver-over-reef` and `
 opens on `turtle-slope`, the SAC rate on `dolphins-blue`, minimum gas on `reef-slope`. The outro names the apps the
 episode's phone segments showed. It reuses the site generator's phone, caption and font helpers. His rules from that
 day, built in: **the cat** is the diver of every worked example (drawn in `cat()`, line art in the family's ink
-and teal, bubbles rising on the cards), **every spoken sentence is on screen** while it is said (each sentence is
-synthesised on its own with `say`, so its start is known), and the voice is **a pleasant young US male**. The
+and teal, bubbles rising on the cards), **every spoken sentence is on screen** while it is said, and the voice is **a pleasant
+young US male**. **The voice is synthesised in passages of connected sentences**, not sentence by sentence: the first takes did
+one sentence at a time so each start was known, and he heard it at once (*"it records sentence individually, but we need to
+have intonation be placed for the set of connected sentences, otherwise its not possible to follow"*). A segment with `new=True`
+starts a passage (a story paragraph of about 20 s; `passages()`), the passage is one synthesised piece, and each sentence's
+start and end come from `tools/align-sentences.py` (Whisper large-v3-turbo through mlx-whisper, word timestamps aligned to
+the script, cached beside the wav); the audio is cut at each segment's first word, a quarter second early so the card is up. The
 macOS system voices were tried first and he called the result "terrible metallic", so the narration comes from
 **Kokoro** (hexgrad/Kokoro-82M, Apache-2.0, a neural model that runs on this Mac): `build/kokoro-venv/` is a
 Python 3.12 virtual environment (Homebrew `python@3.12`; Kokoro pins an older numpy that has no 3.13 build) with
@@ -322,9 +327,10 @@ the 4-bit MLX build of canopylabs/orpheus-3b-0.1-ft, Apache-2.0, about 6 GB in u
 gives each sentence a token budget far above its length, because the default budget cut samples off mid-word without an
 error) and **Chatterbox** (`chatterbox:default[:exaggeration:cfg]`, `build/chatterbox-venv/`, `chatterbox-tts`, MIT, one
 built-in male voice; `tools/chatterbox-say.py` patches `torch.load` onto this Mac's device and stands the package's no-op
-watermarker in for the one that is `None` here). Orpheus speaks at a slower, more natural pace than Kokoro at 1.06, so a
-minute holds about 115 of its words, or the audio is sped up a little; Chatterbox is brisker. Samples of the same four
-sentences from all three engines are `build/pilot/samples/voice-*.m4a`. `SPOKEN` maps what is said, not shown ("SAC" is said "sack"). Every script passes a clean-context instructor review before rendering (the reviews so far: gas
+watermarker in for the one that is `None` here). Samples of the same four sentences from all three engines are
+`build/pilot/samples/voice-*.m4a`; **he chose Orpheus Leo** (`orpheus:leo` is the default). In passages Leo tells each
+episode's 133 to 140 words in 48 to 49 s, with 0.8 s between passages (`PAD`), so no tempo change is needed (`PILOT_TEMPO`
+exists for the engines without a speed of their own, 1 by default). `SPOKEN` maps what is said, not shown ("SAC" is said "sack"). Every script passes a clean-context instructor review before rendering (the reviews so far: gas
 compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷ 33 + 1; depth ÷ 10 + 1 is called
 bar, as on the site; the cat's dive averages 14 m so its SAC rate is exactly the 15 L/min the gas episode uses; the
 36 L/min before the depth correction is "from the cylinder", not breathed; every result card says it is the cat's
