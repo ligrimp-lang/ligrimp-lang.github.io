@@ -97,6 +97,10 @@ the Time to Surface repo (`nimbalyst-local/plans/time-to-surface-signed-plans-su
 - **Time to Surface** is a tech-diver product; the store finds it only by name. ScubaBoard's technical
   forum, GUE and TDI groups, instructors.
 - **Measuring Google** per page: Search Console's page report, from the week of 2026-10-26.
+- **One engine for the family** (2026-10-28, Rustam's brief: one AI-run way to promote all five): proposed in
+  `promotion-engine-proposal-2026-10-28.md` — a weekly question answered as a YouTube video, a Short and a
+  page, the same to Instagram with equal weight (his decision the same day), campaign links per channel.
+  He said go; a pilot episode on the SAC rate is the first deliverable and gates the accounts.
 - **Not done yet:** posting the forum texts (Rustam does it himself); request indexing of the five
   question pages in Search Console (or wait for the sitemap); `APP_SITE_URL` in each app's
   `app-config.sh` still prints the github.io address (harmless, redirects).
