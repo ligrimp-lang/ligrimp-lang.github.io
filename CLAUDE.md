@@ -315,7 +315,16 @@ Python 3.12 virtual environment (Homebrew `python@3.12`; Kokoro pins an older nu
 `kokoro` and `soundfile`, plus Homebrew `espeak-ng` for its fallback; `tools/kokoro-say.py` synthesises a list of
 sentences in one process; the model weights download from Hugging Face on first use. The default voice is `am_puck`
 (`PILOT_VOICE=kokoro:<voice>` or `say:<name>` overrides); samples of six voices are in `build/pilot/samples/`
-for his choice. `SPOKEN` maps what is said, not shown ("SAC" is said "sack"). Every script passes a clean-context instructor review before rendering (the reviews so far: gas
+for his choice. On hearing the rendered episodes he called that voice too a metallic robot and asked for a young man's
+voice (2026-10-28), so two stronger models were set up the same way, each in its own virtual environment with a
+helper that takes a `jobs.json` of sentences: **Orpheus** (`orpheus:<leo|dan|zac>`, `build/orpheus-venv/`, `mlx-audio`,
+the 4-bit MLX build of canopylabs/orpheus-3b-0.1-ft, Apache-2.0, about 6 GB in use, half real time; `tools/orpheus-say.py`
+gives each sentence a token budget far above its length, because the default budget cut samples off mid-word without an
+error) and **Chatterbox** (`chatterbox:default[:exaggeration:cfg]`, `build/chatterbox-venv/`, `chatterbox-tts`, MIT, one
+built-in male voice; `tools/chatterbox-say.py` patches `torch.load` onto this Mac's device and stands the package's no-op
+watermarker in for the one that is `None` here). Orpheus speaks at a slower, more natural pace than Kokoro at 1.06, so a
+minute holds about 115 of its words, or the audio is sped up a little; Chatterbox is brisker. Samples of the same four
+sentences from all three engines are `build/pilot/samples/voice-*.m4a`. `SPOKEN` maps what is said, not shown ("SAC" is said "sack"). Every script passes a clean-context instructor review before rendering (the reviews so far: gas
 compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷ 33 + 1; depth ÷ 10 + 1 is called
 bar, as on the site; the cat's dive averages 14 m so its SAC rate is exactly the 15 L/min the gas episode uses; the
 36 L/min before the depth correction is "from the cylinder", not breathed; every result card says it is the cat's

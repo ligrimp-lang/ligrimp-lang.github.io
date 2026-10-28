@@ -33,6 +33,7 @@ VOICE = os.environ.get("PILOT_VOICE", "kokoro:am_puck")
 RATE, SPEED = 168, 1.06          # the macOS rate; Kokoro's speed
 KOKORO_PY = os.path.join(bm.ROOT, "build", "kokoro-venv", "bin", "python")
 ORPHEUS_PY = os.path.join(bm.ROOT, "build", "orpheus-venv", "bin", "python")   # "orpheus:<leo|dan|zac>", see tools/orpheus-say.py
+CHATTERBOX_PY = os.path.join(bm.ROOT, "build", "chatterbox-venv", "bin", "python")   # "chatterbox:default[:exaggeration:cfg]", tools/chatterbox-say.py
 SPOKEN = [(r"\bSAC\b", "sack"), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
 GAP, PAD, LEAD, FADE = 0.25, 0.6, 0.3, 0.5   # between sentences; after a segment's last sentence; before its first; layer fades
 FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80),
@@ -140,6 +141,11 @@ def synthesise(texts):
         jobs = [[spoken(t), wav_path(t)[:-4] + ".raw.wav"] for t in todo]
         jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
         subprocess.run([ORPHEUS_PY, os.path.join(HERE, "orpheus-say.py"), jp, name], check=True, stdout=subprocess.DEVNULL)
+        raws = [r for _, r in jobs]
+    elif engine == "chatterbox":
+        jobs = [[spoken(t), wav_path(t)[:-4] + ".raw.wav"] for t in todo]
+        jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
+        subprocess.run([CHATTERBOX_PY, os.path.join(HERE, "chatterbox-say.py"), jp] + name.split(":"), check=True, stdout=subprocess.DEVNULL)
         raws = [r for _, r in jobs]
     else:
         for t in todo:
