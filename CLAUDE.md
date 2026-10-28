@@ -320,9 +320,11 @@ compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷
 bar, as on the site; the cat's dive averages 14 m so its SAC rate is exactly the 15 L/min the gas episode uses; the
 36 L/min before the depth correction is "from the cylinder", not breathed; every result card says it is the cat's
 example; the minimum-gas figures are the page's, 61 bar from an aluminium 80 with the stop; claims about the apps
-stay within their listings; the story take added: "as if at the surface" for the SAC rate, "average depth, not maximum" said and
-shown, the 120 bar used derived on screen from 200 in and 80 out, the 4 bar, 3.3 min and 2.5 bar of the minimum-gas legs given with
-their sums, "a slower ascent" rather than "slower", and the turn pressure explained in the phone caption as when to turn the dive).
+stay within their listings; the speech take's cold read added: a spoken number carries its unit ("fifteen litres a minute"), "the pressure was two point four bar"
+because "under two point four bar" reads as less than, the reserve is named minimum gas in the cat episode too, Dive log works the rate out
+"from each dive's profile and pressures" since a profile without pressures gives none, and in the minimum-gas episode the cat is spelled out as
+consumption times pressure times time, 30 m is said to be 4 bar, and the 3.3 min come from "at nine metres a minute", with the derivations
+on the cards; the "deeper, or with a safety stop, it is more" sentence was cut for the time).
 Nothing is published:
 no channel, no account; those wait for his verdict on the pilot.
 
