@@ -283,10 +283,21 @@ runs for that app, so note the replacement in this file.
 
 Rustam's brief: one AI-run way to promote the family. The proposal is `docs/promotion-engine-proposal-2026-10-28.md`
 (a diver's question a week as a YouTube video, a Short and a diver.today page; the same to Instagram with equal
-weight; the alternatives challenged, the review's corrections in). He said go, and a **pilot episode** on the SAC
-rate decides whether the quality is his: `tools/pilot-episode.py` (`script` dumps the words for the instructor
-review, `wide` renders 1920×1080 for YouTube, `short` 1080×1920 for Shorts and Reels; outputs and the thumbnail in
-`build/pilot/`, git-ignored). It reuses the site generator's phone, caption and font helpers. His rules from that
+weight; the alternatives challenged, the review's corrections in). He said go, and a pilot decides whether
+the quality is his. The first take, a four-minute explainer of the SAC rate, he called "stupid" content: **the cat is
+C × A × T**, consumption × ambient pressure × time = the gas a dive needs, and **nothing longer than a minute**
+(*"no one will watch instagram longer"*). So the pilot is **three episodes of under 60 s**, the same words in both
+shapes: `gas-for-the-dive` (the cat: litres and bar for a planned dive, ends on Turn Pressure), `sac-rate` (the C,
+from a logged dive, ends on Dive log) and `minimum-gas` (the same cat for two stressed divers, the same method and
+figures as the `minimum-gas-rock-bottom/` page, ends on Turn Pressure). `tools/pilot-episode.py <episode|all>
+script|time|wide|short|all`: `script` dumps the words for the instructor review, `time` synthesises the voice and
+prints each episode's length (about 125 words fit), `wide` renders 1920×1080 for YouTube and the page, `short`
+1080×1920 for Shorts and Reels; outputs and thumbnails in `build/pilot/`, git-ignored. Episodes are the `EPISODES`
+table at the top; a new one is a new entry. An episode opens on one of the reef clips in
+`surface_interval/reference-footage/clips/`, sharp, so **the clip must show no diver's face** (his 2026-10-21 rule
+about pictures of him in a wetsuit; `two-divers-facing`, `diver-over-reef` and `reef-drill-deep` are him): the cat
+opens on `turtle-slope`, the SAC rate on `dolphins-blue`, minimum gas on `reef-slope`. The outro names the apps the
+episode's phone segments showed. It reuses the site generator's phone, caption and font helpers. His rules from that
 day, built in: **the cat** is the diver of every worked example (drawn in `cat()`, line art in the family's ink
 and teal, bubbles rising on the cards), **every spoken sentence is on screen** while it is said (each sentence is
 synthesised on its own with `say`, so its start is known), and the voice is **a pleasant young US male**. The
@@ -296,9 +307,12 @@ Python 3.12 virtual environment (Homebrew `python@3.12`; Kokoro pins an older nu
 `kokoro` and `soundfile`, plus Homebrew `espeak-ng` for its fallback; `tools/kokoro-say.py` synthesises a list of
 sentences in one process; the model weights download from Hugging Face on first use. The default voice is `am_puck`
 (`PILOT_VOICE=kokoro:<voice>` or `say:<name>` overrides); samples of six voices are in `build/pilot/samples/`
-for his choice. `SPOKEN` maps what is said, not shown ("SAC" is said "sack"). The words passed a clean-context instructor review before rendering (gas
-compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷ 33 + 1; claims about the apps
-stay within their listings; the outro's "free" and "one iCloud" are the site's own words). Nothing is published:
+for his choice. `SPOKEN` maps what is said, not shown ("SAC" is said "sack"). Every script passes a clean-context instructor review before rendering (the reviews so far: gas
+compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷ 33 + 1; depth ÷ 10 + 1 is called
+bar, as on the site; the cat's dive averages 14 m so its SAC rate is exactly the 15 L/min the gas episode uses; the
+36 L/min before the depth correction is "from the cylinder", not breathed; every result card says it is the cat's
+example; the minimum-gas figures are the page's, 61 bar from an aluminium 80 with the stop; claims about the apps
+stay within their listings). Nothing is published:
 no channel, no account; those wait for his verdict on the pilot.
 
 ## The question pages (2026-10-19)

@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Pilot episode of the question engine (docs/promotion-engine-proposal-2026-10-28.md):
-"How do you work out your SAC rate?" told through a cat's dive. Reuses the site generator's phone,
-caption and font helpers (tools/build-media.py). Each spoken sentence is synthesised on its own, so its
-start time is known and it is drawn as text while it is said (Rustam, 2026-10-28: the voice duplicated
-by text; a young US male voice; a cat, simple and unusual).
+"""The question engine's episodes (docs/promotion-engine-proposal-2026-10-28.md), told through a cat: C × A × T,
+consumption times ambient pressure times time, is the gas a dive needs (Rustam, 2026-10-28). Three episodes, each
+under a minute so it works as a Reel: `gas-for-the-dive` (the cat), `sac-rate` (the C, from a dive you have done),
+`minimum-gas` (the same cat for two divers in a hurry). Reuses the site generator's phone, caption and font helpers
+(tools/build-media.py). Each spoken sentence is synthesised on its own, so its start time is known and it is drawn
+as text while it is said (Rustam: the voice duplicated by text; a young US male voice; a cat, simple and unusual).
 
-    python3 tools/pilot-episode.py script          # the words, for the correctness review
-    python3 tools/pilot-episode.py wide            # 1920x1080, YouTube
-    python3 tools/pilot-episode.py short           # 1080x1920, Short / Reel
-Outputs in build/pilot/: sac-rate-<cut>.mp4, sac-rate-thumb.png.
+    python3 tools/pilot-episode.py gas-for-the-dive script   # the words, for the correctness review
+    python3 tools/pilot-episode.py gas-for-the-dive time     # synthesise the voice and print each cut's length
+    python3 tools/pilot-episode.py gas-for-the-dive wide     # 1920x1080, YouTube and the page
+    python3 tools/pilot-episode.py gas-for-the-dive short    # 1080x1920, Reel / Short
+    python3 tools/pilot-episode.py all all                   # every episode, both cuts
+Outputs in build/pilot/: <episode>-<cut>.mp4, <episode>-thumb.png. The same words in both cuts.
 """
 import os, re, sys, json, hashlib, subprocess, importlib.util
 from PIL import Image, ImageDraw
@@ -27,45 +30,77 @@ SHOTS = {"dive-log": (f"{PROJECTS}/sharewater_dive_log/design/screenshots/dive-l
 # male voices am_puck, am_michael, am_fenrir, am_adam, am_echo…), "say:<name>" a macOS system voice. Rustam,
 # 2026-10-28, on the system voice: "terrible metallic", so Kokoro is the default. PILOT_VOICE overrides.
 VOICE = os.environ.get("PILOT_VOICE", "kokoro:am_puck")
-RATE, SPEED = 168, 1.0           # the macOS rate; Kokoro's speed
+RATE, SPEED = 168, 1.06          # the macOS rate; Kokoro's speed
 KOKORO_PY = os.path.join(bm.ROOT, "build", "kokoro-venv", "bin", "python")
 SPOKEN = [(r"\bSAC\b", "sack"), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
-GAP, PAD, FADE = 0.35, 1.0, 0.5          # between sentences; after a segment's last sentence; layer fades
+GAP, PAD, LEAD, FADE = 0.25, 0.6, 0.3, 0.5   # between sentences; after a segment's last sentence; before its first; layer fades
 FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80),
        "short": dict(W=1080, H=1920, phone_h=880, phone_top=540, drift=90)}
 
-SEGMENTS = [
- dict(kind="footage", clip="bannerfish-reef", title="The question", big="How do you work out your SAC rate?", lines=["and what is a normal one"],
-      voice="Your SAC rate is the one number the rest of your gas planning stands on. Here is how to work it out from a dive you have already done, what a normal one looks like, and a cat to help.",
-      short=True, short_voice="How do you work out your SAC rate? A cat and four numbers."),
- dict(kind="footage", clip="dolphins-blue", title="What it is", big="The gas you breathe in a minute, measured at the surface", lines=[],
-      voice="SAC stands for surface air consumption. It is the volume of gas you breathe in one minute, corrected to the surface, where the pressure is one atmosphere. Depth multiplies what you use, so taking the depth back out leaves a number that is yours, not the dive's. You can use it to estimate your gas at any depth and from any cylinder."),
- dict(kind="card", cat=True, title="The cat's dive", lines=["A 12-litre cylinder", "200 bar in, 80 bar out", "40 minutes", "Average depth 15 metres, from the computer"],
-      foot="A worked example with made-up numbers, not your dive.",
-      voice="Meet the cat. The cat has done a dive, and the dive gives us four things. Made-up numbers, not yours. A twelve-litre cylinder. Two hundred bar at the start, eighty at the end. Forty minutes. And an average depth of fifteen metres. The average, not the maximum.", short=True),
- dict(kind="card", cat=True, title="Step one: the gas used", big="120 bar × 12 litres ≈ 1,440 litres", lines=["Bar used times the cylinder's litres is the gas breathed, counted at surface pressure"],
-      voice="Step one. The cat used one hundred twenty bar. Times twelve litres, that is about one thousand four hundred forty litres of gas, counted at surface pressure.", short=True),
- dict(kind="card", cat=True, title="Step two: per minute", big="1,440 ÷ 40 = 36 litres a minute", lines=["The gas the cat used each minute, counted as surface gas: down there every breath is denser, so the number comes out bigger"],
-      voice="Step two. Divide by the forty minutes: thirty-six litres a minute. That is the gas the cat used each minute, counted as surface gas. Down there every breath is denser, so the number comes out bigger.", short=True),
- dict(kind="card", cat=True, title="Step three: back to the surface", big="36 ÷ 2.5 = 14.4 L/min",
-      lines=["15 m ÷ 10 + 1 = 2.5 atmospheres absolute at the average depth", "Divide by it, and the number is the cat's, not the dive's"],
-      foot="In cubic feet and psi: each psi is worth the cylinder's rated volume ÷ its rated pressure, and the pressure at depth is feet ÷ 33 + 1.",
-      voice="Step three. At fifteen metres the pressure is fifteen over ten, plus one: two and a half atmospheres absolute. Divide by that, and the cat's SAC rate is fourteen point four litres a minute. In cubic feet and psi the idea is the same, with two changes. Each psi is worth the cylinder's rated volume divided by its rated pressure. And the pressure at depth is feet divided by thirty-three, plus one.", short=True),
- dict(kind="card", cat=True, title="The whole formula", big="SAC = bar used × litres ÷ minutes ÷ (average depth in metres ÷ 10 + 1)", lines=[],
-      voice="So the whole thing in one line: bar used, times litres, divided by minutes, then divided by the pressure at the average depth: the depth in metres over ten, plus one."),
- dict(kind="card", cat=True, title="What is a normal SAC rate?", lines=["Relaxed and experienced: often 12 to 18 L/min", "New, cold or working hard: more often 20 to 30 L/min", "A current, a task or a fright can double it on the day"],
-      foot="A range people see, not a target. Yours changes with how you dive.",
-      voice="So what is a normal SAC rate? Relaxed, experienced divers often sit between twelve and eighteen litres a minute. New divers, cold divers and anyone working hard are more often between twenty and thirty. A current, a task or a fright can double it on the day. It is a range people see, not a target, and yours changes with how you dive. That is why one dive is not your SAC rate. A season of dives is.", short=True),
- dict(kind="card", cat=True, title="Two things that go wrong", lines=["Using the maximum depth instead of the average makes the rate come out too low", "Trusting one dive: use several, and plan with a higher rate than your average"],
-      foot="Some courses call litres per minute RMV and keep SAC for bar per minute. Here, SAC means litres per minute.",
-      voice="Two things go wrong. Using the maximum depth instead of the average divides by too much, and the rate comes out too low. And trusting one dive: use several, and when you plan, plan with a higher rate than your average, because the dive that needs the gas is not the relaxed one. One more thing. Some courses call litres per minute RMV and keep the word SAC for bar per minute from a particular cylinder. Here, SAC means litres per minute, which does not depend on the cylinder."),
- dict(kind="phone", app="dive-log", shot="4-statistics", pill="Free app", head="Your SAC rate per dive, and over time", sub="Imported from your dive computer, drawn over time",
-      voice="Or let the logbook do it. Dive log works the SAC rate out for each dive you import from your dive computer and draws it over time, so you can see how it changes from dive to dive.", short=True),
- dict(kind="phone", app="turn-pressure", shot="6-sac-from-dive", pill="Free app", head="Take your SAC rate from a dive into the next plan", sub="Minimum gas and the turn pressure at your depth",
-      voice="Turn Pressure takes a SAC rate from a dive you have done and uses it to plan minimum gas and the turn pressure."),
- dict(kind="outro", voice="Both are free on the App Store, and they share one iCloud with the rest of the diver dot today apps. The link is below.",
-      short=True, short_voice="Free on the App Store. diver dot today."),
-]
+# One entry per episode. Footage clips must show no diver's face (Rustam, 2026-10-21: no pictures of him in a wetsuit; two-divers-facing,
+# diver-over-reef and reef-drill-deep are him). Segment kinds: footage (a card over a reef clip), card (over the family's blurred loop; cat=True
+# puts the cat beside it), phone (an app screenshot with the site's caption), outro. Every segment is in both cuts.
+WORKED = "A worked example with made-up numbers, not your dive."
+EPISODES = {
+ "gas-for-the-dive": dict(
+  question="How much gas does a dive need?", thumb_sub="remember a cat: C × A × T", clip="turtle-slope",
+  segments=[
+   dict(kind="footage", clip="turtle-slope", title="The question", big="How much gas does a dive need?", lines=["Remember a cat: C × A × T"],
+        voice="How much gas does your dive need? Remember a cat. C, A, T."),
+   dict(kind="card", cat=True, title="C is consumption", big="15 litres a minute", lines=["Your SAC rate: the gas you breathe in a minute, counted at surface pressure"], foot=WORKED,
+        voice="C is consumption, your SAC rate: litres a minute, counted at surface pressure. This cat: fifteen."),
+   dict(kind="card", cat=True, title="A is ambient pressure", big="20 m ÷ 10 + 1 = 3 bar", lines=["The depth in metres over ten, plus one"], foot="In feet: depth ÷ 33 + 1.",
+        voice="A is ambient pressure: the depth in metres over ten, plus one. At twenty metres, three bar."),
+   dict(kind="card", cat=True, title="T is time", big="30 minutes", lines=["At that depth"],
+        voice="T is time. Thirty minutes at that depth."),
+   dict(kind="card", cat=True, title="C × A × T", big="15 × 3 × 30 = 1,350 litres", lines=["In bar, divide by the cylinder's litres: 1,350 ÷ 12 ≈ 113 bar"], foot="The cat's dive, not yours.",
+        voice="Multiply: one thousand three hundred fifty litres. In bar, divide by the cylinder's litres: from twelve litres, about one hundred thirteen bar."),
+   dict(kind="card", cat=True, title="Two more things", lines=["Several depths: one cat per leg, added up", "This is only the gas you breathe. The reserve for a problem at depth is minimum gas: its own video"],
+        voice="Several depths? One cat per leg, added up. And that is only what you breathe. A problem at depth needs minimum gas: its own video."),
+   dict(kind="phone", app="turn-pressure", shot="1-inputs", pill="Free app", head="Turn Pressure does the cat for the dive you are planning", sub="With minimum gas and the turn pressure",
+        voice="Turn Pressure does the cat for your plan, with minimum gas and the turn pressure."),
+   dict(kind="outro", voice="Free on the App Store. diver dot today."),
+  ]),
+ "sac-rate": dict(
+  question="What is your SAC rate?", thumb_sub="the C in C × A × T, from a dive you have done", clip="dolphins-blue",
+  segments=[
+   dict(kind="footage", clip="dolphins-blue", title="The question", big="What is your SAC rate?", lines=["The C in C × A × T, taken from a dive you have done"],
+        voice="What is your SAC rate? The C in the cat, taken from a dive you have done."),
+   dict(kind="card", cat=True, title="The cat's dive", lines=["12-litre cylinder", "200 bar in, 80 bar out", "40 minutes", "Average depth 14 m, from the computer"], foot=WORKED,
+        voice="The cat's dive: a twelve-litre cylinder, two hundred bar in, eighty out. Forty minutes, average depth fourteen metres."),
+   dict(kind="card", cat=True, title="Gas used", big="120 bar × 12 litres ≈ 1,440 litres", lines=["Bar used times the cylinder's litres, counted at surface pressure"],
+        voice="Bar used times litres: one hundred twenty times twelve, about fourteen hundred forty litres."),
+   dict(kind="card", cat=True, title="Per minute", big="1,440 ÷ 40 = 36 litres a minute from the cylinder", lines=["Down there, where every breath is denser"],
+        voice="Divide by forty: thirty-six litres a minute from the cylinder."),
+   dict(kind="card", cat=True, title="Back to the surface", big="36 ÷ 2.4 = 15 litres a minute", lines=["14 m ÷ 10 + 1 = 2.4 bar at the average depth"],
+        voice="Divide by the pressure at the average depth, two point four bar: fifteen. That is the cat's C."),
+   dict(kind="card", cat=True, title="Two things that go wrong", lines=["The maximum depth instead of the average: the rate comes out too low", "One dive instead of many: plan on a rate above your average"],
+        voice="Average depth, not maximum, or the rate comes out too low. Many dives, not one, and plan on a higher rate."),
+   dict(kind="phone", app="dive-log", shot="4-statistics", pill="Free app", head="Dive log works it out for each dive imported from your dive computer", sub="And draws it over time",
+        voice="Dive log works it out for each dive from your dive computer, and draws it over time."),
+   dict(kind="outro", voice="Free on the App Store. diver dot today."),
+  ]),
+ "minimum-gas": dict(
+  question="What is minimum gas?", thumb_sub="rock bottom: the same cat, for two divers in a hurry", clip="reef-slope",
+  segments=[
+   dict(kind="footage", clip="reef-slope", title="The question", big="What is minimum gas?", lines=["Rock bottom: the gas two divers need to get up when one has none"],
+        voice="Minimum gas, or rock bottom: what two divers need to get up when one has none. Same cat, in a hurry."),
+   dict(kind="card", cat=True, title="C: two stressed divers", big="20 + 20 = 40 litres a minute",
+        foot="A worked example with a flat rate, not numbers for your dive. Courses use 1.5 to 3 times your normal rate, or a flat 20 to 30 litres a minute each.",
+        voice="C: two stressed divers. A flat twenty litres a minute each, forty together."),
+   dict(kind="card", cat=True, title="A minute at the bottom", big="40 × 4 bar × 1 min = 160 litres", lines=["30 metres, sorting the problem out"],
+        voice="A minute at thirty metres to sort it out: forty times four bar times one, one hundred sixty litres."),
+   dict(kind="card", cat=True, title="The ascent", big="40 × 2.5 bar × 3.3 min ≈ 330 litres", lines=["9 metres a minute, averaging 2.5 bar on the way up"],
+        voice="Up at nine metres a minute, three point three minutes, averaging two and a half bar: about three hundred thirty litres."),
+   dict(kind="card", cat=True, title="Together", big="≈ 490 litres: about 45 bar from an aluminium 80", lines=["With a three-minute safety stop at 5 m: about 670 litres, 61 bar"], foot="The cat's example, not a minimum gas for your dive.",
+        voice="Together, about four hundred ninety litres: forty-five bar from an aluminium eighty. With a three-minute safety stop, about sixty-one."),
+   dict(kind="card", cat=True, title="The rule", lines=["Gauge at minimum gas: the dive is over, whatever the plan said", "Deeper, slower, or breathing harder: it rises"],
+        voice="At minimum gas the dive is over, whatever the plan said. Deeper, slower or breathing harder: it rises."),
+   dict(kind="phone", app="turn-pressure", shot="5-plan-two-level", pill="Free app", head="Turn Pressure works out minimum gas and the turn pressure", sub="For the dive you are actually doing, not a flat 50 bar",
+        voice="Turn Pressure works out minimum gas and the turn pressure for the dive you are doing."),
+   dict(kind="outro", voice="Free on the App Store. diver dot today."),
+  ]),
+}
 
 # ---------- voice ----------
 def sentences(text):
@@ -110,18 +145,17 @@ def silence(d):
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo", "-t", f"{d:.3f}", "-c:a", "pcm_s16le", p], check=True)
     return p
 
-def timeline(cut):
-    """Segments of this cut with their sentences timed: seg['dur'], seg['subs'] = [(start, end, text)] relative to the segment."""
-    segs = [dict(s) for s in SEGMENTS if cut == "wide" or s.get("short")]
-    synthesise([sent for s in segs for sent in sentences(s.get("short_voice") if cut == "short" and s.get("short_voice") else s["voice"])])
-    for s in segs:
-        text = s.get("short_voice") if cut == "short" and s.get("short_voice") else s["voice"]
-        t, subs, audio = 0.6, [], [silence(0.6)]
-        for sent in sentences(text):
+def timeline(ep):
+    """The episode's segments with their sentences timed: seg['dur'], seg['subs'] = [(start, end, text)] relative to the segment."""
+    segs = [dict(x) for x in ep["segments"]]
+    synthesise([sent for x in segs for sent in sentences(x["voice"])])
+    for x in segs:
+        t, subs, audio = LEAD, [], [silence(LEAD)]
+        for sent in sentences(x["voice"]):
             wav, d = say(sent)
             subs.append((t, t + d + min(GAP, 0.25), sent)); audio += [wav, silence(GAP)]; t += d + GAP
         audio.append(silence(PAD)); t += PAD
-        s["dur"], s["subs"], s["audio"] = t, subs, audio
+        x["dur"], x["subs"], x["audio"] = t, subs, audio
     return segs
 
 # ---------- drawing ----------
@@ -233,14 +267,18 @@ def sub_layer(fmt, text, under_phone_left):
         d.text((x, y), l, font=f, fill=INK); y += lh
     return layer
 
-def outro_layer(fmt):
+NAMES = {"dive-log": "Dive log", "turn-pressure": "Turn Pressure"}
+
+def outro_layer(fmt, apps):
+    """The episode's app(s), free, diver.today: the apps are those its phone segments showed, in order."""
     W, H = fmt["W"], fmt["H"]
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(layer)
-    icons = [app_icon(os.path.join(bm.ROOT, SHOTS[a][2]), 170) for a in ("dive-log", "turn-pressure")]
+    icons = [app_icon(os.path.join(bm.ROOT, SHOTS[a][2]), 170) for a in apps]
     cy = H // 2 - 150 if W > H else H // 2 - 330
-    layer.alpha_composite(icons[0], (W // 2 - 170 - 24, cy)); layer.alpha_composite(icons[1], (W // 2 + 24, cy))
+    x = (W - (170 * len(icons) + 48 * (len(icons) - 1))) // 2
+    for ic in icons: layer.alpha_composite(ic, (x, cy)); x += 170 + 48
     f_name, f_line, f_url = font(60, "Semibold"), font(34, "Regular"), font(32, "Medium")
-    for text, f, fill, dy in [("Dive log  ·  Turn Pressure", f_name, INK, 220), ("Free on the App Store  ·  one iCloud, five apps", f_line, DIM, 310), ("diver.today", f_url, ACCENT, 380)]:
+    for text, f, fill, dy in [("  ·  ".join(NAMES[a] for a in apps), f_name, INK, 220), ("Free on the App Store  ·  one iCloud, five apps", f_line, DIM, 310), ("diver.today", f_url, ACCENT, 380)]:
         d.text(((W - d.textlength(text, font=f)) // 2, cy + dy), text, font=f, fill=fill)
     return layer
 
@@ -266,7 +304,7 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
             layers.append((p, t, s["dur"], px, f"{fmt['phone_top'] - pad}-{fmt['drift']}*clip((t-{t:.2f})/{s['dur']:.2f},0,1)", True))
             p = os.path.join(WORK, f"{name}-{i}.png"); caption_layer(fmt, label, s["pill"], s["head"], s["sub"], left=True).save(p); layers.append((p, t, s["dur"], 0, "0", True))
         elif k == "outro":
-            p = os.path.join(WORK, f"{name}-{i}.png"); outro_layer(fmt).save(p); layers.append((p, t, s["dur"], 0, "0", True))
+            p = os.path.join(WORK, f"{name}-{i}.png"); outro_layer(fmt, s.get("apps") or list(dict.fromkeys(x["app"] for x in segs if x["kind"] == "phone"))).save(p); layers.append((p, t, s["dur"], 0, "0", True))
         for j, (st, en, text) in enumerate(s["subs"]):
             p = os.path.join(WORK, f"{name}-{i}-sub{j}.png"); sub_layer(fmt, text, k == "phone").save(p)
             layers.append((p, t + st, en - st, 0, "0", True))
@@ -300,52 +338,64 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
                "-c:v", "libx264", "-preset", "fast", "-crf", "16", "-pix_fmt", "yuv420p", out])
     return out
 
-def build(cut):
-    fmt = FMT[cut]; segs = timeline(cut)
+def build(slug, cut):
+    ep, fmt = EPISODES[slug], FMT[cut]; segs = timeline(ep)
     P.clear(); P.update(bm.PALETTES["dark"])
     # chunks: each footage segment alone on its clip; the rest together on the blurred loop
     chunks, group = [], []
-    for s in segs:
-        if s["kind"] == "footage":
+    for x in segs:
+        if x["kind"] == "footage":
             if group: chunks.append(("bg", group)); group = []
-            chunks.append((s["clip"], [s]))
+            chunks.append((x["clip"], [x]))
         else:
-            group.append(s)
+            group.append(x)
     if group: chunks.append(("bg", group))
-    parts = [render_chunk(fmt, g, f"{cut}-{i}", src, with_bubbles=True) for i, (src, g) in enumerate(chunks)]
-    lst = os.path.join(WORK, f"{cut}-video.txt"); open(lst, "w").write("".join(f"file '{p}'\n" for p in parts))
-    video = os.path.join(WORK, f"{cut}-video.mp4"); run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", video])
-    alst = os.path.join(WORK, f"{cut}-audio.txt"); open(alst, "w").write("".join(f"file '{p}'\n" for s in segs for p in s["audio"]))
-    audio = os.path.join(WORK, f"{cut}-voice.wav"); run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", alst, "-c:a", "pcm_s16le", audio])
-    out = os.path.join(WORK, f"sac-rate-{cut}.mp4")
+    parts = [render_chunk(fmt, g, f"{slug}-{cut}-{i}", src, with_bubbles=True) for i, (src, g) in enumerate(chunks)]
+    lst = os.path.join(WORK, f"{slug}-{cut}-video.txt"); open(lst, "w").write("".join(f"file '{p}'\n" for p in parts))
+    video = os.path.join(WORK, f"{slug}-{cut}-video.mp4"); run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", lst, "-c", "copy", video])
+    alst = os.path.join(WORK, f"{slug}-{cut}-audio.txt"); open(alst, "w").write("".join(f"file '{p}'\n" for x in segs for p in x["audio"]))
+    audio = os.path.join(WORK, f"{slug}-{cut}-voice.wav"); run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", alst, "-c:a", "pcm_s16le", audio])
+    out = os.path.join(WORK, f"{slug}-{cut}.mp4")
     run(["ffmpeg", "-y", "-v", "error", "-i", video, "-i", audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000", "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-pix_fmt", "yuv420p",
          "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", "-shortest", out])
-    total = sum(s["dur"] for s in segs)
-    print(f"{cut}: {total:.1f}s, {len(segs)} segments ->", out)
-    if cut == "wide": thumbnail(fmt)
+    total = sum(x["dur"] for x in segs)
+    print(f"{slug} {cut}: {total:.1f}s, {len(segs)} segments ->", out)
+    if cut == "wide": thumbnail(slug, fmt)
 
-def thumbnail(fmt):
-    frame = os.path.join(WORK, "thumb-frame.png")
-    run(["ffmpeg", "-y", "-v", "error", "-ss", "3", "-i", os.path.join(CLIPS, "bannerfish-reef.mp4"), "-frames:v", "1", "-vf", "scale=1280:720", frame])
+def thumbnail(slug, fmt):
+    ep = EPISODES[slug]
+    frame = os.path.join(WORK, f"{slug}-thumb-frame.png")
+    run(["ffmpeg", "-y", "-v", "error", "-ss", "0.5", "-i", os.path.join(CLIPS, ep["clip"] + ".mp4"), "-frames:v", "1", "-vf", "scale=1280:720", frame])
     im = Image.open(frame).convert("RGBA"); im.alpha_composite(Image.new("RGBA", im.size, (0, 0, 0, 105)))
     d = ImageDraw.Draw(im); f = font(84, "Bold"); f2 = font(30, "Medium")
-    lines = wrap(d, "How do you work out your SAC rate?", f, 780)
+    lines = wrap(d, ep["question"], f, 780)
     y = (720 - len(lines) * 96) // 2 - 20
     for ln in lines: d.text((70, y), ln, font=f, fill=INK); y += 96
-    d.text((72, y + 10), "the formula, a worked example, and what is normal", font=f2, fill=ACCENT)
+    d.text((72, y + 10), ep["thumb_sub"], font=f2, fill=ACCENT)
     im.alpha_composite(cat(360), (880, 190))
-    im.convert("RGB").save(os.path.join(WORK, "sac-rate-thumb.png"))
+    im.convert("RGB").save(os.path.join(WORK, f"{slug}-thumb.png"))
 
-def dump_script():
-    print("# Pilot episode: How do you work out your SAC rate?\n\nOn screen (cards) and spoken (voice), in order. S = also in the Short.\n")
-    for i, s in enumerate(SEGMENTS, 1):
-        on = [s.get("title", ""), s.get("big", "")] + s.get("lines", []) + [s.get("foot", "")]
-        if s["kind"] == "phone": on = [s["head"], s["sub"]]
-        print(f"## {i}. {s['kind']}{' S' if s.get('short') else ''}\n\nOn screen: " + " | ".join(x for x in on if x) + f"\n\nVoice: {s['voice']}\n")
-        if s.get("short_voice"): print(f"Voice in the Short: {s['short_voice']}\n")
+def dump_script(slug):
+    ep = EPISODES[slug]
+    print(f"# {slug}: {ep['question']}\n\nOn screen (cards) and spoken (voice), in order; the same in both cuts.\n")
+    for i, x in enumerate(ep["segments"], 1):
+        on = [x.get("title", ""), x.get("big", "")] + x.get("lines", []) + [x.get("foot", "")]
+        if x["kind"] == "phone": on = [x["head"], x["sub"]]
+        print(f"## {i}. {x['kind']}\n\nOn screen: " + " | ".join(o for o in on if o) + f"\n\nVoice: {x['voice']}\n")
+
+def timing(slug):
+    segs = timeline(EPISODES[slug]); total = sum(x["dur"] for x in segs)
+    for x in segs: print(f"  {x['dur']:5.1f}s  {x['kind']:8s} {x.get('title', x.get('head', ''))}")
+    print(f"{slug}: {total:.1f}s, {sum(len(sentences(x['voice'])) for x in segs)} sentences, {sum(len(x['voice'].split()) for x in segs)} words")
 
 if __name__ == "__main__":
-    what = sys.argv[1] if len(sys.argv) > 1 else "script"
-    if what == "script": dump_script()
-    elif what in FMT: build(what)
-    else: sys.exit("script | wide | short")
+    which = sys.argv[1] if len(sys.argv) > 1 else "all"; what = sys.argv[2] if len(sys.argv) > 2 else "script"
+    slugs = list(EPISODES) if which == "all" else [which]
+    if which != "all" and which not in EPISODES: sys.exit("episode: " + " | ".join(EPISODES) + " | all")
+    for slug in slugs:
+        if what == "script": dump_script(slug)
+        elif what == "time": timing(slug)
+        elif what in FMT: build(slug, what)
+        elif what == "thumb": thumbnail(slug, FMT["wide"])
+        elif what == "all": build(slug, "wide"); build(slug, "short")
+        else: sys.exit("script | time | wide | short | thumb | all")

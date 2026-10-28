@@ -14,11 +14,11 @@ the design of the one that survives, what it will and will not do, and the few d
 
 **Answer one diver's question a week, as a video and as a page, and let search deliver it.** A weekly,
 AI-run production line turns one question divers actually type ("how do I work out my SAC rate", "how
-much weight do I need", "why is my GoPro footage blue") into a 3–5 minute **YouTube** video built from
-his footage, the app on screen and a voice-over; a 45-second **Short**; and its written twin on
-**diver.today** with a worked example. Each ends with the app that does the thing for free, linked with an App Store campaign link so every
+much weight do I need", "why is my GoPro footage blue") into **one video of under a minute** (his rule, 2026-10-28: Reel-friendly, *"no one will watch
+instagram longer"*) in two shapes, 16:9 for **YouTube** and the page and 9:16 for Shorts and Reels, built from
+his footage, the app on screen and a voice-over; and its written twin on **diver.today** with a worked example. Each ends with the app that does the thing for free, linked with an App Store campaign link so every
 install is attributed. **Instagram carries the same content with the same weight** (his decision,
-2026-10-28): the video and the Short as Reels and the answer's key cards as a carousel, posted through
+2026-10-28): the vertical cut as a Reel and the answer's key cards as a carousel, posted through
 Meta's own API, each channel with its own campaign token so the two can be compared after eight weeks.
 The following of instructors and their students is his, at a human pace, from a list the AI builds. The AI picks the next question from the demand
 it can see (Search Console, YouTube's own suggestions, his research), writes in his voice, passes the
@@ -84,12 +84,16 @@ choice and the three runners-up in the message he gets.
 ## Will it be yet another AI-generated channel?
 
 Fair concern, and nothing promised here can settle it; only a finished episode can. So the first
-deliverable is a **pilot episode** on the SAC rate, made before any account exists, for him to judge.
+deliverable is a pilot, made before any account exists, for him to judge. The first take, a four-minute
+explainer of the SAC rate, he called "stupid": **the cat is C × A × T**, consumption times ambient pressure
+times time, the gas a dive needs, and nothing may run longer than a minute. So the pilot is **three episodes of
+under 60 seconds**: the cat itself (how much gas a dive needs, in litres and bar), the SAC rate from a logged dive
+(the C), and minimum gas (the same cat for two stressed divers).
 What is designed to keep it from looking generated:
 
 - **Real dives, his footage.** The b-roll is his own clips (the reef clips the site videos already use
-  until he adds more), never stock, and the worked examples are real dives: his Blue Hole dive that
-  Dive log shows, the Canyon plan that Time to Surface shows. A viewer who dives recognises real water.
+  until he adds more), never stock; the worked examples are the cat's, with made-up numbers labelled as such, and the app
+  screens show real dives: his Blue Hole dive in Dive log, the Canyon plan in Time to Surface. A viewer who dives recognises real water.
 - **The app on screen doing the real thing**, rendered the way the site videos are: the same phone, the
   same captions, the same family look, so the channel and the site are one object.
 - **A voice he chose, and every word on screen.** His instruction on 2026-10-28: a very pleasant young
@@ -98,7 +102,7 @@ What is designed to keep it from looking generated:
   free neural speech model running on the Mac, in one of its young American male voices; he picks which
   from six samples. A paid speech service stays the upgrade if even that is not pleasant enough. His
   on-camera intros remain the strongest trust lever and stay on offer.
-- **The cat.** His idea the same day: explain the formula simply and unusually, with a cat. The cat is
+- **The cat.** His idea the same day: C × A × T is the gas a dive needs, so the mascot is a cat. The cat is
   the diver of every worked example, drawn in the family's line and teal, breathing bubbles on the
   cards, so the example is visibly not the viewer's dive and the channel has a face of its own.
 - **One answer a week, reviewed.** Scripts come from his training notes, in his voice, with no filler,
@@ -114,14 +118,13 @@ What is designed to keep it from looking generated:
 
 Each week produces one question in three shapes from one script:
 
-1. **The video, 3–5 minutes.** Open on his footage with the question in his words. The answer with the
-   physics, in captions and voice. A worked example, labelled as one, never a verdict for the viewer's
+1. **The video, under a minute, in two shapes** (16:9 for YouTube and the page, 9:16 for Shorts and Reels;
+   the same words in both). Open on his footage with the question. The answer with the
+   physics, in captions and voice, about 125 words in all. A worked example, labelled as one, never a verdict for the viewer's
    own dive (the rule from the question pages). Then the app doing it on screen: the generator in
    `tools/build-media.py` already renders phone journeys from the apps' screenshots, so the app part
-   costs nothing new. Close on the family: free, one iCloud, five apps, and the campaign link.
-2. **The Short, about 45 seconds.** The answer and the app, vertical, captions, the same voice. It goes
-   to YouTube as a Short and to Instagram as a Reel; the long video goes to Instagram as a Reel too.
-   A **carousel** of the answer's key cards (the question, the formula, the worked example, the app
+   costs nothing new. Close on the app, free, and the campaign link.
+2. **The carousel.** The vertical cut goes to YouTube as a Short and to Instagram as a Reel; beside it, a **carousel** of the answer's key cards (the question, the formula, the worked example, the app
    screen, the link card) is Instagram's own educational shape and is cut from the same captions.
 3. **The page on diver.today.** The script as a reviewed article with the worked example, linked from
    the home page like the five existing ones, in the sitemap, **with a small inline calculator** (SAC,
@@ -218,25 +221,26 @@ script using Google's client library, ordinary developer activity, run only with
 
 | # | Question a diver types | Ends on |
 |---|---|---|
-| 1 | How do I work out my SAC rate, and what is a normal one? | Dive log (SAC per dive and over time); Turn Pressure uses it |
-| 2 | What is minimum gas, or rock bottom, and how do I work it out? | Turn Pressure (page exists) |
-| 3 | What is a turn pressure and how do I set one? | Turn Pressure |
-| 4 | How much weight do I need for scuba diving? | Weights Check (page exists) |
-| 5 | Why am I heavy at the end of the dive, or light at the safety stop? | Weights Check |
-| 6 | What are gradient factors? | Time to Surface (page exists) |
-| 7 | What is the MOD of nitrox 32, and why does it matter? | Time to Surface |
-| 8 | Why is my GoPro dive footage blue, and how do I fix it? | Surface Interval (page exists) |
-| 9 | How do I make a dive highlights reel in ten minutes? | Surface Interval |
-| 10 | How do I get my dives off a Shearwater onto my iPhone? | Dive log (page exists) |
-| 11 | How do I read a dive profile my computer logged? | Dive log |
+| 1 | How much gas does my dive need? (C × A × T: the cat; pilot) | Turn Pressure |
+| 2 | What is my SAC rate, from a dive I have done? (the C; pilot) | Dive log (SAC per dive and over time) |
+| 3 | What is minimum gas, or rock bottom? (the same cat for two; pilot) | Turn Pressure (page exists) |
+| 4 | What is a turn pressure and how do I set one? | Turn Pressure |
+| 5 | How much weight do I need for scuba diving? | Weights Check (page exists) |
+| 6 | Why am I heavy at the end of the dive, or light at the safety stop? | Weights Check |
+| 7 | What are gradient factors? | Time to Surface (page exists) |
+| 8 | What is the MOD of nitrox 32, and why does it matter? | Time to Surface |
+| 9 | Why is my GoPro dive footage blue, and how do I fix it? | Surface Interval (page exists) |
+| 10 | How do I make a dive highlights reel in ten minutes? | Surface Interval |
+| 11 | How do I get my dives off a Shearwater onto my iPhone? | Dive log (page exists) |
 | 12 | How does a dive centre share a plan the whole team signs? | Time to Surface for dive pros |
 
-Five of these have a reviewed page already, so the first five videos cost only the video work.
+Five of these have a reviewed page already, so those videos cost only the video work; the three pilot
+episodes are rendered (`tools/pilot-episode.py`), awaiting his verdict.
 
 ## Decisions he has to make
 
 1. ~~Go, or Instagram first~~ **Decided 2026-10-28: go, with Instagram and YouTube as equals**; the
-   pilot episode comes first and his verdict on it gates the accounts.
+   pilot (three episodes around the cat, each under a minute) comes first and his verdict gates the accounts.
 2. **The voice**: decided 2026-10-28, a pleasant young US male voice; the Mac's own voices were rejected
    the same evening. Kokoro (free, local) is in; which of its six American male voices is his pick from the
    samples, and a paid speech service is the upgrade if none pleases. His recorded intros stay optional.
