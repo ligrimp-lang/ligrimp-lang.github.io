@@ -92,9 +92,15 @@ What is designed to keep it from looking generated:
   Dive log shows, the Canyon plan that Time to Surface shows. A viewer who dives recognises real water.
 - **The app on screen doing the real thing**, rendered the way the site videos are: the same phone, the
   same captions, the same family look, so the channel and the site are one object.
-- **His voice and his face.** A cloned voice of his own (a few minutes recorded once) narrates in his
-  words; he opens each episode asking the question on camera, recorded twelve at a time in one sitting.
-  The pilot uses a placeholder voice to show everything else; the voice decision is his.
+- **A voice he chose, and every word on screen.** His instruction on 2026-10-28: a very pleasant young
+  US male voice (not his own), and the narration duplicated as text. So every spoken sentence is
+  synthesised on its own, its length measured, and drawn as a line of text while it is said. The pilot
+  uses the youngest US male voice installed on the Mac as a stand-in; a properly pleasant one is a
+  downloaded premium system voice or a paid speech service, his pick after he hears the pilot. His
+  on-camera intros remain the strongest trust lever and stay on offer.
+- **The cat.** His idea the same day: explain the formula simply and unusually, with a cat. The cat is
+  the diver of every worked example, drawn in the family's line and teal, breathing bubbles on the
+  cards, so the example is visibly not the viewer's dive and the channel has a face of its own.
 - **One answer a week, reviewed.** Scripts come from his training notes, in his voice, with no filler,
   no "dive safe", no exclamation marks, and pass the instructor-level correctness review before render.
   Generated channels fail on volume and vagueness; this makes one specific thing a week.
@@ -231,9 +237,9 @@ Five of these have a reviewed page already, so the first five videos cost only t
 
 1. ~~Go, or Instagram first~~ **Decided 2026-10-28: go, with Instagram and YouTube as equals**; the
    pilot episode comes first and his verdict on it gates the accounts.
-2. **The voice**: a cloned voice of his own (a few minutes recorded once, a few dollars a month) is the
-   recommendation after his quality concern; a macOS premium voice is the free fallback. His recorded
-   20-second intros, twelve in one sitting, are the default either way.
+2. **The voice**: decided 2026-10-28, a pleasant young US male voice. Which one: a premium system voice
+   he downloads once in System Settings (free) or a paid speech service (a few dollars a month), after
+   he hears the pilot's stand-in. His recorded intros stay optional.
 3. **Allow a small inline script on the question pages** for the calculators; the design counts on it.
 4. **The veto**: his weekly publish click until the audit, then 48 hours of silence; or no veto after.
 5. **Publishing from this Mac**: the upload script runs inside the weekly job and he applies for the

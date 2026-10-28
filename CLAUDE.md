@@ -279,6 +279,23 @@ and shapes — `video/<slug>-wide.mp4` at 1920×1080 and `video/<slug>-tall.mp4`
 posters in `img/`. The page needs no change; the generator will overwrite them the next time it
 runs for that app, so note the replacement in this file.
 
+## The question engine and its pilot (2026-10-28)
+
+Rustam's brief: one AI-run way to promote the family. The proposal is `docs/promotion-engine-proposal-2026-10-28.md`
+(a diver's question a week as a YouTube video, a Short and a diver.today page; the same to Instagram with equal
+weight; the alternatives challenged, the review's corrections in). He said go, and a **pilot episode** on the SAC
+rate decides whether the quality is his: `tools/pilot-episode.py` (`script` dumps the words for the instructor
+review, `wide` renders 1920×1080 for YouTube, `short` 1080×1920 for Shorts and Reels; outputs and the thumbnail in
+`build/pilot/`, git-ignored). It reuses the site generator's phone, caption and font helpers. His rules from that
+day, built in: **the cat** is the diver of every worked example (drawn in `cat()`, line art in the family's ink
+and teal, bubbles rising on the cards), **every spoken sentence is on screen** while it is said (each sentence is
+synthesised on its own with `say`, so its start is known), and the voice is **a pleasant young US male** — the
+pilot uses the youngest US male voice installed (`Eddy (English (US))`) as a stand-in until he picks a premium
+system voice or a speech service. The words passed a clean-context instructor review before rendering (gas
+compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷ 33 + 1; claims about the apps
+stay within their listings; the outro's "free" and "one iCloud" are the site's own words). Nothing is published:
+no channel, no account; those wait for his verdict on the pilot.
+
 ## The question pages (2026-10-19)
 
 Store search is nouns; Google is questions. On 2026-10-19 Rustam asked for the findability proposal
