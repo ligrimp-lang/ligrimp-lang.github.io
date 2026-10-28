@@ -293,7 +293,10 @@ figures as the `minimum-gas/` page, ends on Turn Pressure). `tools/pilot-episode
 script|time|wide|short|all`: `script` dumps the words for the instructor review, `time` synthesises the voice and
 prints each episode's length (about 125 words fit), `wide` renders 1920×1080 for YouTube and the page, `short`
 1080×1920 for Shorts and Reels; outputs and thumbnails in `build/pilot/`, git-ignored. Episodes are the `EPISODES`
-table at the top; a new one is a new entry. An episode opens on one of the reef clips in
+table at the top; a new one is a new entry. His second rule that day, on the second take (*"its just confusing … you cannot
+throw the information without setting up a context"*): **every episode is a story**, the problem the diver has first, then the
+definitions (C is consumption, the SAC rate; **A is the average pressure**, from the average depth the diver plans; T the time of the
+dive or of one segment), then one worked example, then the practical wrap-up into bar by the cylinder. An episode opens on one of the reef clips in
 `surface_interval/reference-footage/clips/`, sharp, so **the clip must show no diver's face** (his 2026-10-21 rule
 about pictures of him in a wetsuit; `two-divers-facing`, `diver-over-reef` and `reef-drill-deep` are him): the cat
 opens on `turtle-slope`, the SAC rate on `dolphins-blue`, minimum gas on `reef-slope`. The outro names the apps the
@@ -312,7 +315,10 @@ compressibility makes 120 bar × 12 L "about" 1,440 L; imperial depth is feet ÷
 bar, as on the site; the cat's dive averages 14 m so its SAC rate is exactly the 15 L/min the gas episode uses; the
 36 L/min before the depth correction is "from the cylinder", not breathed; every result card says it is the cat's
 example; the minimum-gas figures are the page's, 61 bar from an aluminium 80 with the stop; claims about the apps
-stay within their listings). Nothing is published:
+stay within their listings; the story take added: "as if at the surface" for the SAC rate, "average depth, not maximum" said and
+shown, the 120 bar used derived on screen from 200 in and 80 out, the 4 bar, 3.3 min and 2.5 bar of the minimum-gas legs given with
+their sums, "a slower ascent" rather than "slower", and the turn pressure explained in the phone caption as when to turn the dive).
+Nothing is published:
 no channel, no account; those wait for his verdict on the pilot.
 
 ## The question pages (2026-10-19)

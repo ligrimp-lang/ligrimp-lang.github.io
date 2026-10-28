@@ -85,10 +85,12 @@ choice and the three runners-up in the message he gets.
 
 Fair concern, and nothing promised here can settle it; only a finished episode can. So the first
 deliverable is a pilot, made before any account exists, for him to judge. The first take, a four-minute
-explainer of the SAC rate, he called "stupid": **the cat is C × A × T**, consumption times ambient pressure
+explainer of the SAC rate, he called "stupid": **the cat is C × A × T**, consumption times the average pressure
 times time, the gas a dive needs, and nothing may run longer than a minute. So the pilot is **three episodes of
 under 60 seconds**: the cat itself (how much gas a dive needs, in litres and bar), the SAC rate from a logged dive
-(the C), and minimum gas (the same cat for two stressed divers).
+(the C), and minimum gas (the same cat for two stressed divers). The second take he called confusing, and set the
+shape of every episode: **a story**, the problem the diver has, then the definitions, then one worked example, then
+the practical wrap-up into bar by the cylinder; *"you cannot throw the information without setting up a context"*.
 What is designed to keep it from looking generated:
 
 - **Real dives, his footage.** The b-roll is his own clips (the reef clips the site videos already use
