@@ -81,10 +81,10 @@ EPISODES = {
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
  "minimum-gas": dict(
-  question="What is minimum gas?", thumb_sub="rock bottom: the same cat, for two divers in a hurry", clip="reef-slope",
+  question="What is minimum gas?", thumb_sub="the same cat, for two divers in a hurry", clip="reef-slope",
   segments=[
-   dict(kind="footage", clip="reef-slope", title="The question", big="What is minimum gas?", lines=["Rock bottom: the gas two divers need to get up when one has none"],
-        voice="Minimum gas, or rock bottom: what two divers need to get up when one has none. Same cat, in a hurry."),
+   dict(kind="footage", clip="reef-slope", title="The question", big="What is minimum gas?", lines=["The gas two divers need to get up when one has none"],
+        voice="Minimum gas: what two divers need to get up when one has none. Same cat, in a hurry."),
    dict(kind="card", cat=True, title="C: two stressed divers", big="20 + 20 = 40 litres a minute",
         foot="A worked example with a flat rate, not numbers for your dive. Courses use 1.5 to 3 times your normal rate, or a flat 20 to 30 litres a minute each.",
         voice="C: two stressed divers. A flat twenty litres a minute each, forty together."),
