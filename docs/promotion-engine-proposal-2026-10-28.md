@@ -223,7 +223,7 @@ script using Google's client library, ordinary developer activity, run only with
 |---|---|---|
 | 1 | How much gas does my dive need? (C × A × T: the cat; pilot) | Turn Pressure |
 | 2 | What is my SAC rate, from a dive I have done? (the C; pilot) | Dive log (SAC per dive and over time) |
-| 3 | What is minimum gas, or rock bottom? (the same cat for two; pilot) | Turn Pressure (page exists) |
+| 3 | What is minimum gas? (the same cat for two; pilot) | Turn Pressure (page exists) |
 | 4 | What is a turn pressure and how do I set one? | Turn Pressure |
 | 5 | How much weight do I need for scuba diving? | Weights Check (page exists) |
 | 6 | Why am I heavy at the end of the dive, or light at the safety stop? | Weights Check |

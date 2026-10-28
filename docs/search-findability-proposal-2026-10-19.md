@@ -92,7 +92,7 @@ Monday after release measures from day one, and drop `log,logbook` from Turn Pre
    not yet know an app exists:
    - How much weight do I need for scuba diving? (Weights Check — the method, the weight check at
      the stop, what changes it; no verdict promised)
-   - What is minimum gas / rock bottom, and how do I work it out? (Turn Pressure)
+   - What is minimum gas, and how do I work it out? (Turn Pressure)
    - What are gradient factors, in plain words? (Time to Surface)
    - Why is my GoPro dive footage blue, and how do I fix it? (Surface Interval)
    - How do I get my dives off a Shearwater onto an iPhone? (Dive log, after release)

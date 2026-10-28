@@ -19,7 +19,7 @@ and search. **This file is the present tense; read it before changing anything.*
 | Search | `robots.txt`, `sitemap.xml`, canonical `https://diver.today/`, JSON-LD `WebSite` + `ItemList` of five `SoftwareApplication`s, Open Graph and Twitter cards |
 | Preview | `tools/preview.sh [page-folder]` — screenshots from the files with headless Chrome, desktop and phone width, into `build/preview/`; `PREVIEW_HEIGHT=9000` for the whole home page. See "Previewing and publishing" below |
 | Privacy | `privacy/index.html` — the **family-wide privacy statement** at `diver.today/privacy/` (2026-10-19, Rustam: *"for privacy update, use the diver.today project"*): the shared CloudKit container `iCloud.net.ismailov.divertoday`, private database only, no server of ours, signed out of iCloud everything works on one device, and links to the five per-app privacy pages, which stay the authority on what each app does. Each app's own page points here for the shared-container part. Linked from every page's footer; in `sitemap.xml`. Update it when an app starts or stops keeping data in that container |
-| Question pages | Five articles for Google, one per app, each a folder with its own `index.html`: `weight-for-scuba-diving/`, `minimum-gas-rock-bottom/`, `gradient-factors-explained/`, `blue-gopro-dive-footage/`, `shearwater-dives-on-iphone/`. Linked from the home page under each app and listed in `sitemap.xml`; their CSS is the `/* question pages */` block at the end of `style.css`. See "The question pages" below |
+| Question pages | Five articles for Google, one per app, each a folder with its own `index.html`: `weight-for-scuba-diving/`, `minimum-gas/`, `gradient-factors-explained/`, `blue-gopro-dive-footage/`, `shearwater-dives-on-iphone/`. Linked from the home page under each app and listed in `sitemap.xml`; their CSS is the `/* question pages */` block at the end of `style.css`. See "The question pages" below |
 | Promotion | **This project is the home for app promotion** (Rustam, 2026-10-19). Start at `docs/promotion-knowledge.md`: where every number and listing lives, each app's store position, what was learned, what is open, and the weekly loop. Beside it: `docs/promotion-posts-2026-10-15.md` (where to post and the texts, in Rustam's voice, for him to post himself) `docs/search-findability-proposal-2026-10-19.md` (the proposal that was implemented that day) and `docs/promotion-engine-proposal-2026-10-28.md` (the one AI-run engine proposed on his 2026-10-28 brief: one diver question a week as a YouTube video, a Short and a diver.today page, the same to Instagram with equal weight; he said go on 2026-10-28, a pilot episode first). None of it is on the web |
 
 ## Previewing and publishing
@@ -289,7 +289,7 @@ C × A × T**, consumption × ambient pressure × time = the gas a dive needs, a
 (*"no one will watch instagram longer"*). So the pilot is **three episodes of under 60 s**, the same words in both
 shapes: `gas-for-the-dive` (the cat: litres and bar for a planned dive, ends on Turn Pressure), `sac-rate` (the C,
 from a logged dive, ends on Dive log) and `minimum-gas` (the same cat for two stressed divers, the same method and
-figures as the `minimum-gas-rock-bottom/` page, ends on Turn Pressure). `tools/pilot-episode.py <episode|all>
+figures as the `minimum-gas/` page, ends on Turn Pressure). `tools/pilot-episode.py <episode|all>
 script|time|wide|short|all`: `script` dumps the words for the instructor review, `time` synthesises the voice and
 prints each episode's length (about 125 words fit), `wide` renders 1920×1080 for YouTube and the page, `short`
 1080×1920 for Shorts and Reels; outputs and thumbnails in `build/pilot/`, git-ignored. Episodes are the `EPISODES`
@@ -327,10 +327,12 @@ for diving and physics correctness before publishing:
 | Page | Question | App |
 |---|---|---|
 | `weight-for-scuba-diving/` | How much weight do I need for scuba diving? | Weights Check |
-| `minimum-gas-rock-bottom/` | What is minimum gas (rock bottom) and how do I work it out? | Turn Pressure |
+| `minimum-gas/` | What is minimum gas and how do I work it out? | Turn Pressure |
 | `gradient-factors-explained/` | What are gradient factors? | Time to Surface |
 | `blue-gopro-dive-footage/` | Why is my GoPro dive footage blue, and how do I fix it? | Surface Interval |
 | `shearwater-dives-on-iphone/` | How do I get my dives off a Shearwater onto my iPhone? | Dive log |
+
+**The minimum gas page moved on 2026-10-28** from `minimum-gas-rock-bottom/` to `minimum-gas/`. Rustam's rule that day: the reserve is called **minimum gas** and nothing else; the term the old folder name carries is never used in any work with him, not in a page, a video, a post, a keyword or a note, and not as a synonym for searchers. The old folder holds only a redirect (a `meta refresh` to the new address with a canonical on it) so the links already out there and Google's index follow; it can go when he says so. The home page link and `sitemap.xml` name the new address.
 
 Rules for them: no number is given as a verdict for the reader's own dive (weights, gas, gradient
 factors appear only in worked examples labelled as such); every claim about an app is one its
