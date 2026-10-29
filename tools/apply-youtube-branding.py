@@ -38,7 +38,7 @@ auth = importlib.util.module_from_spec(spec); spec.loader.exec_module(auth)
 def profile_texts():
     """The fenced blocks of docs/brand-profiles.md, keyed by the heading above each: the document is the one place the texts live."""
     s = open(PROFILES, encoding="utf-8").read(); texts = {}
-    for m in re.finditer(r"^#+[ \t]+([^\n]+?)[ \t]*\n(?:(?!^#).)*?^```\w*\n(aPv(e-au", s, re.S | re.M):
+    for m in re.finditer(r"^#+[ \t]+([^\n]+?)[ \t]*\n(?:(?!^#).)*?^```\w*\n(.*?)^```", s, re.S | re.M):
         texts.setdefault(m.group(1).strip(), m.group(2).rstrip("\n"))
     return texts
 
