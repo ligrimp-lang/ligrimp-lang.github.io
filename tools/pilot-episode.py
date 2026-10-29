@@ -248,7 +248,7 @@ PAPER, CHARCOAL = (238, 236, 231), (22, 22, 24)
 CAT_DIR = os.path.join(HERE, "assets", "cat")   # Rustam's own cat drawings, cat-<pose>.png, black strokes on transparent (or white)
 CAT_MOUTH = {"standing": (0.13, 0.50), "swimming": (0.12, 0.53), "ascending": (0.22, 0.25), "sharing": (0.14, 0.47), "gauge": (0.26, 0.45),
              "head": (0.22, 0.80), "sketch": (0.20, 0.47)}   # where the bubbles start, as a fraction of the drawing's square, per pose
-CAT_SIZE = {"wide": 600, "short": 460}
+CAT_SIZE = {"wide": 680, "short": 620}
 
 def bez(p0, p1, p2, p3, n):
     pts = []
@@ -380,37 +380,45 @@ def cat_art(pose, size):
     if im.getextrema()[3][0] == 255:   # no transparency: dark strokes on white become charcoal on transparent
         lum = im.convert("L"); im = Image.new("RGBA", im.size, CHARCOAL + (0,)); im.putalpha(lum.point(lambda v: 255 - v))
     im = im.crop(im.getbbox())
-    inner = int(size * 0.84); im.thumbnail((inner, inner), Image.LANCZOS)
+    inner = int(size * 0.84); im.thumbnail((inner, inner), Image.LANCZOS)   # CAT_MOUTH was measured in this fit
     out = Image.new("RGBA", (size, size), (0, 0, 0, 0)); out.alpha_composite(im, ((size - im.width) // 2, (size - im.height) // 2))
     return out
 
-@functools.lru_cache(maxsize=None)
-def cat(size, pose="standing", tilt=-4):
-    """The cat on a sheet of paper with a soft shadow, tilted a little: RGBA, `size` square."""
-    pad = int(size * 0.06); inner = size - 2 * pad
-    sheet = Image.new("RGBA", (inner, inner), PAPER + (255,))
-    grain = Image.effect_noise((inner, inner), 16).point(lambda v: 225 + v * 30 // 255).convert("L")
-    sheet = Image.merge("RGBA", [ImageChops.multiply(c, grain) for c in sheet.split()[:3]] + [sheet.split()[3]])
-    sheet.alpha_composite(cat_art(pose, inner))
-    rounded = Image.new("L", (inner, inner), 0); ImageDraw.Draw(rounded).rounded_rectangle((0, 0, inner - 1, inner - 1), radius=inner * 0.03, fill=255)
-    sheet.putalpha(rounded)
-    page = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    shadow = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle((pad + 6, pad + 14, pad + inner + 6, pad + inner + 14), radius=inner * 0.03, fill=(0, 0, 0, 150))
-    page.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(size * 0.025)))
-    page.alpha_composite(sheet, (pad, pad))
-    return page.rotate(tilt, resample=Image.BICUBIC, expand=False)
+# The drawing's own tones (black fur, grey highlight strokes) are mapped onto a ramp from a deep water-blue, a step lighter than the
+# card, to a pale aqua, so the cat is drawn in light on the dark card rather than pasted onto it (Rustam, 2026-10-29: no white
+# background, "embedded … so it looks native"); a soft teal glow underneath sets it off from the blurred reef.
+CAT_TINTS = {"silver": ((30, 38, 46), (236, 244, 244), (ACCENT, 0.30)),     # the pick: dark body, silver strokes, a whisper of teal glow
+             "aqua": ((26, 48, 60), (216, 242, 238), (ACCENT, 0.42)),       # softer: deep water body, pale aqua strokes
+             "ink": ((30, 36, 42), (240, 243, 245), (None, 0.0)),             # plain: no glow
+             "teal": ((16, 58, 64), (120, 232, 220), (ACCENT, 0.55))}          # bolder: everything teal
+CAT_TINT = os.environ.get("PILOT_CAT_TINT", "silver")
 
-def cat_mouth(size, pose="standing", tilt=-4):
-    """Where the bubbles start, in the cat square's own pixels (the mouth, rotated with the sheet)."""
-    pad = int(size * 0.06); inner = size - 2 * pad; fx, fy = CAT_MOUTH.get(pose, CAT_MOUTH["standing"])
-    mx, my = pad + fx * inner, pad + fy * inner; c = size / 2; a = math.radians(-tilt)
-    return (c + (mx - c) * math.cos(a) - (my - c) * math.sin(a), c + (mx - c) * math.sin(a) + (my - c) * math.cos(a))
+@functools.lru_cache(maxsize=None)
+def cat(size, pose="standing", tint=None):
+    """The cat for a card: RGBA, `size` square, transparent around it."""
+    deep, light, (glow, glow_a) = CAT_TINTS[tint or CAT_TINT]
+    art = cat_art(pose, size)
+    lum = art.convert("L"); alpha = art.split()[3]
+    bands = []
+    for k, (d, l) in enumerate(zip(deep, light)):   # per channel: deep at black, light at the brightest strokes (gamma so mid greys stay dark)
+        bands.append(lum.point(lambda v, d=d, l=l: int(d + (l - d) * (v / 255) ** 0.75)))
+    body = Image.merge("RGBA", bands + [alpha])
+    out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    if glow is not None:
+        halo = alpha.filter(ImageFilter.GaussianBlur(size * 0.035)).point(lambda v: int(v * glow_a))
+        g = Image.new("RGBA", (size, size), glow + (0,)); g.putalpha(halo); out.alpha_composite(g)
+    out.alpha_composite(body)
+    return out
+
+def cat_mouth(size, pose="standing"):
+    """Where the bubbles start, in the cat square's own pixels."""
+    fx, fy = CAT_MOUTH.get(pose, CAT_MOUTH["standing"])
+    return (fx * size, fy * size)
 
 def cat_place(fmt):
     """Top-left of the cat square on a card: beside the text on a wide frame, above it on a tall one."""
     W, H = fmt["W"], fmt["H"]; size = CAT_SIZE["short" if W < H else "wide"]
-    return ((W - size) // 2, 150) if W < H else (W - size - 150, (H - size) // 2 - 20)
+    return ((W - size) // 2, 120) if W < H else (W - size - 120, (H - size) // 2 - 10)
 
 def bubble(diam):
     """A ring that shows on the paper and on the dark background alike."""
@@ -430,19 +438,22 @@ def card_layer(fmt, s, pose):
         f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(104, "Bold"), font(60, "Medium"), font(38, "Regular")
         lh_title, lh_big, lh_line, lh_foot = 72, 122, 74, 48
     else:
-        x0, max_w = 160, (980 if pose else 1560)
+        x0, max_w = 160, (900 if pose else 1560)
         f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(112, "Bold"), font(64, "Medium"), font(40, "Regular")
         lh_title, lh_big, lh_line, lh_foot = 76, 132, 80, 50
     blocks = [(s["title"].upper(), f_title, ACCENT, lh_title, True)]
     if s.get("big"):
-        blocks += [(ln, f_big, INK, lh_big, False) for ln in wrap(d, s["big"], f_big, max_w)]; blocks.append(("", None, None, 24, False))
+        for shrink in (1.0, 0.88, 0.78):   # a long figure takes a smaller size rather than a third line
+            fb = font(int(f_big.size * shrink), "Bold"); lines = wrap(d, s["big"], fb, max_w)
+            if len(lines) <= 2: break
+        blocks += [(ln, fb, INK, int(lh_big * shrink), False) for ln in lines]; blocks.append(("", None, None, 24, False))
     for ln in s.get("lines", []):
         blocks += [(w, f_line, INK, lh_line, False) for w in wrap(d, ln, f_line, max_w)]; blocks.append(("", None, None, 18, False))
     if s.get("foot"):
         blocks.append(("", None, None, 22, False)); blocks += [(w, f_foot, DIM, lh_foot, False) for w in wrap(d, s["foot"], f_foot, max_w)]
     total = sum(b[3] for b in blocks)
     if tall:
-        y = 150 + CAT_SIZE["short"] + 60 if pose else (H - 300 - total) // 2
+        y = 120 + CAT_SIZE["short"] + 40 if pose else (H - 300 - total) // 2
     else:
         y = (H - total) // 2 - 20
     for text, f, fill, lh, spaced in blocks:
@@ -587,7 +598,7 @@ def thumbnail(slug, fmt):
     y = (720 - len(lines) * 96) // 2 - 20
     for ln in lines: d.text((70, y), ln, font=f, fill=INK); y += 96
     d.text((72, y + 10), ep["thumb_sub"], font=f2, fill=ACCENT)
-    im.alpha_composite(cat(360, ep.get("thumb_cat", "standing")), (880, 190))
+    im.alpha_composite(cat(440, ep.get("thumb_cat", "standing")), (820, 150))
     im.convert("RGB").save(os.path.join(WORK, f"{slug}-thumb.png"))
 
 def dump_script(slug):

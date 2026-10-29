@@ -310,10 +310,12 @@ day, built in: **the cat** is the diver of every worked example (bubbles rising 
 young US male**. **Nothing spoken is drawn on the screen** (2026-10-29, on the passage take: *"what you voiceover is unnecessary to
 include … main text make much bigger as this is the only content you show"*): the subtitle layer is gone, a card's title, figure, lines
 and footnote are about one and a half times their old size (`card_layer()`), and the sentences with their times go out as
-`build/pilot/<episode>.srt` for the platforms' captions instead; the alignment still times the cards. **The cat is a charcoal sketch
-on a sheet of paper** (2026-10-29, his reference an Instagram artist's series of black cats in loose brush strokes; `sketch_cat()` draws
-one procedurally, nothing of anyone's drawing copied, the paper tilted a little with a soft shadow, the kit one teal line), and **his own
-drawings replaced it the same day** (made with ChatGPT to a brief of the family's colours; plain black cats, no kit, his choice): `tools/assets/cat/cat-<pose>.png` (dark strokes on transparent or plain white; poses standing, swimming, ascending,
+`build/pilot/<episode>.srt` for the platforms' captions instead; the alignment still times the cards. **The cat is his own charcoal drawing,
+drawn into the card** (2026-10-29: his reference an Instagram artist's series of black cats in loose brush strokes; he made six poses with
+ChatGPT, plain black cats, no kit; a first take put them on a tilted sheet of paper and he said no white background, *"embedded … so it looks
+native"*): `cat()` maps the drawing's tones onto a ramp from a dark water-blue a step lighter than the card to silver strokes, with a faint
+teal glow underneath (`CAT_TINTS`, the pick `silver`; `aqua`, `ink` and `teal` were the alternatives tried; `PILOT_CAT_TINT` switches). The
+procedural `sketch_cat()` remains only as the fallback for a missing pose. The files: `tools/assets/cat/cat-<pose>.png` (dark strokes on transparent or plain white; poses standing, swimming, ascending,
 sharing, gauge, head; `tools/assets/README.md`), a segment's `cat="<pose>"` picks one, `CAT_MOUTH` says where its bubbles start. **Every
 episode ends on the app, Apple's "Download on the App Store" badge and diver.today as the biggest line** (2026-10-29: *"finish with the
 link to website and add some ios logo (respecting the copyright and TMs)"*): the badge is Apple's artwork exactly as its marketing tools

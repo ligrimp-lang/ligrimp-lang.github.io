@@ -11,6 +11,7 @@ Artwork the pilot generator (`tools/pilot-episode.py`) draws into the episodes. 
   line at the end of the video. Apple asks marketing not to refer to "iOS" and offers no iOS logo to third parties.
 - `cat/cat-<pose>.png` — Rustam's own cat drawings, made with ChatGPT on 2026-10-29 in the charcoal-sketch style he chose
   (black strokes on transparent; his masters are 2048 px, these are the same pictures at 1400 px): `standing`, `swimming`,
-  `ascending`, `sharing` (two cats), `gauge`, `head`. A card's `cat="<pose>"` picks one, `CAT_MOUTH` in the generator says
-  where its bubbles start, and an episode's `thumb_cat` picks the thumbnail's. If a pose's file were missing the generator
+  `ascending`, `sharing` (two cats), `gauge`, `head`. A card's `cat="<pose>"` picks one, the generator recolours it into the
+  family's palette (silver strokes, a faint teal glow) straight onto the dark card, `CAT_MOUTH` says where its bubbles start, and
+  an episode's `thumb_cat` picks the thumbnail's. If a pose's file were missing the generator
   would draw its own sketch instead.
