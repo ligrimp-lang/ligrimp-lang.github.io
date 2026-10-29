@@ -25,7 +25,7 @@ and search. **This file is the present tense; read it before changing anything.*
 ## Previewing and publishing
 
 Preview a page with `tools/preview.sh [page-folder]`: desktop and phone-width screenshots from the
-files, in `build/preview/`. Publish by committing and pushing to `main`; `gh run list -R
+files, in `build/preview/`. **No token, secret, password or account login ever goes to GitHub** (Rustam, 2026-10-29: mandatory): run `tools/check-secrets.sh` before every commit and push, and it must say clean. Publish by committing and pushing to `main`; `gh run list -R
 ligrimp-lang/ligrimp-lang.github.io --limit 1` shows the deployment, then look at the live page.
 This repository is public, CLAUDE.md and `docs/` included, so private working notes stay in the
 git-ignored `CLAUDE.local.md`.
