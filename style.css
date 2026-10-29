@@ -175,6 +175,9 @@ footer a:hover { color: var(--ink); }
 .prose .closing .note { margin: 0; }
 .prose ul { margin: 0 0 1.2em; padding-left: 1.2em; font-size: 18px; line-height: 1.7; }
 .prose li { margin: 0 0 .3em; }
+.prose .episode { margin: 0 0 32px; }
+.prose .episode video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 14px; background: #000; }
+.prose .episode figcaption { margin: 10px 0 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
 .prose code { font-size: .88em; padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.07); overflow-wrap: anywhere; }
 main + footer { margin-top: 56px; }
 @media (max-width: 760px) {
