@@ -7,6 +7,8 @@ Graph API Explorer (developers.facebook.com/tools/explorer: the app, the permiss
 last and finds the Instagram account behind the Page.
 
     instagram-auth.py exchange <short-lived user token>     needs app_id and app_secret already in the file (written by hand, mode 600)
+    instagram-auth.py adopt <long-lived user token>          the same, for a token already made long-lived by Meta's Access Token Debugger
+                                                            ("Extend Access Token"), so no app secret is needed
     instagram-auth.py check                                 prints the Instagram username and id the credentials reach
 
 The file is ~/.config/diver-today/instagram.json (outside every repository), after exchange:
@@ -29,11 +31,13 @@ def save(d):
 if __name__ == "__main__":
     what = sys.argv[1] if len(sys.argv) > 1 else ""
     d = json.load(open(PATH)) if os.path.exists(PATH) else {}
-    if what == "exchange":
-        short = sys.argv[2]
-        if not d.get("app_id") or not d.get("app_secret"): sys.exit("put app_id and app_secret into " + PATH + " first")
-        long_ = get("/oauth/access_token", {"grant_type": "fb_exchange_token", "client_id": d["app_id"], "client_secret": d["app_secret"], "fb_exchange_token": short})
-        user_token = long_["access_token"]
+    if what in ("exchange", "adopt"):
+        if what == "exchange":
+            if not d.get("app_id") or not d.get("app_secret"): sys.exit("put app_id and app_secret into " + PATH + " first")
+            long_ = get("/oauth/access_token", {"grant_type": "fb_exchange_token", "client_id": d["app_id"], "client_secret": d["app_secret"], "fb_exchange_token": sys.argv[2]})
+            user_token = long_["access_token"]
+        else:
+            user_token = sys.argv[2]
         pages = get("/me/accounts", {"fields": "id,name,access_token,instagram_business_account", "access_token": user_token}).get("data", [])
         linked = [p for p in pages if p.get("instagram_business_account")]
         if not linked: sys.exit("no Page with an Instagram professional account linked; pages seen: " + ", ".join(p["name"] for p in pages))
