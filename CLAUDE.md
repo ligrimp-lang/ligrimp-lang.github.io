@@ -313,7 +313,7 @@ and footnote are about one and a half times their old size (`card_layer()`), and
 `build/pilot/<episode>.srt` for the platforms' captions instead; the alignment still times the cards. **The cat is a charcoal sketch
 on a sheet of paper** (2026-10-29, his reference an Instagram artist's series of black cats in loose brush strokes; `sketch_cat()` draws
 one procedurally, nothing of anyone's drawing copied, the paper tilted a little with a soft shadow, the kit one teal line), and **his own
-drawings replace it**: `tools/assets/cat/cat-<pose>.png` (dark strokes on transparent or plain white; poses standing, swimming, ascending,
+drawings replaced it the same day** (made with ChatGPT to a brief of the family's colours; plain black cats, no kit, his choice): `tools/assets/cat/cat-<pose>.png` (dark strokes on transparent or plain white; poses standing, swimming, ascending,
 sharing, gauge, head; `tools/assets/README.md`), a segment's `cat="<pose>"` picks one, `CAT_MOUTH` says where its bubbles start. **Every
 episode ends on the app, Apple's "Download on the App Store" badge and diver.today as the biggest line** (2026-10-29: *"finish with the
 link to website and add some ios logo (respecting the copyright and TMs)"*): the badge is Apple's artwork exactly as its marketing tools

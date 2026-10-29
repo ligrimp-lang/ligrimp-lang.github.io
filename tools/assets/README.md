@@ -9,6 +9,8 @@ Artwork the pilot generator (`tools/pilot-episode.py`) draws into the episodes. 
   Store Marketing Artwork License (developer.apple.com/app-store/marketing/guidelines/): never altered, tilted or
   animated, one per video, smaller than the main message, a clear space of a quarter of its height, and the credit
   line at the end of the video. Apple asks marketing not to refer to "iOS" and offers no iOS logo to third parties.
-- `cat/cat-<pose>.png` — Rustam's own cat drawings (2026-10-29, to be made with ChatGPT in the charcoal-sketch style he
-  chose): dark strokes on a transparent background, or on plain white, which the generator keys out. Poses: standing,
-  swimming, ascending, sharing (two cats), gauge, head. Until a pose's file exists the generator draws its own sketch.
+- `cat/cat-<pose>.png` — Rustam's own cat drawings, made with ChatGPT on 2026-10-29 in the charcoal-sketch style he chose
+  (black strokes on transparent; his masters are 2048 px, these are the same pictures at 1400 px): `standing`, `swimming`,
+  `ascending`, `sharing` (two cats), `gauge`, `head`. A card's `cat="<pose>"` picks one, `CAT_MOUTH` in the generator says
+  where its bubbles start, and an episode's `thumb_cat` picks the thumbnail's. If a pose's file were missing the generator
+  would draw its own sketch instead.

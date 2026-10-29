@@ -43,8 +43,8 @@ FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80),
        "short": dict(W=1080, H=1920, phone_h=880, phone_top=540, drift=90)}
 
 # One entry per episode. Footage clips must show no diver's face (Rustam, 2026-10-21: no pictures of him in a wetsuit; two-divers-facing,
-# diver-over-reef and reef-drill-deep are him). Segment kinds: footage (a card over a reef clip), card (over the family's blurred loop; cat=True
-# puts the cat beside it), phone (an app screenshot with the site's caption), outro. Every segment is in both cuts.
+# diver-over-reef and reef-drill-deep are him). Segment kinds: footage (a card over a reef clip), card (over the family's blurred loop; cat="<pose>"
+# puts one of Rustam's cat drawings beside it), phone (an app screenshot with the site's caption), outro. Every segment is in both cuts.
 WORKED = "A worked example with made-up numbers, not your dive."
 # Every episode is a story in Rustam's order (2026-10-28): the problem the diver has, then the definitions, then one worked example, then
 # the practical wrap-up (into bar, by the cylinder). Never facts before the context is set.
@@ -54,63 +54,63 @@ WORKED = "A worked example with made-up numbers, not your dive."
 # defined. Nothing is rendered before Rustam has read the words (his 2026-10-28 verdict on the first takes: word salad, no narrative).
 EPISODES = {
  "gas-for-the-dive": dict(
-  question="How much gas does a dive need?", thumb_sub="remember a cat: C × A × T", clip="turtle-slope",
+  question="How much gas does a dive need?", thumb_cat="standing", thumb_sub="remember a cat: C × A × T", clip="turtle-slope",
   segments=[
    dict(kind="footage", clip="turtle-slope", title="The question", big="How much gas does your dive need?",
         voice="You are planning a dive, say forty minutes at around twenty metres. Will the gas on your back cover it?"),
-   dict(kind="card", cat=True, title="The cat", big="C × A × T",
+   dict(kind="card", cat="standing", title="The cat", big="C × A × T",
         voice="Divers work that out with a cat."),
-   dict(new=True, kind="card", cat=True, title="C is consumption", big="Your SAC rate: 15 litres a minute", foot=WORKED,
+   dict(new=True, kind="card", cat="standing", title="C is consumption", big="Your SAC rate: 15 litres a minute", foot=WORKED,
         voice="C is your consumption, your SAC rate: what you breathe in a minute at the surface. Say fifteen litres a minute."),
-   dict(kind="card", cat=True, title="A is the average pressure", big="20 m: 1 + 2 = 3 bar",
+   dict(kind="card", cat="swimming", title="A is the average pressure", big="20 m: 1 + 2 = 3 bar",
         voice="A is the pressure at your average depth: one bar at the surface, plus one for every ten metres. Twenty metres: three bar."),
-   dict(kind="card", cat=True, title="T is time", big="40 minutes",
+   dict(kind="card", cat="swimming", title="T is time", big="40 minutes",
         voice="T is the time of the dive: forty minutes."),
-   dict(new=True, kind="card", cat=True, title="Multiply", big="15 × 3 × 40 = 1,800 litres",
+   dict(new=True, kind="card", cat="standing", title="Multiply", big="15 × 3 × 40 = 1,800 litres",
         voice="Fifteen, times three, times forty: eighteen hundred litres."),
-   dict(kind="card", cat=True, title="Into bar", big="1,800 L ÷ 12 L = 150 bar",
+   dict(kind="card", cat="gauge", title="Into bar", big="1,800 L ÷ 12 L = 150 bar",
         voice="Your gauge reads bar, so divide by the size of your cylinder. Twelve litres: a hundred and fifty bar."),
-   dict(kind="card", cat=True, title="Plus minimum gas", big="150 bar for the dive, then your minimum gas",
+   dict(kind="card", cat="gauge", title="Plus minimum gas", big="150 bar for the dive, then your minimum gas",
         voice="That is the dive. Your minimum gas comes on top."),
    dict(new=True, kind="phone", app="turn-pressure", shot="1-inputs", pill="Free app", head="Turn Pressure works out both for the dive you are planning", sub="The gas for the dive, and the minimum gas to keep",
         voice="Turn Pressure works out both for your dive."),
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
  "sac-rate": dict(
-  question="What is your SAC rate?", thumb_sub="the C in C × A × T, from a dive you have done", clip="dolphins-blue",
+  question="What is your SAC rate?", thumb_cat="swimming", thumb_sub="the C in C × A × T, from a dive you have done", clip="dolphins-blue",
   segments=[
    dict(kind="footage", clip="dolphins-blue", title="The question", big="What is your SAC rate?",
         voice="Every gas plan starts with your SAC rate: what you breathe in a minute, at the surface. You get it from a dive you have done."),
-   dict(new=True, kind="card", cat=True, title="Three things from that dive", big="120 bar used, from a 12-litre cylinder", foot=WORKED,
+   dict(new=True, kind="card", cat="swimming", title="Three things from that dive", big="120 bar used, from a 12-litre cylinder", foot=WORKED,
         voice="Three things from that dive. The gas you used: say a hundred and twenty bar, from a twelve-litre cylinder."),
-   dict(kind="card", cat=True, title="Three things from that dive", big="40 minutes · average depth 14 m",
+   dict(kind="card", cat="swimming", title="Three things from that dive", big="40 minutes · average depth 14 m",
         voice="How long: forty minutes. And the average depth your computer recorded: fourteen metres."),
-   dict(new=True, kind="card", cat=True, title="Litres a minute, at depth", big="120 × 12 = 1,440 L ÷ 40 min = 36 L/min",
+   dict(new=True, kind="card", cat="swimming", title="Litres a minute, at depth", big="120 × 12 = 1,440 L ÷ 40 min = 36 L/min",
         voice="A hundred and twenty bar times twelve litres: fourteen hundred and forty litres. Over forty minutes, thirty-six litres a minute."),
-   dict(kind="card", cat=True, title="Back to the surface", big="14 ÷ 10 + 1 = 2.4 bar · 36 ÷ 2.4 = 15",
+   dict(kind="card", cat="ascending", title="Back to the surface", big="14 ÷ 10 + 1 = 2.4 bar · 36 ÷ 2.4 = 15",
         voice="At fourteen metres the pressure was two point four bar, so you breathed two point four times the gas. Divide by two point four, and your SAC rate is fifteen litres a minute."),
-   dict(new=True, kind="card", cat=True, title="Make it yours", big="A few dives, averaged",
+   dict(new=True, kind="card", cat="head", title="Make it yours", big="A few dives, averaged",
         voice="Do it for a few dives and use the average."),
    dict(kind="phone", app="dive-log", shot="4-statistics", pill="Free app", head="Dive log works it out from each dive's profile and pressures", sub="And draws it over time",
         voice="Dive log works it out from each dive's profile and pressures."),
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
  "minimum-gas": dict(
-  question="What is minimum gas?", thumb_sub="the same cat, for two divers on the way up", clip="reef-slope",
+  question="What is minimum gas?", thumb_cat="sharing", thumb_sub="the same cat, for two divers on the way up", clip="reef-slope",
   segments=[
    dict(kind="footage", clip="reef-slope", title="The question", big="What is minimum gas?",
         voice="At the deepest point your buddy signals: out of gas. You share, and you both go up. How much must be left for that? That is minimum gas."),
-   dict(new=True, kind="card", cat=True, title="The cat, for two", big="C × A × T, for the way up",
+   dict(new=True, kind="card", cat="sharing", title="The cat, for two", big="C × A × T, for the way up",
         voice="Work it out with the cat: consumption times pressure times time, for two on the way up."),
-   dict(kind="card", cat=True, title="C is consumption, for two", big="20 + 20 = 40 litres a minute", foot="A worked example. Courses differ on the rate for a stressed diver.",
+   dict(kind="card", cat="sharing", title="C is consumption, for two", big="20 + 20 = 40 litres a minute", foot="A worked example. Courses differ on the rate for a stressed diver.",
         voice="C: two stressed divers, say twenty litres a minute each. Forty together."),
-   dict(new=True, kind="card", cat=True, title="A minute to sort it out", big="40 × 4 bar × 1 min = 160 litres", lines=["30 m: 30 ÷ 10 + 1 = 4 bar"],
+   dict(new=True, kind="card", cat="sharing", title="A minute to sort it out", big="40 × 4 bar × 1 min = 160 litres", lines=["30 m: 30 ÷ 10 + 1 = 4 bar"],
         voice="A minute at thirty metres to sort it out. Thirty metres is four bar: a hundred and sixty litres."),
-   dict(kind="card", cat=True, title="The ascent", big="40 × 2.5 bar × 3.3 min ≈ 330 litres", lines=["30 m at 9 m/min = 3.3 min · (4 + 1) ÷ 2 = 2.5 bar"],
+   dict(kind="card", cat="ascending", title="The ascent", big="40 × 2.5 bar × 3.3 min ≈ 330 litres", lines=["30 m at 9 m/min = 3.3 min · (4 + 1) ÷ 2 = 2.5 bar"],
         voice="Then the ascent at nine metres a minute: three point three minutes at two and a half bar on average, three hundred and thirty litres."),
-   dict(new=True, kind="card", cat=True, title="Together", big="≈ 490 L ÷ 11 L = 45 bar", foot="The cat's example, not a minimum gas for your dive.",
+   dict(new=True, kind="card", cat="gauge", title="Together", big="≈ 490 L ÷ 11 L = 45 bar", foot="The cat's example, not a minimum gas for your dive.",
         voice="Nearly five hundred litres: from an eleven-litre cylinder, forty-five bar."),
-   dict(kind="card", cat=True, title="The rule", big="At minimum gas, the dive is over",
+   dict(kind="card", cat="gauge", title="The rule", big="At minimum gas, the dive is over",
         voice="When your gauge gets there, the dive is over, whatever the plan said."),
    dict(kind="phone", app="turn-pressure", shot="5-plan-two-level", pill="Free app", head="Turn Pressure works out minimum gas for the dive you are planning", sub="And the turn pressure: when to turn the dive",
         voice="Turn Pressure works it out for your dive."),
@@ -246,8 +246,9 @@ def timeline(ep):
 INK, DIM, DARK = (240, 243, 245), (168, 178, 186), (16, 22, 28)
 PAPER, CHARCOAL = (238, 236, 231), (22, 22, 24)
 CAT_DIR = os.path.join(HERE, "assets", "cat")   # Rustam's own cat drawings, cat-<pose>.png, black strokes on transparent (or white)
-CAT_MOUTH = {"standing": (0.20, 0.47)}           # where the bubbles start, as a fraction of the drawing's square, per pose
-CAT_SIZE = {"wide": 520, "short": 420}
+CAT_MOUTH = {"standing": (0.13, 0.50), "swimming": (0.12, 0.53), "ascending": (0.22, 0.25), "sharing": (0.14, 0.47), "gauge": (0.26, 0.45),
+             "head": (0.22, 0.80), "sketch": (0.20, 0.47)}   # where the bubbles start, as a fraction of the drawing's square, per pose
+CAT_SIZE = {"wide": 600, "short": 460}
 
 def bez(p0, p1, p2, p3, n):
     pts = []
@@ -374,7 +375,7 @@ def cat_art(pose, size):
     """Rustam's drawing for the pose if it exists (tools/assets/cat/cat-<pose>.png: dark strokes on transparent, or on plain white,
     which is keyed out here), fitted into a square of `size` with a margin; else the sketch above."""
     path = os.path.join(CAT_DIR, f"cat-{pose}.png")
-    if not os.path.exists(path): return sketch_cat(size)
+    if not os.path.exists(path): return sketch_cat(size)   # the fallback; its mouth is CAT_MOUTH["sketch"]
     im = Image.open(path).convert("RGBA")
     if im.getextrema()[3][0] == 255:   # no transparency: dark strokes on white become charcoal on transparent
         lum = im.convert("L"); im = Image.new("RGBA", im.size, CHARCOAL + (0,)); im.putalpha(lum.point(lambda v: 255 - v))
@@ -420,7 +421,8 @@ def bubble(diam):
 
 def card_layer(fmt, s, pose):
     """A card: a small spaced title in teal, a big line, lines, a footnote; big, because it is the only content on the screen
-    (Rustam, 2026-10-29); the cat beside it (wide) or above it (short) when the segment names a pose."""
+    (Rustam, 2026-10-29); the cat beside it (wide) or above it (short) when the segment names a pose
+    (cat="standing|swimming|ascending|sharing|gauge|head", Rustam's drawings)."""
     W, H = fmt["W"], fmt["H"]; tall = W < H
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(layer)
     if tall:
@@ -428,7 +430,7 @@ def card_layer(fmt, s, pose):
         f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(104, "Bold"), font(60, "Medium"), font(38, "Regular")
         lh_title, lh_big, lh_line, lh_foot = 72, 122, 74, 48
     else:
-        x0, max_w = 160, (1040 if pose else 1560)
+        x0, max_w = 160, (980 if pose else 1560)
         f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(112, "Bold"), font(64, "Medium"), font(40, "Regular")
         lh_title, lh_big, lh_line, lh_foot = 76, 132, 80, 50
     blocks = [(s["title"].upper(), f_title, ACCENT, lh_title, True)]
@@ -521,14 +523,15 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
         fc.append(f"[{k}:v]format=rgba,{f_in}{f_out}tpad=start_duration={st:.2f}:start_mode=add:color=black@0.0[l{k}]")
     n = len(layers)
     if with_bubbles and cat_spans:
-        px, py = cat_place(fmt); mx, my = cat_mouth(CAT_SIZE["short" if W < H else "wide"], cat_spans[0][2])
-        mouth = (px + mx - 12, py + my - 10)
-        enable = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b, _ in cat_spans)
-        for j, (diam, speed, period, off, amp) in enumerate([(26, 150, 5.3, 0.0, 14), (38, 125, 6.1, 2.1, 20), (18, 175, 4.4, 3.6, 10)]):
-            n += 1; p = os.path.join(WORK, f"bubble-{j}.png"); bubble(diam).save(p)
-            cmd += ["-loop", "1", "-framerate", str(FPS), "-t", f"{total:.2f}", "-i", p]
-            fc.append(f"[{n}:v]format=rgba[l{n}]")
-            layers.append((p, 0, total, f"{mouth[0]:.0f}+{amp}*sin(1.7*t+{off})", f"{mouth[1]:.0f}-{speed}*mod(t+{off},{period})", enable))
+        px, py = cat_place(fmt)
+        for pose in dict.fromkeys(ps for _, _, ps in cat_spans):   # one set of bubbles per pose, rising from that drawing's mouth
+            mx, my = cat_mouth(CAT_SIZE["short" if W < H else "wide"], pose); mouth = (px + mx - 12, py + my - 10)
+            enable = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b, ps in cat_spans if ps == pose)
+            for j, (diam, speed, period, off, amp) in enumerate([(26, 150, 5.3, 0.0, 14), (38, 125, 6.1, 2.1, 20), (18, 175, 4.4, 3.6, 10)]):
+                n += 1; p = os.path.join(WORK, f"bubble-{j}.png"); bubble(diam).save(p)
+                cmd += ["-loop", "1", "-framerate", str(FPS), "-t", f"{total:.2f}", "-i", p]
+                fc.append(f"[{n}:v]format=rgba[l{n}]")
+                layers.append((p, 0, total, f"{mouth[0]:.0f}+{amp}*sin(1.7*t+{off})", f"{mouth[1]:.0f}-{speed}*mod(t+{off},{period})", enable))
     prev = "[bg]"
     for k, (path, st, du, x, yexpr, extra) in enumerate(layers, 1):
         en = f":enable='{extra}'" if isinstance(extra, str) else ""
@@ -584,7 +587,7 @@ def thumbnail(slug, fmt):
     y = (720 - len(lines) * 96) // 2 - 20
     for ln in lines: d.text((70, y), ln, font=f, fill=INK); y += 96
     d.text((72, y + 10), ep["thumb_sub"], font=f2, fill=ACCENT)
-    im.alpha_composite(cat(360), (880, 190))
+    im.alpha_composite(cat(360, ep.get("thumb_cat", "standing")), (880, 190))
     im.convert("RGB").save(os.path.join(WORK, f"{slug}-thumb.png"))
 
 def dump_script(slug):
