@@ -16,6 +16,7 @@ it; the per-app repositories hold the raw material named below. Not on the web (
 | Forum and group posts, in Rustam's voice | `docs/promotion-posts-2026-10-15.md` (venues, five reply templates, five posts) |
 | The findability proposal and its data | `docs/search-findability-proposal-2026-10-19.md` |
 | Google Search Console | property `https://diver.today/`, Rustam's Google account; the weekly job reads it through a service account |
+| The question engine (2026-10-28): the proposal, the episodes, the publishing scripts and their runbook | `docs/promotion-engine-proposal-2026-10-28.md`; `tools/pilot-episode.py` (the `EPISODES` table; renders into `build/pilot/`); `tools/publish-youtube.py`, `tools/publish-instagram.py`, `docs/publishing-runbook.md`; the episode pages `episodes/<slug>/`; `docs/weekly-loop-proposal.md` for running the publish from the cloud |
 
 ## The apps and their store position (2026-10-19)
 
@@ -50,6 +51,29 @@ dive-centre brands) and **One iCloud, five apps** (`#one-icloud`, what the famil
 and not yet on sale carry an asterisk that points at the footnote there. The dive-professional section is the
 page to send a dive centre or an instructor; the App Store custom product page for it is still a proposal in
 the Time to Surface repo (`nimbalyst-local/plans/time-to-surface-signed-plans-subscription-2026-10-18.md`).
+
+## The question engine (2026-10-29)
+
+The engine proposed on 2026-10-28 exists, and nothing of it is published. The state on 2026-10-29:
+
+- **Three pilot episodes are rendered** (`tools/pilot-episode.py`; the rules in `CLAUDE.md`, "The question engine and
+  its pilot"): `gas-for-the-dive` (the cat, C × A × T, ends on Turn Pressure), `sac-rate` (the C, from a logged dive,
+  ends on Dive log) and `minimum-gas` (the same cat for two divers, ends on Turn Pressure). Each is under a minute, in
+  a 16:9 cut for YouTube and the page and a 9:16 cut for Shorts and Reels, with a thumbnail and a captions file; the
+  words are written first, as speech, and Rustam reads them before anything is rendered.
+- **The developer side of both platforms is set up** on his Mac: a YouTube channel with a Google Cloud project, the
+  YouTube Data API and an OAuth client (`tools/youtube-auth.py` did the one-time sign-in), and an Instagram
+  professional account linked to a Facebook Page, published through Meta's Graph API by the Facebook-login route
+  (`tools/instagram-auth.py` did the one-time exchange; Meta's dashboard offered no Instagram-login set-up). The
+  credential files live only under `~/.config/diver-today/` there; the account names are in the private notes.
+- **The publishing scripts and their runbook** are in the repository: `tools/publish-youtube.py` (a resumable upload,
+  thumbnail, captions, playlist; private by default), `tools/publish-instagram.py` (a Reel from a public address of
+  the short cut) and `docs/publishing-runbook.md` (the weekly run, the limits, what is never automated: no replies,
+  no follows, no likes, no messages by machine). The episode pages `episodes/<slug>/` carry the wide cut, the captions
+  and a transcript, and the home page links to them under the app each ends on.
+- **Nothing is published until Rustam passes the pilot.** Then: YouTube uploads stay private until the API
+  compliance audit passes (he sets them public in YouTube Studio), and the Instagram token is renewed by hand about
+  every 60 days. Running the weekly publish from the cloud instead of the Mac is `docs/weekly-loop-proposal.md`.
 
 ## What was learned (keep these; they cost time to find out)
 
@@ -100,7 +124,8 @@ the Time to Surface repo (`nimbalyst-local/plans/time-to-surface-signed-plans-su
 - **One engine for the family** (2026-10-28, Rustam's brief: one AI-run way to promote all five): proposed in
   `promotion-engine-proposal-2026-10-28.md` — a weekly question answered as a YouTube video, a Short and a
   page, the same to Instagram with equal weight (his decision the same day), campaign links per channel.
-  He said go; a pilot episode on the SAC rate is the first deliverable and gates the accounts.
+  He said go; three pilot episodes are rendered and the accounts and scripts exist (the section above, 2026-10-29);
+  his verdict on the pilot gates the first publish.
 - **Not done yet:** posting the forum texts (Rustam does it himself); request indexing of the five
   question pages in Search Console (or wait for the sitemap); `APP_SITE_URL` in each app's
   `app-config.sh` still prints the github.io address (harmless, redirects).

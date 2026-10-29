@@ -15,6 +15,7 @@ One episode a week, the same words in two shapes, rendered by `tools/pilot-episo
 | `<slug>-short.mp4` | 1080×1920 | YouTube, as a Short; Instagram, as a Reel |
 | `<slug>-thumb.png` | 1280×720 | YouTube's thumbnail for the wide cut |
 | `<slug>.srt` | the spoken sentences with their times | YouTube's captions (nothing spoken is drawn on the screen) |
+| `<slug>.vtt` | the same cues as WebVTT | the episode page's captions (`episodes/<slug>/`; browsers take WebVTT, not SubRip) |
 
 The pilot's three slugs are `gas-for-the-dive`, `sac-rate` and `minimum-gas`. A new episode is a new entry in three tables:
 `EPISODES` in `tools/pilot-episode.py`, `METADATA` in `tools/publish-youtube.py` and `CAPTIONS` in `tools/publish-instagram.py`.
@@ -23,9 +24,13 @@ The pilot's three slugs are `gas-for-the-dive`, `sac-rate` and `minimum-gas`. A 
 
 1. Rustam has read the words (`tools/pilot-episode.py <slug> script`) and the clean-context instructor review has passed; only
    then is the episode rendered. Nothing goes out without his verdict on the episode.
-2. Both cuts, the thumbnail and the captions are in `build/pilot/`.
-3. The short cut sits at a public https address on diver.today (a copy under `video/`, committed and pushed, is one way; the
-   address is what `publish-instagram.py` needs, since Instagram fetches the file rather than taking an upload).
+2. Both cuts, the thumbnail and the two captions files are in `build/pilot/`.
+3. The episode's page exists at `episodes/<slug>/index.html` (built like the question pages; the three pilot pages are in), and
+   the wide cut, the thumbnail and the `.vtt` are committed beside it as `episodes/<slug>/<slug>-wide.mp4`, `<slug>-thumb.png`
+   and `<slug>.vtt`, from the Mac. The short cut sits at a public https address on diver.today too (a copy as
+   `episodes/<slug>/<slug>-short.mp4` is the natural place); that address is what `publish-instagram.py` needs, since Instagram
+   fetches the file rather than taking an upload. Once the YouTube upload is done, its video id goes into the page's
+   `data-youtube` attribute.
 4. The app the episode ends on is on sale: the `sac-rate` episode names Dive log's App Store link, which works only once Apple
    has approved the app (`CLAUDE.md`, "The apps on the page").
 5. Each command is run with `--dry-run` first. It prints the title, description and tags, or the caption, and every call that
@@ -36,8 +41,8 @@ The pilot's three slugs are `gas-for-the-dive`, `sac-rate` and `minimum-gas`. A 
     python3 tools/publish-youtube.py <slug> --dry-run
     python3 tools/publish-youtube.py <slug>                              # the wide cut, private
     python3 tools/publish-youtube.py <slug> --cut short                  # the Short, private, "#Shorts" added to the title
-    python3 tools/publish-instagram.py <slug> --video-url https://diver.today/video/<slug>-short.mp4 --dry-run
-    python3 tools/publish-instagram.py <slug> --video-url https://diver.today/video/<slug>-short.mp4
+    python3 tools/publish-instagram.py <slug> --video-url https://diver.today/episodes/<slug>/<slug>-short.mp4 --dry-run
+    python3 tools/publish-instagram.py <slug> --video-url https://diver.today/episodes/<slug>/<slug>-short.mp4
 
 Then, in YouTube Studio, Rustam sets the two videos public or gives them a publish time (why, below). The addresses the
 scripts print go into the week's note. Running the publish inside the Monday job is decision 5 of the proposal and is still
@@ -81,7 +86,7 @@ proposal decided (review note 6: a campaign shows in App Analytics only after fi
 
 ## Instagram: `tools/publish-instagram.py`
 
-    publish-instagram.py <slug> --video-url https://diver.today/video/<slug>-short.mp4 [--caption-file path] [--dry-run]
+    publish-instagram.py <slug> --video-url https://diver.today/episodes/<slug>/<slug>-short.mp4 [--caption-file path] [--dry-run]
 
 What it does, in order, against `graph.facebook.com`, Meta's Instagram Graph API on the Facebook-login route: the Instagram
 professional account is linked to a Facebook Page, and the Page's access token publishes to the Instagram account behind it
