@@ -61,7 +61,7 @@ CAPTIONS = {
   "A worked example with made-up numbers, not your dive: 120 bar from a 12-litre cylinder is 1,440 litres; over 40 minutes, 36 litres "
   "a minute; at an average depth of 14 m, which is 2.4 bar, that is 15 litres a minute at the surface. Do it for a few dives and use "
   "the average.\n\n"
-  f"Dive log works it out from each dive's profile and pressures, and draws it over time. Free on the App Store. More at {SITE}, link in bio.\n\n"
+  f"Dive log works it out from each dive's profile and pressures, and draws it over time. Coming soon to the App Store. More at {SITE}, link in bio.\n\n"
   "#scuba #scubadiving #diving #divetraining #sacrate #gasplanning #divelog #divelogbook #divecomputer #divetheory #openwaterdiver "
   "#divertoday"),
  "minimum-gas": (

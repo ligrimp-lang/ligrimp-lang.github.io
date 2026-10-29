@@ -92,8 +92,8 @@ METADATA = {
    "14 m the pressure was 2.4 bar, so you breathed 2.4 times the gas: 36 ÷ 2.4, and your SAC rate is 15 litres a minute. Do it for a few "
    "dives and use the average.\n\n"
    "Dive log works it out from each dive's profile and pressures, and draws it over time. A Shearwater dive log app for iPhone: import your "
-   "dives once, over Bluetooth, into a dive logbook, with your SAC per dive and over time. Free, private, no account.\n"
-   "Dive log on the App Store: {store}\n\n"
+   "dives once, over Bluetooth, into a dive logbook, with your SAC per dive and over time. Free, private, no account. "
+   "It is in Apple's review, coming soon to the App Store: {store}\n\n"
    "More answers for divers, and the five apps: {site}\n\n"
    "#scuba #diving #sacrate\n\n"
    "© Rustam Ismailov\n" + CREDIT),
