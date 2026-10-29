@@ -306,9 +306,22 @@ before he has read the words** (`script`, or the voice as prose), with a cold re
 about pictures of him in a wetsuit; `two-divers-facing`, `diver-over-reef` and `reef-drill-deep` are him): the cat
 opens on `turtle-slope`, the SAC rate on `dolphins-blue`, minimum gas on `reef-slope`. The outro names the apps the
 episode's phone segments showed. It reuses the site generator's phone, caption and font helpers. His rules from that
-day, built in: **the cat** is the diver of every worked example (drawn in `cat()`, line art in the family's ink
-and teal, bubbles rising on the cards), **every spoken sentence is on screen** while it is said, and the voice is **a pleasant
-young US male**. **The voice is synthesised in passages of connected sentences**, not sentence by sentence: the first takes did
+day, built in: **the cat** is the diver of every worked example (bubbles rising from its mouth on the cards), and the voice is **a pleasant
+young US male**. **Nothing spoken is drawn on the screen** (2026-10-29, on the passage take: *"what you voiceover is unnecessary to
+include … main text make much bigger as this is the only content you show"*): the subtitle layer is gone, a card's title, figure, lines
+and footnote are about one and a half times their old size (`card_layer()`), and the sentences with their times go out as
+`build/pilot/<episode>.srt` for the platforms' captions instead; the alignment still times the cards. **The cat is a charcoal sketch
+on a sheet of paper** (2026-10-29, his reference an Instagram artist's series of black cats in loose brush strokes; `sketch_cat()` draws
+one procedurally, nothing of anyone's drawing copied, the paper tilted a little with a soft shadow, the kit one teal line), and **his own
+drawings replace it**: `tools/assets/cat/cat-<pose>.png` (dark strokes on transparent or plain white; poses standing, swimming, ascending,
+sharing, gauge, head; `tools/assets/README.md`), a segment's `cat="<pose>"` picks one, `CAT_MOUTH` says where its bubbles start. **Every
+episode ends on the app, Apple's "Download on the App Store" badge and diver.today as the biggest line** (2026-10-29: *"finish with the
+link to website and add some ios logo (respecting the copyright and TMs)"*): the badge is Apple's artwork exactly as its marketing tools
+serve it (`tools/assets/app-store-badge.*`), never altered, tilted or animated, one per video, smaller than the address, a clear space of
+a quarter of its height, and Apple's credit line at the foot of the outro, as its guidelines ask at the end of a video; Apple offers no
+iOS logo to third parties and asks marketing not to say "iOS", so the badge is the mark. Leo's delivery he found "still too
+overexaggerated words sometimes": `orpheus:leo:<temperature>` lowers the sampling temperature (0.6 by default; samples at 0.45 and 0.3
+of one passage are in `build/pilot/samples/leo-temperature-*.m4a` for his ear). **The voice is synthesised in passages of connected sentences**, not sentence by sentence: the first takes did
 one sentence at a time so each start was known, and he heard it at once (*"it records sentence individually, but we need to
 have intonation be placed for the set of connected sentences, otherwise its not possible to follow"*). A segment with `new=True`
 starts a passage (a story paragraph of about 20 s; `passages()`), the passage is one synthesised piece, and each sentence's
@@ -340,8 +353,9 @@ because "under two point four bar" reads as less than, the reserve is named mini
 "from each dive's profile and pressures" since a profile without pressures gives none, and in the minimum-gas episode the cat is spelled out as
 consumption times pressure times time, 30 m is said to be 4 bar, and the 3.3 min come from "at nine metres a minute", with the derivations
 on the cards; the "deeper, or with a safety stop, it is more" sentence was cut for the time).
-Nothing is published:
-no channel, no account; those wait for his verdict on the pilot.
+Nothing is published. The YouTube and
+Instagram accounts exist since 2026-10-29 (their names and the developer set-up are private notes, `CLAUDE.local.md`); publishing waits
+for his verdict on the pilot.
 
 ## The question pages (2026-10-19)
 

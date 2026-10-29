@@ -4,18 +4,20 @@ consumption times ambient pressure times time, is the gas a dive needs (Rustam, 
 under a minute so it works as a Reel: `gas-for-the-dive` (the cat), `sac-rate` (the C, from a dive you have done),
 `minimum-gas` (the same cat for two divers in a hurry). Reuses the site generator's phone, caption and font helpers
 (tools/build-media.py). The voice is synthesised in passages of connected sentences (new=True starts one), so the
-intonation carries across them; each sentence is then located in the audio (tools/align-sentences.py) and drawn as text
-while it is said (Rustam: the voice duplicated by text; a young US male voice; a cat, simple and unusual).
+intonation carries across them; each sentence is then located in the audio (tools/align-sentences.py) so that the cards
+change on their first words and a captions file goes out with the video. Nothing spoken is drawn on the screen (Rustam,
+2026-10-29: the voiceover's text is unnecessary; the card's own text is the only content, so it is big). A young US male
+voice; a cat, simple and unusual, drawn as a charcoal sketch on a sheet of paper (his 2026-10-29 reference).
 
     python3 tools/pilot-episode.py gas-for-the-dive script   # the words, for the correctness review
     python3 tools/pilot-episode.py gas-for-the-dive time     # synthesise the voice and print each cut's length
     python3 tools/pilot-episode.py gas-for-the-dive wide     # 1920x1080, YouTube and the page
     python3 tools/pilot-episode.py gas-for-the-dive short    # 1080x1920, Reel / Short
     python3 tools/pilot-episode.py all all                   # every episode, both cuts
-Outputs in build/pilot/: <episode>-<cut>.mp4, <episode>-thumb.png. The same words in both cuts.
+Outputs in build/pilot/: <episode>-<cut>.mp4, <episode>-thumb.png, <episode>.srt (the captions). The same words in both cuts.
 """
-import os, re, sys, json, hashlib, subprocess, importlib.util
-from PIL import Image, ImageDraw
+import os, re, sys, json, math, random, hashlib, subprocess, importlib.util, functools
+from PIL import Image, ImageDraw, ImageFilter, ImageChops
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 spec = importlib.util.spec_from_file_location("bm", os.path.join(HERE, "build-media.py"))
@@ -33,7 +35,7 @@ SHOTS = {"dive-log": (f"{PROJECTS}/sharewater_dive_log/design/screenshots/dive-l
 VOICE = os.environ.get("PILOT_VOICE", "orpheus:leo")   # Rustam's pick, 2026-10-28, from samples of three engines
 RATE, SPEED = 168, 1.06          # the macOS rate; Kokoro's speed
 KOKORO_PY = os.path.join(bm.ROOT, "build", "kokoro-venv", "bin", "python")
-ORPHEUS_PY = os.path.join(bm.ROOT, "build", "orpheus-venv", "bin", "python")   # "orpheus:<leo|dan|zac>", see tools/orpheus-say.py
+ORPHEUS_PY = os.path.join(bm.ROOT, "build", "orpheus-venv", "bin", "python")   # "orpheus:<leo|dan|zac>[:temperature]", see tools/orpheus-say.py
 CHATTERBOX_PY = os.path.join(bm.ROOT, "build", "chatterbox-venv", "bin", "python")   # "chatterbox:default[:exaggeration:cfg]", tools/chatterbox-say.py
 SPOKEN = [(r"\bSAC\b", "sack"), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
 GAP, PAD, LEAD, FADE = 0.25, 0.8, 0.3, 0.5   # between sentences (unused since passages); after a passage; before the first; layer fades
@@ -48,7 +50,7 @@ WORKED = "A worked example with made-up numbers, not your dive."
 # the practical wrap-up (into bar, by the cylinder). Never facts before the context is set.
 # The voice is the story and is written first, as one person talking to another: whole sentences, each following from the one before,
 # every number arriving inside a sentence that says what it is and why it is needed. A card carries only a title and the figure the voice
-# is reaching; the spoken sentence itself is shown by the subtitle. "Cat" is said as the word; the letters are spoken only when each is
+# is reaching, drawn big; the spoken sentence is not drawn (2026-10-29), it goes out as the captions file. "Cat" is said as the word; the letters are spoken only when each is
 # defined. Nothing is rendered before Rustam has read the words (his 2026-10-28 verdict on the first takes: word salad, no narrative).
 EPISODES = {
  "gas-for-the-dive": dict(
@@ -150,7 +152,7 @@ def synthesise(texts):
         elif engine == "orpheus":
             jobs = [[spoken(t), base_path(t)[:-4] + ".raw.wav"] for t in todo]
             jp = os.path.join(WORK, "jobs.json"); json.dump(jobs, open(jp, "w"))
-            subprocess.run([ORPHEUS_PY, os.path.join(HERE, "orpheus-say.py"), jp, name], check=True, stdout=subprocess.DEVNULL)
+            subprocess.run([ORPHEUS_PY, os.path.join(HERE, "orpheus-say.py"), jp] + name.split(":"), check=True, stdout=subprocess.DEVNULL)
             raws = [r for _, r in jobs]
         elif engine == "chatterbox":
             jobs = [[spoken(t), base_path(t)[:-4] + ".raw.wav"] for t in todo]
@@ -242,126 +244,246 @@ def timeline(ep):
 
 # ---------- drawing ----------
 INK, DIM, DARK = (240, 243, 245), (168, 178, 186), (16, 22, 28)
+PAPER, CHARCOAL = (238, 236, 231), (22, 22, 24)
+CAT_DIR = os.path.join(HERE, "assets", "cat")   # Rustam's own cat drawings, cat-<pose>.png, black strokes on transparent (or white)
+CAT_MOUTH = {"standing": (0.20, 0.47)}           # where the bubbles start, as a fraction of the drawing's square, per pose
+CAT_SIZE = {"wide": 520, "short": 420}
 
-def cat(size):
-    """A diving cat in line art: round head, ears, a mask over the eyes, a cylinder on its back, a hose to its mouth."""
-    s = size; im = Image.new("RGBA", (s, s), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    lw = max(4, s // 70)
-    cx, cy, r = s * 0.46, s * 0.46, s * 0.26
-    # cylinder behind the body, leaning
-    d.rounded_rectangle((s*0.64, s*0.50, s*0.80, s*0.96), radius=s*0.07, fill=ACCENT)
-    d.rounded_rectangle((s*0.69, s*0.44, s*0.75, s*0.52), radius=s*0.02, fill=INK)        # valve
-    # body
-    d.ellipse((s*0.22, s*0.60, s*0.72, s*0.98), fill=DARK, outline=INK, width=lw)
-    # tail
-    d.arc((s*0.60, s*0.72, s*0.98, s*1.06), 200, 330, fill=INK, width=lw)
-    # ears
-    for sx in (-1, 1):
-        ex = cx + sx * r * 0.62
-        d.polygon([(ex - r*0.30, cy - r*0.55), (ex + r*0.30, cy - r*0.55), (ex + sx*r*0.12, cy - r*1.28)], fill=DARK, outline=INK)
-        d.line([(ex - r*0.30, cy - r*0.55), (ex + sx*r*0.12, cy - r*1.28), (ex + r*0.30, cy - r*0.55)], fill=INK, width=lw, joint="curve")
-    # head
-    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=DARK, outline=INK, width=lw)
-    # mask: one rounded window over both eyes, teal rim
-    d.rounded_rectangle((cx - r*0.80, cy - r*0.52, cx + r*0.80, cy + r*0.10), radius=r*0.28, fill=(40, 70, 80), outline=ACCENT, width=lw)
-    d.line([(cx + r*0.80, cy - r*0.22), (cx + r*1.02, cy - r*0.26)], fill=ACCENT, width=lw)   # strap
-    d.line([(cx - r*0.80, cy - r*0.22), (cx - r*1.02, cy - r*0.26)], fill=ACCENT, width=lw)
-    for sx in (-1, 1):   # eyes with slit pupils
-        ex = cx + sx * r * 0.38; ey = cy - r * 0.21
-        d.ellipse((ex - r*0.17, ey - r*0.15, ex + r*0.17, ey + r*0.15), fill=INK)
-        d.ellipse((ex - r*0.05, ey - r*0.13, ex + r*0.05, ey + r*0.13), fill=DARK)
-    # nose and mouth, whiskers
-    d.polygon([(cx - r*0.08, cy + r*0.30), (cx + r*0.08, cy + r*0.30), (cx, cy + r*0.40)], fill=ACCENT)
-    for sx in (-1, 1):
-        for k, dy in enumerate((-0.04, 0.08, 0.20)):
-            d.line([(cx + sx*r*0.30, cy + r*(0.36 + dy*0.5)), (cx + sx*r*1.05, cy + r*(0.30 + dy))], fill=INK, width=max(2, lw-2))
-    # regulator in the mouth, hose to the cylinder
-    d.rounded_rectangle((cx - r*0.22, cy + r*0.48, cx + r*0.22, cy + r*0.72), radius=r*0.08, fill=INK)
-    d.arc((cx + r*0.1, cy + r*0.45, s*0.78, s*0.72), 270, 360, fill=INK, width=lw)
-    d.line([(s*0.72, s*0.52), (s*0.72, s*0.60)], fill=INK, width=lw)
-    return im
+def bez(p0, p1, p2, p3, n):
+    pts = []
+    for k in range(n + 1):
+        t = k / n; u = 1 - t
+        pts.append((u*u*u*p0[0] + 3*u*u*t*p1[0] + 3*u*t*t*p2[0] + t*t*t*p3[0], u*u*u*p0[1] + 3*u*u*t*p1[1] + 3*u*t*t*p2[1] + t*t*t*p3[1]))
+    return pts
+
+def wobble(pts, amp, rnd):
+    return [(x + rnd.uniform(-amp, amp), y + rnd.uniform(-amp, amp)) for x, y in pts]
+
+def stroke(d, pts, width, fill, alpha, rnd, grain=3):
+    """A charcoal stroke: a few thin passes side by side, each a little off, so the edge is dry and grainy."""
+    for _ in range(grain):
+        off = rnd.uniform(-width * 0.4, width * 0.4); ang = rnd.uniform(0, math.pi)
+        dx, dy = off * math.cos(ang), off * math.sin(ang)
+        d.line([(x + dx, y + dy) for x, y in pts], fill=fill + (int(alpha * rnd.uniform(0.6, 1.0)),),
+               width=max(1, int(width * rnd.uniform(0.45, 0.85))), joint="curve")
+
+def tapered(d, pts, w0, w1, fill, alpha):
+    n = len(pts) - 1
+    for k in range(n):
+        w = w0 + (w1 - w0) * k / n
+        d.line([pts[k], pts[k + 1]], fill=fill + (alpha,), width=max(1, int(w)))
+        x, y = pts[k]; d.ellipse((x - w/2, y - w/2, x + w/2, y + w/2), fill=fill + (alpha,))
+
+def sketch_cat(size, seed=11):
+    """A black cat in loose charcoal strokes, drawn here until Rustam's own drawings arrive (the look he pointed at on 2026-10-29: a
+    silhouette built from flowing dark strokes, a sweeping tail, two sharp ears; nothing of anyone's drawing copied). The diving kit is
+    one teal line: a mask over the eye, a hose to a cylinder on its back. RGBA, charcoal on transparent, `size` square."""
+    rnd = random.Random(seed); ink = CHARCOAL
+    S = size * 3
+    def P(x, y): return (x * S, y * S)
+    body = [P(0.13, 0.47), P(0.15, 0.38), P(0.19, 0.33), P(0.175, 0.19), P(0.27, 0.30), P(0.32, 0.29), P(0.36, 0.29), P(0.40, 0.16), P(0.44, 0.33),
+            P(0.50, 0.345), P(0.62, 0.315), P(0.74, 0.34), P(0.84, 0.44), P(0.87, 0.56), P(0.86, 0.66), P(0.885, 0.90), P(0.815, 0.91), P(0.79, 0.80),
+            P(0.775, 0.70), P(0.66, 0.715), P(0.52, 0.72), P(0.455, 0.73), P(0.46, 0.90), P(0.385, 0.91), P(0.37, 0.78), P(0.345, 0.70),
+            P(0.27, 0.66), P(0.20, 0.60), P(0.145, 0.53)]
+    mask = Image.new("L", (S, S), 0); ImageDraw.Draw(mask).polygon(body, fill=255)
+    far_legs = Image.new("L", (S, S), 0); fd = ImageDraw.Draw(far_legs)
+    fd.polygon([P(0.43, 0.72), P(0.50, 0.72), P(0.53, 0.905), P(0.45, 0.91)], fill=255)
+    fd.polygon([P(0.71, 0.70), P(0.78, 0.70), P(0.78, 0.905), P(0.70, 0.91)], fill=255)
+    out = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    far = Image.new("RGBA", (S, S), ink + (0,)); far.putalpha(far_legs.filter(ImageFilter.GaussianBlur(S*0.006)).point(lambda v: v * 120 // 255))
+    out.alpha_composite(far)
+    grad = Image.linear_gradient("L").resize((S, S)).point(lambda v: 185 - v * 95 // 255)   # darker along the back, lighter under the belly
+    massa = ImageChops.multiply(mask.filter(ImageFilter.GaussianBlur(S*0.006)), grad)
+    mass = Image.new("RGBA", (S, S), ink + (0,)); mass.putalpha(massa); out.alpha_composite(mass)
+    strokes = Image.new("RGBA", (S, S), (0, 0, 0, 0)); d = ImageDraw.Draw(strokes)
+    bc = (S*0.56, S*0.62)
+    for _ in range(330):
+        for _try in range(30):
+            x, y = rnd.uniform(S*0.10, S*0.92), rnd.uniform(S*0.14, S*0.94)
+            if mask.getpixel((int(x), int(y))) > 0: break
+        else:
+            continue
+        if x < S*0.40 and y < S*0.62: ang = rnd.uniform(-0.35, 0.15)
+        elif y > S*0.74: ang = math.pi/2 + rnd.uniform(-0.15, 0.15)
+        else:
+            ang = math.atan2(y - bc[1], x - bc[0]) + math.pi/2 + rnd.uniform(-0.12, 0.12)
+            if rnd.random() < 0.05: ang += rnd.uniform(-0.8, 0.8)
+        L = rnd.uniform(S*0.16, S*0.42) if y <= S*0.74 else rnd.uniform(S*0.06, S*0.16)
+        pts = []; bend = rnd.uniform(-0.6, 0.6)
+        for k in range(6):
+            t = -0.5 + k / 5
+            pts.append((x + L*t*math.cos(ang) - L*0.6*bend*t*t*math.sin(ang), y + L*t*math.sin(ang) + L*0.6*bend*t*t*math.cos(ang)))
+        stroke(d, wobble(pts, S*0.002, rnd), rnd.uniform(S*0.008, S*0.03), ink, rnd.uniform(90, 230), rnd, grain=4)
+    clip = mask.filter(ImageFilter.MaxFilter(int(S*0.012) | 1)).filter(ImageFilter.GaussianBlur(S*0.012)).point(lambda v: min(255, int(v * 1.5)))
+    strokes.putalpha(ImageChops.multiply(strokes.split()[3], clip))
+    strokes = strokes.filter(ImageFilter.GaussianBlur(S*0.0015))
+    out.alpha_composite(strokes); d = ImageDraw.Draw(out)
+    for k in range(7):   # long loose contour strokes: the back, the chest, the belly
+        p0 = (S*rnd.uniform(0.36, 0.44), S*rnd.uniform(0.30, 0.36)); p3 = (S*rnd.uniform(0.78, 0.86), S*rnd.uniform(0.42, 0.50))
+        stroke(d, bez(p0, (S*0.55, S*rnd.uniform(0.30, 0.34)), (S*0.72, S*rnd.uniform(0.33, 0.38)), p3, 24), rnd.uniform(S*0.010, S*0.022), ink, rnd.uniform(100, 180), rnd, grain=4)
+    for k in range(4):
+        p0 = (S*rnd.uniform(0.14, 0.18), S*rnd.uniform(0.54, 0.58)); p3 = (S*rnd.uniform(0.32, 0.38), S*rnd.uniform(0.72, 0.76))
+        stroke(d, bez(p0, (S*0.18, S*0.64), (S*0.26, S*0.71), p3, 16), rnd.uniform(S*0.008, S*0.016), ink, rnd.uniform(80, 140), rnd)
+    for k in range(4):
+        p0 = (S*rnd.uniform(0.46, 0.50), S*rnd.uniform(0.74, 0.78)); p3 = (S*rnd.uniform(0.72, 0.78), S*rnd.uniform(0.72, 0.76))
+        stroke(d, bez(p0, (S*0.56, S*0.80), (S*0.68, S*0.79), p3, 16), rnd.uniform(S*0.006, S*0.014), ink, rnd.uniform(60, 120), rnd)
+    for base, tip, inner in ((P(0.19, 0.33), P(0.175, 0.19), P(0.27, 0.30)), (P(0.36, 0.29), P(0.40, 0.16), P(0.44, 0.32))):   # ears
+        stroke(d, wobble([base, tip, inner], S*0.003, rnd), S*0.012, ink, 230, rnd, grain=3)
+    for px in (0.425, 0.84, 0.485, 0.745):   # paws, and a soft shadow on the ground
+        d.ellipse((S*(px - 0.035), S*0.895, S*(px + 0.035), S*0.93), fill=ink + (200,))
+    for k in range(6):
+        stroke(d, [(S*rnd.uniform(0.30, 0.42), S*rnd.uniform(0.93, 0.95)), (S*rnd.uniform(0.80, 0.94), S*rnd.uniform(0.93, 0.955))], S*0.012, ink, rnd.uniform(20, 55), rnd, grain=2)
+    tail = bez(P(0.84, 0.50), P(1.02, 0.46), P(0.97, 0.08), P(0.74, 0.05), 60)   # a sweep up and over, scribbled along its length
+    tapered(d, tail, S*0.075, S*0.01, ink, 190)
+    for k in range(18):
+        off = rnd.uniform(-1, 1); i0 = rnd.randint(0, 22); i1 = rnd.randint(i0 + 12, 60)
+        pts = [(x + off*S*0.028*(1 - i/60), y + off*S*0.028*(1 - i/60)) for i, (x, y) in enumerate(tail)]
+        stroke(d, wobble(pts[i0:i1], S*0.004, rnd), rnd.uniform(S*0.005, S*0.02), ink, rnd.uniform(110, 230), rnd, grain=2)
+    for k in range(4):
+        i = rnd.randint(2, 16); x, y = tail[i]; a = math.atan2(tail[i+1][1] - y, tail[i+1][0] - x) + rnd.uniform(-0.5, 0.5); L = S*rnd.uniform(0.03, 0.06)
+        stroke(d, [(x - L*math.cos(a), y - L*math.sin(a)), (x + L*math.cos(a), y + L*math.sin(a))], S*rnd.uniform(0.005, 0.012), ink, rnd.uniform(80, 160), rnd, grain=2)
+    ex, ey = S*0.215, S*0.44   # eye, whiskers
+    d.ellipse((ex - S*0.028, ey - S*0.015, ex + S*0.028, ey + S*0.015), fill=PAPER + (240,))
+    d.ellipse((ex - S*0.007, ey - S*0.013, ex + S*0.007, ey + S*0.013), fill=ink + (255,))
+    for dy in (-0.012, 0.0, 0.012):
+        stroke(d, [(S*0.17, S*(0.50 + dy*0.3)), (S*(0.05 + rnd.uniform(-0.01, 0.01)), S*(0.49 + dy*2.5))], S*0.0035, ink, 110, rnd, grain=1)
+    t = ACCENT   # the kit: mask rim and strap, regulator in the mouth, cylinder on the back, hose over the head
+    rim = [(ex + S*0.052*math.cos(a), ey + S*0.038*math.sin(a)) for a in [i*2*math.pi/40 for i in range(41)]]
+    stroke(d, wobble(rim, S*0.0025, rnd), S*0.009, t, 235, rnd, grain=2)
+    stroke(d, wobble([(ex + S*0.05, ey - S*0.012), (S*0.31, S*0.34), (S*0.36, S*0.31)], S*0.0025, rnd), S*0.007, t, 210, rnd, grain=2)
+    cyl = Image.new("RGBA", (S, S), (0, 0, 0, 0)); cd = ImageDraw.Draw(cyl)
+    cm = Image.new("L", (S, S), 0); ImageDraw.Draw(cm).rounded_rectangle((S*0.52, S*0.30, S*0.66, S*0.60), radius=S*0.055, fill=255)
+    body_grey = Image.new("RGBA", (S, S), (120, 122, 126, 0)); body_grey.putalpha(cm.filter(ImageFilter.GaussianBlur(S*0.004)).point(lambda v: v * 235 // 255))
+    cyl.alpha_composite(body_grey); cd = ImageDraw.Draw(cyl)
+    for k in range(28):
+        x = S*rnd.uniform(0.525, 0.655); y0 = S*rnd.uniform(0.30, 0.45); y1 = y0 + S*rnd.uniform(0.08, 0.2)
+        stroke(cd, wobble([(x, y0), (x + S*rnd.uniform(-0.006, 0.006), (y0 + y1)/2), (x, y1)], S*0.002, rnd), rnd.uniform(S*0.004, S*0.012), (60, 60, 64), rnd.uniform(30, 90), rnd, grain=2)
+    cyl.putalpha(ImageChops.multiply(cyl.split()[3], cm.filter(ImageFilter.GaussianBlur(S*0.003))))
+    out.alpha_composite(cyl); d = ImageDraw.Draw(out)
+    outline = [P(0.535, 0.305), P(0.645, 0.305), P(0.66, 0.34), P(0.66, 0.57), P(0.645, 0.60), P(0.535, 0.60), P(0.52, 0.57), P(0.52, 0.34), P(0.535, 0.305)]
+    stroke(d, wobble(outline, S*0.003, rnd), S*0.009, ink, 190, rnd, grain=3)
+    stroke(d, [(S*0.59, S*0.30), (S*0.59, S*0.255)], S*0.016, t, 240, rnd, grain=2)
+    hose = bez(P(0.59, 0.255), P(0.54, 0.12), P(0.28, 0.17), P(0.20, 0.47), 30)
+    stroke(d, wobble(hose, S*0.0025, rnd), S*0.0075, t, 220, rnd, grain=2)
+    d.ellipse((S*0.175, S*0.455, S*0.225, S*0.495), fill=t + (240,))
+    noise = Image.effect_noise((S, S), 60).point(lambda v: 120 + v * 135 // 255)   # charcoal grain
+    out.putalpha(ImageChops.multiply(out.split()[3], noise))
+    return out.resize((size, size), Image.LANCZOS)
+
+def cat_art(pose, size):
+    """Rustam's drawing for the pose if it exists (tools/assets/cat/cat-<pose>.png: dark strokes on transparent, or on plain white,
+    which is keyed out here), fitted into a square of `size` with a margin; else the sketch above."""
+    path = os.path.join(CAT_DIR, f"cat-{pose}.png")
+    if not os.path.exists(path): return sketch_cat(size)
+    im = Image.open(path).convert("RGBA")
+    if im.getextrema()[3][0] == 255:   # no transparency: dark strokes on white become charcoal on transparent
+        lum = im.convert("L"); im = Image.new("RGBA", im.size, CHARCOAL + (0,)); im.putalpha(lum.point(lambda v: 255 - v))
+    im = im.crop(im.getbbox())
+    inner = int(size * 0.84); im.thumbnail((inner, inner), Image.LANCZOS)
+    out = Image.new("RGBA", (size, size), (0, 0, 0, 0)); out.alpha_composite(im, ((size - im.width) // 2, (size - im.height) // 2))
+    return out
+
+@functools.lru_cache(maxsize=None)
+def cat(size, pose="standing", tilt=-4):
+    """The cat on a sheet of paper with a soft shadow, tilted a little: RGBA, `size` square."""
+    pad = int(size * 0.06); inner = size - 2 * pad
+    sheet = Image.new("RGBA", (inner, inner), PAPER + (255,))
+    grain = Image.effect_noise((inner, inner), 16).point(lambda v: 225 + v * 30 // 255).convert("L")
+    sheet = Image.merge("RGBA", [ImageChops.multiply(c, grain) for c in sheet.split()[:3]] + [sheet.split()[3]])
+    sheet.alpha_composite(cat_art(pose, inner))
+    rounded = Image.new("L", (inner, inner), 0); ImageDraw.Draw(rounded).rounded_rectangle((0, 0, inner - 1, inner - 1), radius=inner * 0.03, fill=255)
+    sheet.putalpha(rounded)
+    page = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    shadow = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rounded_rectangle((pad + 6, pad + 14, pad + inner + 6, pad + inner + 14), radius=inner * 0.03, fill=(0, 0, 0, 150))
+    page.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(size * 0.025)))
+    page.alpha_composite(sheet, (pad, pad))
+    return page.rotate(tilt, resample=Image.BICUBIC, expand=False)
+
+def cat_mouth(size, pose="standing", tilt=-4):
+    """Where the bubbles start, in the cat square's own pixels (the mouth, rotated with the sheet)."""
+    pad = int(size * 0.06); inner = size - 2 * pad; fx, fy = CAT_MOUTH.get(pose, CAT_MOUTH["standing"])
+    mx, my = pad + fx * inner, pad + fy * inner; c = size / 2; a = math.radians(-tilt)
+    return (c + (mx - c) * math.cos(a) - (my - c) * math.sin(a), c + (mx - c) * math.sin(a) + (my - c) * math.cos(a))
+
+def cat_place(fmt):
+    """Top-left of the cat square on a card: beside the text on a wide frame, above it on a tall one."""
+    W, H = fmt["W"], fmt["H"]; size = CAT_SIZE["short" if W < H else "wide"]
+    return ((W - size) // 2, 150) if W < H else (W - size - 150, (H - size) // 2 - 20)
 
 def bubble(diam):
+    """A ring that shows on the paper and on the dark background alike."""
     im = Image.new("RGBA", (diam + 6, diam + 6), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    d.ellipse((3, 3, diam + 3, diam + 3), outline=(240, 243, 245, 210), width=max(2, diam // 10), fill=(255, 255, 255, 40))
-    d.ellipse((3 + diam*0.22, 3 + diam*0.18, 3 + diam*0.42, 3 + diam*0.34), fill=(255, 255, 255, 170))
+    d.ellipse((3, 3, diam + 3, diam + 3), outline=(150, 162, 170, 225), width=max(2, diam // 10), fill=(255, 255, 255, 40))
+    d.ellipse((3 + diam*0.22, 3 + diam*0.18, 3 + diam*0.42, 3 + diam*0.34), fill=(255, 255, 255, 200))
     return im
 
-def card_layer(fmt, s, with_cat):
-    """A card: a small spaced title in teal, an optional big line, lines, a footnote; the cat beside (wide) or above (short)."""
+def card_layer(fmt, s, pose):
+    """A card: a small spaced title in teal, a big line, lines, a footnote; big, because it is the only content on the screen
+    (Rustam, 2026-10-29); the cat beside it (wide) or above it (short) when the segment names a pose."""
     W, H = fmt["W"], fmt["H"]; tall = W < H
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(layer)
     if tall:
         x0, max_w = 70, W - 140
-        f_title, f_big, f_line, f_foot = font(28, "Semibold"), font(64, "Bold"), font(44, "Medium"), font(30, "Regular")
-        lh_big, lh_line, lh_foot = 76, 58, 40
+        f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(104, "Bold"), font(60, "Medium"), font(38, "Regular")
+        lh_title, lh_big, lh_line, lh_foot = 72, 122, 74, 48
     else:
-        x0, max_w = 160, (1120 if with_cat else 1500)
-        f_title, f_big, f_line, f_foot = font(28, "Semibold"), font(70, "Bold"), font(44, "Medium"), font(30, "Regular")
-        lh_big, lh_line, lh_foot = 84, 58, 40
-    blocks = [(s["title"].upper(), f_title, ACCENT, 50, True)]
+        x0, max_w = 160, (1040 if pose else 1560)
+        f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(112, "Bold"), font(64, "Medium"), font(40, "Regular")
+        lh_title, lh_big, lh_line, lh_foot = 76, 132, 80, 50
+    blocks = [(s["title"].upper(), f_title, ACCENT, lh_title, True)]
     if s.get("big"):
-        blocks += [(ln, f_big, INK, lh_big, False) for ln in wrap(d, s["big"], f_big, max_w)]; blocks.append(("", None, None, 22, False))
+        blocks += [(ln, f_big, INK, lh_big, False) for ln in wrap(d, s["big"], f_big, max_w)]; blocks.append(("", None, None, 24, False))
     for ln in s.get("lines", []):
-        blocks += [(w, f_line, INK, lh_line, False) for w in wrap(d, ln, f_line, max_w)]; blocks.append(("", None, None, 16, False))
+        blocks += [(w, f_line, INK, lh_line, False) for w in wrap(d, ln, f_line, max_w)]; blocks.append(("", None, None, 18, False))
     if s.get("foot"):
-        blocks.append(("", None, None, 20, False)); blocks += [(w, f_foot, DIM, lh_foot, False) for w in wrap(d, s["foot"], f_foot, max_w)]
+        blocks.append(("", None, None, 22, False)); blocks += [(w, f_foot, DIM, lh_foot, False) for w in wrap(d, s["foot"], f_foot, max_w)]
     total = sum(b[3] for b in blocks)
     if tall:
-        y = 640 if with_cat else (H - 420 - total) // 2
+        y = 150 + CAT_SIZE["short"] + 60 if pose else (H - 300 - total) // 2
     else:
-        y = (H - 130 - total) // 2
+        y = (H - total) // 2 - 20
     for text, f, fill, lh, spaced in blocks:
         if text:
             x = (W - d.textlength(text, font=f)) // 2 if tall else x0
             if spaced:
-                bm.draw_spaced(d, (x - 6, y), text, f, fill, 2.2)
+                bm.draw_spaced(d, (x - 6, y), text, f, fill, 2.6)
             else:
                 d.text((x, y), text, font=f, fill=fill)
         y += lh
-    if with_cat:
-        c = cat(500 if not tall else 400)
-        pos = ((W - c.width) // 2, 160) if tall else (W - c.width - 150, (H - 130 - c.height) // 2)
-        layer.alpha_composite(c, pos)
+    if pose:
+        layer.alpha_composite(cat(CAT_SIZE["short" if tall else "wide"], pose), cat_place(fmt))
     return layer
 
 def dim_layer(fmt, alpha=120):
     return Image.new("RGBA", (fmt["W"], fmt["H"]), (0, 0, 0, alpha))
 
-def sub_layer(fmt, text, under_phone_left):
-    """One spoken sentence, as text in a dark rounded box at the foot of the frame."""
-    W, H = fmt["W"], fmt["H"]; tall = W < H
-    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(layer)
-    f = font(40 if tall else 38, "Medium"); lh = 50 if tall else 48
-    max_w = 900 if tall else (800 if under_phone_left else 1400)
-    lines = wrap(d, text, f, max_w)
-    tw = max(d.textlength(l, font=f) for l in lines); bh = len(lines) * lh + 30
-    if tall:
-        x0 = (W - tw) // 2 - 26; y0 = H - 300 - bh
-    elif under_phone_left:
-        x0 = 150 - 26; y0 = H - 70 - bh
-    else:
-        x0 = (W - tw) // 2 - 26; y0 = H - 70 - bh
-    d.rounded_rectangle((x0, y0, x0 + tw + 52, y0 + bh), radius=18, fill=(8, 12, 16, 170))
-    y = y0 + 14
-    for l in lines:
-        x = x0 + 26 if (under_phone_left and not tall) else x0 + 26 + (tw - d.textlength(l, font=f)) // 2
-        d.text((x, y), l, font=f, fill=INK); y += lh
-    return layer
-
 NAMES = {"dive-log": "Dive log", "turn-pressure": "Turn Pressure"}
 
+BADGE = os.path.join(HERE, "assets", "app-store-badge.png")   # Apple's black badge, as provided (tools/assets/README.md); never altered or tilted
+CREDIT = ("Apple and the Apple logo are trademarks of Apple Inc., registered in the U.S. and other countries. "
+          "App Store is a service mark of Apple Inc., registered in the U.S. and other countries.")
+
 def outro_layer(fmt, apps):
-    """The episode's app(s), free, diver.today: the apps are those its phone segments showed, in order."""
-    W, H = fmt["W"], fmt["H"]
+    """The episode's app(s), the App Store badge, and diver.today as the last and biggest line (Rustam, 2026-10-29: finish with the link to the
+    website and the store mark). The badge keeps a clear space of a quarter of its height and stays smaller than the address, as Apple asks;
+    the credit line at the foot is the one Apple asks for at the end of a video."""
+    W, H = fmt["W"], fmt["H"]; tall = W < H
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(layer)
     icons = [app_icon(os.path.join(bm.ROOT, SHOTS[a][2]), 170) for a in apps]
-    cy = H // 2 - 150 if W > H else H // 2 - 330
+    y = 520 if tall else 150
     x = (W - (170 * len(icons) + 48 * (len(icons) - 1))) // 2
-    for ic in icons: layer.alpha_composite(ic, (x, cy)); x += 170 + 48
-    f_name, f_line, f_url = font(60, "Semibold"), font(34, "Regular"), font(32, "Medium")
-    for text, f, fill, dy in [("  ·  ".join(NAMES[a] for a in apps), f_name, INK, 220), ("Free on the App Store  ·  one iCloud, five apps", f_line, DIM, 310), ("diver.today", f_url, ACCENT, 380)]:
-        d.text(((W - d.textlength(text, font=f)) // 2, cy + dy), text, font=f, fill=fill)
+    for ic in icons: layer.alpha_composite(ic, (x, y)); x += 170 + 48
+    y += 170 + 36
+    f_name = font(56, "Semibold"); name = "  ·  ".join(NAMES[a] for a in apps)
+    d.text(((W - d.textlength(name, font=f_name)) // 2, y), name, font=f_name, fill=INK); y += 70 + 56
+    badge = Image.open(BADGE).convert("RGBA"); bh = 130 if tall else 110; badge = badge.resize((badge.width * bh // badge.height, bh), Image.LANCZOS)
+    layer.alpha_composite(badge, ((W - badge.width) // 2, y)); y += bh + 70
+    f_url = font(112 if tall else 128, "Bold"); url = "diver.today"
+    d.text(((W - d.textlength(url, font=f_url)) // 2, y), url, font=f_url, fill=ACCENT)
+    f_credit = font(22, "Regular"); yc = (H - 430) if tall else (H - 72)
+    for ln in wrap(d, CREDIT, f_credit, W - 160):
+        d.text(((W - d.textlength(ln, font=f_credit)) // 2, yc), ln, font=f_credit, fill=DIM); yc += 28
     return layer
 
 # ---------- assembly ----------
@@ -376,8 +498,9 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
     for i, s in enumerate(segs):
         k = s["kind"]
         if k in ("footage", "card"):
-            p = os.path.join(WORK, f"{name}-{i}.png"); card_layer(fmt, s, s.get("cat", False)).save(p); layers.append((p, t, s["dur"], 0, "0", True))
-            if s.get("cat"): cat_spans.append((t, t + s["dur"]))
+            pose = s.get("cat"); pose = "standing" if pose is True else pose
+            p = os.path.join(WORK, f"{name}-{i}.png"); card_layer(fmt, s, pose).save(p); layers.append((p, t, s["dur"], 0, "0", True))
+            if pose: cat_spans.append((t, t + s["dur"], pose))
         elif k == "phone":
             folder, label, _ = SHOTS[s["app"]]
             ph, pad = phone(os.path.join(folder, s["shot"] + ".png"), fmt["phone_h"])
@@ -387,9 +510,6 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
             p = os.path.join(WORK, f"{name}-{i}.png"); caption_layer(fmt, label, s["pill"], s["head"], s["sub"], left=True).save(p); layers.append((p, t, s["dur"], 0, "0", True))
         elif k == "outro":
             p = os.path.join(WORK, f"{name}-{i}.png"); outro_layer(fmt, s.get("apps") or list(dict.fromkeys(x["app"] for x in segs if x["kind"] == "phone"))).save(p); layers.append((p, t, s["dur"], 0, "0", True))
-        for j, (st, en, text) in enumerate(s["subs"]):
-            p = os.path.join(WORK, f"{name}-{i}-sub{j}.png"); sub_layer(fmt, text, k == "phone").save(p)
-            layers.append((p, t + st, en - st, 0, "0", True))
         t += s["dur"]
     src = os.path.join(BUILD, "bg.mp4") if source == "bg" else os.path.join(CLIPS, source + ".mp4")
     cmd = ["ffmpeg", "-y", "-v", "error", "-stats", "-stream_loop", "-1", "-i", src]
@@ -401,9 +521,9 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
         fc.append(f"[{k}:v]format=rgba,{f_in}{f_out}tpad=start_duration={st:.2f}:start_mode=add:color=black@0.0[l{k}]")
     n = len(layers)
     if with_bubbles and cat_spans:
-        tall = W < H
-        mouth = ((W // 2 - 30, 160 + 400 * 0.66) if tall else (W - 150 - 500 + 500 * 0.46 - 20, (H - 130 - 500) // 2 + 500 * 0.62))
-        enable = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b in cat_spans)
+        px, py = cat_place(fmt); mx, my = cat_mouth(CAT_SIZE["short" if W < H else "wide"], cat_spans[0][2])
+        mouth = (px + mx - 12, py + my - 10)
+        enable = "+".join(f"between(t,{a:.2f},{b:.2f})" for a, b, _ in cat_spans)
         for j, (diam, speed, period, off, amp) in enumerate([(26, 150, 5.3, 0.0, 14), (38, 125, 6.1, 2.1, 20), (18, 175, 4.4, 3.6, 10)]):
             n += 1; p = os.path.join(WORK, f"bubble-{j}.png"); bubble(diam).save(p)
             cmd += ["-loop", "1", "-framerate", str(FPS), "-t", f"{total:.2f}", "-i", p]
@@ -442,7 +562,17 @@ def build(slug, cut):
          "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", "-shortest", out])
     total = sum(x["dur"] for x in segs)
     print(f"{slug} {cut}: {total:.1f}s, {len(segs)} segments ->", out)
-    if cut == "wide": thumbnail(slug, fmt)
+    if cut == "wide": thumbnail(slug, fmt); captions(slug, segs)
+
+def captions(slug, segs):
+    """The spoken sentences with their times, as build/pilot/<slug>.srt, for YouTube's and Instagram's captions (nothing spoken is drawn on screen)."""
+    def stamp(t): return f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{int(t % 60):02d},{int(round((t % 1) * 1000)):03d}"
+    lines, n, t = [], 0, 0.0
+    for x in segs:
+        for st, en, text in x["subs"]:
+            n += 1; lines.append(f"{n}\n{stamp(t + st)} --> {stamp(t + en)}\n{text}\n")
+        t += x["dur"]
+    open(os.path.join(WORK, f"{slug}.srt"), "w").write("\n".join(lines))
 
 def thumbnail(slug, fmt):
     ep = EPISODES[slug]
