@@ -551,7 +551,7 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
     fc.append(f"{prev}format=yuv420p[v]")
     out = os.path.join(WORK, f"{name}.mp4")
     run(cmd + ["-filter_complex", ";".join(fc), "-map", "[v]", "-t", f"{total:.2f}", "-r", str(FPS),
-               "-c:v", "libx264", "-preset", "fast", "-crf", "16", "-pix_fmt", "yuv420p", out])
+               "-c:v", "libx264", "-preset", "fast", "-crf", "10", "-pix_fmt", "yuv420p", out])   # near-lossless: the final step encodes again
     return out
 
 def build(slug, cut):
@@ -572,8 +572,15 @@ def build(slug, cut):
     alst = os.path.join(WORK, f"{slug}-{cut}-audio.txt"); open(alst, "w").write("".join(f"file '{p}'\n" for x in segs for p in x["audio"]))
     audio = os.path.join(WORK, f"{slug}-{cut}-voice.wav"); run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", alst, "-c:a", "pcm_s16le", audio])
     out = os.path.join(WORK, f"{slug}-{cut}.mp4")
-    run(["ffmpeg", "-y", "-v", "error", "-i", video, "-i", audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000", "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-pix_fmt", "yuv420p",
-         "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", "-shortest", out])
+    # YouTube re-encodes whatever it gets, and a 1080p upload of a mostly still, dark, blurred picture at CRF 21 came out at
+    # 2.3 Mbit/s and looked smeared there (2026-10-31). So: one high-quality encode (CRF 14, slow, aq-mode 3 against banding in the
+    # dark water) for Instagram and the page, and a YouTube master upscaled to 1440 on the short side, which YouTube serves with
+    # its better VP9 encodes even to 1080p viewers.
+    enc = ["-c:v", "libx264", "-preset", "slow", "-crf", "14", "-x264-params", "aq-mode=3", "-pix_fmt", "yuv420p",
+           "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest"]
+    run(["ffmpeg", "-y", "-v", "error", "-i", video, "-i", audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000"] + enc + [out])
+    yt = "2560:1440" if cut == "wide" else "1440:2560"
+    run(["ffmpeg", "-y", "-v", "error", "-i", out, "-vf", f"scale={yt}:flags=lanczos", "-c:a", "copy"] + enc[:10] + ["-movflags", "+faststart", out.replace(".mp4", "-youtube.mp4")])
     total = sum(x["dur"] for x in segs)
     print(f"{slug} {cut}: {total:.1f}s, {len(segs)} segments ->", out)
     if cut == "wide": thumbnail(slug, fmt); captions(slug, segs)
