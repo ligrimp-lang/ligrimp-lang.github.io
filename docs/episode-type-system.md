@@ -82,6 +82,11 @@ brightest second of the dolphin clip under the hook card, and one from the blurr
   same left axis. Centred text is kept for what it suits: a headline, a figure, a single short line. Rustam's 2026-11-01 verdict
   on the first take of the term card ("this block of text is not readable") is the reason: three centred, wrapped lines read as a
   block, the same words as a keyed list read at a glance.
+- **Every row tells the viewer something the screen does not already.** A row that only names what is in front of them
+  ("SCR — its short form" under the headline "Surface consumption rate") is padding and goes, or becomes a fact ("SCR — for
+  short; the term GUE uses"). Rustam rejected that row on the second take of the same card, the same day. Before a card is handed
+  over, each line is read as the viewer will read it, with the question "what does this give me that the rest of the card does
+  not", and a line with no answer is cut.
 - **A pause after every number** (`hold=` seconds of silence after a segment's words), so a figure can be taken in before the
   next sentence starts.
 - **The example is announced at the start** ("An example dive: …", its own card), not disclaimed in small type at the end.
