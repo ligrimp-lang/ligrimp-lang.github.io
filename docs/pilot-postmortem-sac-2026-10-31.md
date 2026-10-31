@@ -227,3 +227,75 @@ The Mac holds the workbooks; this session does not. Each item goes through a fre
 - No claim about an app feature that is not in the build under review.
 - After publishing, the retention curve in YouTube Studio and the view rate in Instagram Insights are read at the first three
   seconds, and the next episode's hook is judged by them, not by the view count of a channel with no followers.
+
+## Second round: Rustam's feedback on the render (2026-11-01)
+
+He watched the first render of the redo and asked for the narrative and the type to be done again. His points, lightly cleaned:
+the pace ("better to have it a little longer and let the user think more": a pause after every slide with a number; 75 to 90
+seconds is fine); the type (the best font for bold and for small text, visibly separate, readable on a small screen, current
+practice for Mac and iPhone); the term slide (explain the SAC abbreviation, surface air consumption, and why it is not used: the
+gas is not necessarily air, nitrox and trimix); the maths slides ("magic numbers": every number on screen understood from the
+screen alone; 120 bar is a difference of two gauge readings, 12 L a tank volume, aluminium is 11.1 L; the small "made-up numbers"
+line at the end goes, the example is announced at the start); and the narrative (open with an example scenario and keep it in
+view on every step; his example: average depth 20 m, start 200 bar, end 40 bar, aluminium 11.1 L, 40 minutes; no word salad).
+
+What changed in `tools/pilot-episode.py`, for every episode from now on: `hold=` on a segment adds a pause of silence after its
+words; `scenario=` on an episode and `uses=` on a segment draw the example-dive strip with the step's values lit; `figures=` and
+`result=` draw a formula card with a label under every number and the result revealed on the beat (the segment's second sentence,
+or `beat=`); the cards sit on a scrim panel inside the platforms' safe area with the type system of `docs/episode-type-system.md`.
+The 20 L/min table card he approved keeps its words and takes the new type only.
+
+### The words, second round
+
+Six passages, twelve segments, 213 words plus 11.9 s of pauses: about 90 s at Leo's measured pace (the `time` command gives the
+truth; if it runs long, the first holds to shorten are the table's and step five's, 2.0 s each).
+
+1. *Footage, card "Gas planning · One number to plan your dives with"*
+   To plan dives and reserves you need one number: a key part of gas planning.
+2. *Card "The number · Surface consumption rate", then a keyed list: SCR — its short form · Unit — litres a minute, at the surface ·
+   Also SAC — surface air consumption, though the gas is not always air: nitrox, trimix; pause 1.0 s*
+   Your surface consumption rate, SCR: the litres you breathe in a minute at the surface. Also called SAC, surface air consumption,
+   but the gas is not always air: nitrox, trimix.
+3. *The example-dive strip, all four values lit, and the card "Our example · every step below uses these four values"; pause 1.5 s*
+   An example dive: twenty metres average depth, forty minutes, an eleven point one litre aluminium tank, two hundred bar down to forty.
+4. *Strip lit: 200 → 40 bar. Card "Step 1 · gas used": 200 bar (start) − 40 bar (end), then = 160 bar (used) on the beat; pause 1.2 s*
+   Step one: two hundred down to forty bar. A hundred and sixty bar used.
+5. *Strip lit: 200 → 40 bar, 11.1 L. Card "Step 2 · litres": 160 bar (used) × 11.1 L (tank), then = 1,776 L (gas used); pause 1.2 s*
+   Step two: a hundred and sixty bar times eleven point one litres. Seventeen hundred and seventy-six litres.
+6. *Strip lit: 40 min. Card "Step 3 · litres a minute": 1,776 L (gas used) ÷ 40 min (dive time), then = 44.4 L/min (at depth); pause 1.2 s*
+   Step three: over forty minutes. Forty-four point four litres a minute at depth.
+7. *Strip lit: 20 m. Card "Step 4 · pressure at depth": 20 m (average depth) ÷ 10 + 1, then = 3 ATA (pressure at 20 m); pause 1.0 s*
+   Step four: twenty metres is twenty over ten, plus one. Three atmospheres.
+8. *Strip lit: 20 m. Card "Step 5 · back to the surface": 44.4 L/min (at depth) ÷ 3 ATA (pressure), then = 14.8 → 15 L/min (your SCR,
+   rounded up); pause 2.0 s*
+   Step five: divide by that pressure. Fourteen point eight, rounded up to fifteen litres a minute at the surface. That is your rate.
+9. *Card "Several dives, easy and hard · Plan with the higher figure · rounded up"; pause 0.8 s*
+   Over several dives, easy and hard, plan with the higher figure, rounded up.
+10. *The approved table card, "An easy rule: 20 L/min · Bar every 5 minutes", the table and its footnote unchanged; pause 2.0 s*
+    For an easy rule, plan with twenty litres a minute: in bar, every five minutes. Breathe more? Use your own number. Breathe less?
+    Extra margin.
+11. *Phone: Dive log, the dive page. "Dive log shows your rate for each dive · Your Shearwater dives, as the computer logged them"*
+    Some computers track it with a transmitter; for Shearwater divers, Dive log shows it for each dive, and soon over time.
+12. *Outro.* Free on the App Store. diver dot today.
+
+The title is now "Your surface consumption rate, or SAC: work it out step by step" (it said "three steps"; there are five).
+
+### New figures and claims, for the GUE check
+
+The list above still stands; these are new in the second round, each NEEDS GUE CHECK unless marked otherwise.
+
+14. **The example's figures** (Rustam's): average depth 20 m, 40 minutes, aluminium 11.1 L, 200 bar at the start, 40 at the end.
+    Whether an "AL80" is 11.1 L of water capacity in GUE's material (the table card says AL80). NEEDS GUE CHECK.
+15. **160 bar used** = 200 − 40; **1,776 L** = 160 × 11.1 (stated flat, no "about"); **44.4 L/min at depth** = 1,776 ÷ 40;
+    **3 ATA** at 20 m = 20 ÷ 10 + 1; **14.8 L/min** = 44.4 ÷ 3, **rounded up to 15 L/min**. Arithmetic exact; the rounding up is
+    GUE's practice per the first-round review. NEEDS GUE CHECK.
+16. **"SAC, surface air consumption, but the gas is not always air: nitrox, trimix."** Rustam's reason for the term; whether GUE's
+    material states it this way or only uses SCR. NEEDS GUE CHECK.
+17. **"That is your rate"** after one dive, followed by segment 9's range of dives: the single-dive figure is an example, not the
+    planning figure; the order makes that clear. Wording only. NEEDS GUE CHECK.
+18. **The wording the GUE reviews already set stays as it was** ("dives and reserves", the transmitter clause, "soon over time",
+    the table and its footnote). Carried over; checked once more all the same.
+19. **"Step 4 · pressure at depth: 20 m ÷ 10 + 1 = 3 ATA"** on screen with "ATA" and "atmospheres" in the voice, where the site's
+    pages say "bar"; as item 5. NEEDS GUE CHECK.
+20. **Timing**, not a claim: about 90 s by the measured pace, over the first brief's sixty but inside Rustam's 75–90; the Mac's
+    `time` run decides, and the holds are the first thing to trim.

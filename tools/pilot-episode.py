@@ -39,8 +39,11 @@ ORPHEUS_PY = os.path.join(bm.ROOT, "build", "orpheus-venv", "bin", "python")   #
 CHATTERBOX_PY = os.path.join(bm.ROOT, "build", "chatterbox-venv", "bin", "python")   # "chatterbox:default[:exaggeration:cfg]", tools/chatterbox-say.py
 SPOKEN = [(r"\bSAC\b", "sack"), (r"\bSCR\b", "S.C.R."), (r"\bDCR\b", "D.C.R."), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
 GAP, PAD, LEAD, FADE = 0.25, 0.8, 0.3, 0.5   # between sentences (unused since passages); after a passage; before the first; layer fades
-FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80),
-       "short": dict(W=1080, H=1920, phone_h=880, phone_top=540, drift=90)}
+# pt_per_px: the points one frame pixel is on the viewer's screen (a 1080-wide Reel on a 390-pt iPhone; a 1920-wide video in a
+# 1280-pt window), for the type's optical size and the minimum size. safe: the box text keeps to (x0, y0, x1, y1): on the short cut the
+# top 14% and the bottom 25% are under the platforms' chrome and the right-hand column under their buttons (docs/episode-type-system.md).
+FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80, pt_per_px=0.667, safe=(120, 70, 1800, 1010)),
+       "short": dict(W=1080, H=1920, phone_h=880, phone_top=540, drift=90, pt_per_px=0.361, safe=(72, 270, 910, 1440))}
 
 # One entry per episode. The cat is per episode: cat="<pose>" on a card and thumb_cat on the entry; none at all on sac-rate (Rustam,
 # 2026-10-31: nobody asked for a cat in a SAC episode) and none on a new episode unless he says so.
@@ -79,32 +82,40 @@ EPISODES = {
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
  "sac-rate": dict(
-  # Redone 2026-10-31 after Rustam's verdict on the first take (bad in content, facts and visuals; the cat uninvited; 1 view), the GUE
-  # expert's review of it and Rustam's structure for the redo (the post-mortem is docs/pilot-postmortem-sac-2026-10-31.md): the problem
-  # and why the number matters, then the term given in full and explained in plain words with "also known as SAC" (SCR, GUE's term, his
-  # decision), then the steps in GUE's order for someone with little background (litres used, litres a minute, divided by the pressure at
-  # the average depth), GUE's advice (several dives, easy and hard, the higher figure rounded up), and at the very end that some computers
-  # track it and Dive log shows it. No cat anywhere in it. Every figure is on the check list in that document; nothing is rendered before
-  # the Mac has checked it and Rustam has read the words.
-  question="Your surface consumption rate, or SAC: work it out in three steps", thumb_cat=None, thumb_sub="from any dive, without hard maths", clip="dolphins-blue",
+  # Redone 2026-10-31 after Rustam's verdict on the first take, the GUE expert's review and his structure (docs/pilot-postmortem-sac-2026-10-31.md),
+  # and again on 2026-11-01 after he watched the render: a slower pace with a pause after every number (hold=), one example dive kept in
+  # view on every step (scenario=, lit per step by uses=), formula cards whose every number carries a label and whose result appears on the
+  # beat (figures=, result=), the term explained with why SAC is not used, and the type system in docs/episode-type-system.md. SCR is the term,
+  # GUE's and his decision; the GUE reviews' wording stays ("reserves", the transmitter clause, "soon over time", the 20 L/min table he
+  # approved). No cat anywhere in it. Every figure is on the check list in the post-mortem; nothing is rendered before the Mac has
+  # checked it and Rustam has read the words.
+  question="Your surface consumption rate, or SAC: work it out step by step", thumb_cat=None, thumb_sub="from any dive, without hard maths", clip="dolphins-blue",
+  scenario=[("depth", "average depth", "20 m"), ("time", "dive time", "40 min"), ("tank", "aluminium tank", "11.1 L"), ("bar", "gauge, start \u2192 end", "200 \u2192 40 bar")],
   segments=[
    dict(kind="footage", clip="dolphins-blue", title="Gas planning", big="One number to plan your dives with",
         voice="To plan dives and reserves you need one number: a key part of gas planning."),
-   dict(new=True, kind="card", title="One number", big="Surface consumption rate, SCR", lines=["also known as SAC", "litres a minute, at the surface"],
-        voice="That is your surface consumption rate, SCR, also known as SAC: the litres you breathe in a minute at the surface."),
-   dict(new=True, kind="card", title="Step 1 \u00b7 litres used", big="120 bar \u00d7 12 L = 1,440 L", foot=WORKED,
-        voice="No hard maths. Say your last dive used a hundred and twenty bar from a twelve-litre cylinder; bar times litres, fourteen hundred and forty litres."),
-   dict(kind="card", title="Step 2 \u00b7 litres a minute", big="1,440 L \u00f7 40 min = 36 L/min at depth",
-        voice="Over forty minutes, that is thirty-six litres a minute at depth."),
-   dict(kind="card", title="Step 3 \u00b7 back to the surface", big="36 L/min \u00f7 2.0 ATA = 18 L/min", lines=["average depth 10 m: 10 \u00f7 10 + 1 = 2.0 ATA"],
-        voice="At ten metres average depth the pressure is two atmospheres: divide by two, eighteen litres a minute at the surface."),
-   dict(new=True, kind="card", title="Several dives, easy and hard", big="18 \u2192 20 L/min", lines=["the higher figure, rounded up"],
-        voice="Do it over several dives, easy and hard, and plan with the higher figure, rounded up."),
-   dict(new=True, kind="card", title="An easy rule: 20 L/min", big="Bar every 5 minutes",
+   dict(new=True, kind="card", title="The number", big="Surface consumption rate",
+        rows=[("SCR", "its short form"), ("Unit", "litres a minute, at the surface"), ("Also SAC", "surface air consumption, though the gas is not always air: nitrox, trimix")], hold=1.0,
+        voice="Your surface consumption rate, SCR: the litres you breathe in a minute at the surface. Also called SAC, surface air consumption, but the gas is not always air: nitrox, trimix."),
+   dict(new=True, kind="card", title="Our example", uses="all", lines=["every step below uses these four values"], hold=1.5,
+        voice="An example dive: twenty metres average depth, forty minutes, an eleven point one litre aluminium tank, two hundred bar down to forty."),
+   dict(kind="card", title="Step 1 \u00b7 gas used", uses=["bar"], figures=[("200 bar", "start"), "\u2212", ("40 bar", "end")], result=("160 bar", "used"), hold=1.2,
+        voice="Step one: two hundred down to forty bar. A hundred and sixty bar used."),
+   dict(kind="card", title="Step 2 \u00b7 litres", uses=["bar", "tank"], figures=[("160 bar", "used"), "\u00d7", ("11.1 L", "tank")], result=("1,776 L", "gas used"), hold=1.2,
+        voice="Step two: a hundred and sixty bar times eleven point one litres. Seventeen hundred and seventy-six litres."),
+   dict(new=True, kind="card", title="Step 3 \u00b7 litres a minute", uses=["time"], figures=[("1,776 L", "gas used"), "\u00f7", ("40 min", "dive time")], result=("44.4 L/min", "at depth"), hold=1.2,
+        voice="Step three: over forty minutes. Forty-four point four litres a minute at depth."),
+   dict(kind="card", title="Step 4 \u00b7 pressure at depth", uses=["depth"], figures=[("20 m", "average depth"), "\u00f7 10 + 1"], result=("3 ATA", "pressure at 20 m"), hold=1.0,
+        voice="Step four: twenty metres is twenty over ten, plus one. Three atmospheres."),
+   dict(kind="card", title="Step 5 \u00b7 back to the surface", uses=["depth"], figures=[("44.4 L/min", "at depth"), "\u00f7", ("3 ATA", "pressure")], result=("14.8 \u2192 15 L/min", "your SCR, rounded up"), hold=2.0,
+        voice="Step five: divide by that pressure. Fourteen point eight, rounded up to fifteen litres a minute at the surface. That is your rate."),
+   dict(new=True, kind="card", title="Several dives, easy and hard", big="Plan with the higher figure", lines=["rounded up"], hold=0.8,
+        voice="Over several dives, easy and hard, plan with the higher figure, rounded up."),
+   dict(kind="card", title="An easy rule: 20 L/min", big="Bar every 5 minutes",
         table=[("", "single AL80", "double AL80"), ("10 m", "20 bar", "10 bar"), ("20 m", "30 bar", "15 bar"), ("30 m", "40 bar", "20 bar")],
-        foot="Rounded up. Breathe more? Use your own figure. Breathe less? This adds a margin.",
-        voice="For an easy rule, plan with twenty litres a minute: here it is in bar every five minutes. Breathe more? Use your own number; breathe less, and it's extra margin."),
-   dict(kind="phone", app="dive-log", shot="1-dive-page/00", pill="Free app", head="Dive log shows your rate for each dive", sub="Your Shearwater dives, as the computer logged them",
+        foot="Rounded up. Breathe more? Use your own figure. Breathe less? This adds a margin.", hold=2.0,
+        voice="For an easy rule, plan with twenty litres a minute: in bar, every five minutes. Breathe more? Use your own number. Breathe less? Extra margin."),
+   dict(new=True, kind="phone", app="dive-log", shot="1-dive-page/00", pill="Free app", head="Dive log shows your rate for each dive", sub="Your Shearwater dives, as the computer logged them",
         voice="Some computers track it with a transmitter; for Shearwater divers, Dive log shows it for each dive, and soon over time."),
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
@@ -226,6 +237,7 @@ def timeline(ep):
     """The episode's segments with their sentences timed: seg['dur'], seg['subs'] = [(start, end, text)] relative to the segment,
     seg['audio'] the wav pieces to concatenate. Each passage is one synthesised piece, cut at the segments' first words."""
     segs = [dict(x) for x in ep["segments"]]
+    for x in segs: x.setdefault("scenario", ep.get("scenario"))   # the example dive every step keeps in view
     groups = passages(segs)
     texts = [" ".join(segs[i]["voice"] for i in g) for g in groups]
     synthesise(texts)
@@ -251,8 +263,13 @@ def timeline(ep):
                 st, en = times[j]; nxt = times[j + 1][0] if j + 1 < len(times) else b1
                 subs.append((lead + st - b0, lead + min(en + 0.3, nxt, b1) - b0, sent))
             x["subs"] = subs
-            x["audio"] = ([silence(LEAD)] if lead else []) + [cut(wav, b0, b1)] + ([silence(PAD)] if pad else [])
-            x["dur"] = lead + (b1 - b0) + pad
+            hold = float(x.get("hold", 0))   # a pause after the words, so a number can be taken in (Rustam, 2026-11-01: "let the user think more")
+            x["audio"] = ([silence(LEAD)] if lead else []) + [cut(wav, b0, b1)] + ([silence(hold)] if hold else []) + ([silence(PAD)] if pad else [])
+            x["dur"] = lead + (b1 - b0) + hold + pad
+            # a card's result appears on a beat: at its own `beat`, else when its second sentence starts (a step says the operands, then the
+            # result), else early in a one-sentence card
+            reveal = x["beat"] if x.get("beat") is not None else (subs[1][0] - CARD_LEAD if len(subs) > 1 else min(0.9, (b1 - b0) * 0.45))
+            x["reveal"] = max(0.3, min(reveal, x["dur"] - 0.8))
     return segs
 
 # ---------- drawing ----------
@@ -440,57 +457,171 @@ def bubble(diam):
     d.ellipse((3 + diam*0.22, 3 + diam*0.18, 3 + diam*0.42, 3 + diam*0.34), fill=(255, 255, 255, 200))
     return im
 
-def card_layer(fmt, s, pose):
-    """A card: a small spaced title in teal, a big line, lines, a footnote; big, because it is the only content on the screen
-    (Rustam, 2026-10-29); the cat beside it (wide) or above it (short) when the segment names a pose
-    (cat="standing|swimming|ascending|sharing|gauge|head", Rustam's drawings)."""
-    W, H = fmt["W"], fmt["H"]; tall = W < H
+MUTED = (178, 198, 208)      # secondary text: a cool grey-blue, a clear step down from the ink and apart from the teal
+PANEL = (8, 14, 20, 186)     # the scrim behind text: the water's bright top washes out white type (Rustam, 2026-11-01)
+UNLIT = (112, 126, 136)      # a scenario value the step does not use
+# Sizes in frame pixels per cut (docs/episode-type-system.md): on the short cut 34 px is about 12 pt on an iPhone, above Apple's 11-pt
+# floor; big lines and figures are Display sizes, labels and footnotes Text sizes; a clear step between each level.
+TYPE = {"short": dict(title=34, big=92, line=46, foot=34, fig=96, lab=34, res=104, sv=46, sl=32),
+        "wide":  dict(title=38, big=104, line=52, foot=38, fig=108, lab=38, res=116, sv=50, sl=34)}
+WEIGHTS = {"Regular": 400, "Medium": 500, "Semibold": 600, "Bold": 700, "Heavy": 800}
+
+def typeface(fmt, size, weight="Regular"):
+    """SF Pro at `size` with its optical size set to the points the viewer sees: SF Pro is one variable font whose design moves from the
+    Text cut to the Display cut between 17 and 28 pt (Apple, WWDC20), so small labels get the Text cut and big lines the Display cut
+    when the axis is there. A font without the axis (DejaVu standing in off the Mac) is used as it is."""
+    f = font(size, weight)
+    try:
+        axes = f.get_variation_axes()
+        names = [(a.get("name") or b"").decode("latin-1") if isinstance(a.get("name"), bytes) else str(a.get("name") or "") for a in axes]
+        if any("ptical" in n or n.lower() == "opsz" for n in names):
+            vals = []
+            for a, n in zip(axes, names):
+                if "ptical" in n or n.lower() == "opsz": v = size * fmt["pt_per_px"]
+                elif "eight" in n or n.lower() == "wght": v = WEIGHTS.get(weight, 400)
+                else: v = a["default"]
+                vals.append(max(a["minimum"], min(a["maximum"], v)))
+            f.set_variation_by_axes(vals)
+    except Exception:
+        pass
+    return f
+
+def panel(layer, box, radius=36):
+    """The scrim: a rounded dark panel behind a block of text."""
+    ImageDraw.Draw(layer).rounded_rectangle(box, radius=radius, fill=PANEL)
+
+def scenario_strip(fmt, scenario, uses):
+    """The example dive, kept in view on every step: a compact strip of its values, the ones this step uses lit in teal, the rest dimmed
+    (Rustam, 2026-11-01: the viewer always has the scenario in front of them). A 2×2 grid on the short cut, one row on the wide."""
+    W, H = fmt["W"], fmt["H"]; tall = W < H; T = TYPE["short" if tall else "wide"]
+    sx0, sy0, sx1, sy1 = fmt["safe"]; width = sx1 - sx0
+    f_cap, f_v, f_l = typeface(fmt, T["title"] - 6, "Semibold"), typeface(fmt, T["sv"], "Semibold"), typeface(fmt, T["sl"], "Regular")
+    cols = 2 if tall else len(scenario); rows = -(-len(scenario) // cols)
+    cell_h = int(T["sv"] * 1.2 + T["sl"] * 1.35); pad = 28; cap_h = int(T["title"] * 1.1)
+    h = pad + cap_h + rows * cell_h + pad
+    im = Image.new("RGBA", (width, h), (0, 0, 0, 0)); panel(im, (0, 0, width - 1, h - 1), radius=30); d = ImageDraw.Draw(im)
+    bm.draw_spaced(d, (pad, pad - 2), "EXAMPLE DIVE", f_cap, ACCENT, 2.4)
+    cw = (width - 2 * pad) // cols
+    for i, (key, label, value) in enumerate(scenario):
+        lit = uses == "all" or key in uses
+        cx = pad + (i % cols) * cw + cw // 2; cy = pad + cap_h + (i // cols) * cell_h
+        d.text((cx - d.textlength(value, font=f_v) / 2, cy), value, font=f_v, fill=ACCENT if lit else UNLIT)
+        d.text((cx - d.textlength(label, font=f_l) / 2, cy + int(T["sv"] * 1.15)), label, font=f_l, fill=MUTED if lit else UNLIT)
+    return im, h
+
+def card_layer(fmt, s, pose, stage=None):
+    """A card: a small spaced title in teal, a big line, secondary lines, a figures row (each number with a small label under it) and a
+    result, a table, a footnote; on a dark panel inside the safe area so it reads over the bright top of the water; the example-dive
+    strip above it when the segment names what it `uses`. Big, because it is the only content on the screen (Rustam, 2026-10-29).
+    `stage` "base" draws everything but the result (its space kept), "result" the result alone: it appears on the segment's beat.
+    The cat beside it (wide) or above it (short) when the segment names a pose."""
+    W, H = fmt["W"], fmt["H"]; tall = W < H; T = TYPE["short" if tall else "wide"]
+    sx0, sy0, sx1, sy1 = fmt["safe"]
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0)); d = ImageDraw.Draw(layer)
-    if tall:
-        x0, max_w = 70, W - 140
-        f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(104, "Bold"), font(60, "Medium"), font(38, "Regular")
-        lh_title, lh_big, lh_line, lh_foot = 72, 122, 74, 48
-    else:
-        x0, max_w = 160, (900 if pose else 1560)
-        f_title, f_big, f_line, f_foot = font(40, "Semibold"), font(112, "Bold"), font(64, "Medium"), font(40, "Regular")
-        lh_title, lh_big, lh_line, lh_foot = 76, 132, 80, 50
-    blocks = [(s["title"].upper(), f_title, ACCENT, lh_title, True)]
+    tf = lambda k, w: typeface(fmt, T[k], w)
+    f_title, f_big, f_line, f_foot = tf("title", "Semibold"), tf("big", "Bold"), tf("line", "Medium"), tf("foot", "Regular")
+    f_fig, f_lab, f_res = tf("fig", "Bold"), tf("lab", "Medium"), tf("res", "Bold")
+    pad = 44 if tall else 48
+    px0, px1 = sx0, (sx1 if not (pose and not tall) else sx0 + 1000)   # the panel's span; the text column sits inside its padding
+    x0, max_w = px0 + pad, (px1 - px0) - 2 * pad
+    top = sy0
+    strip = None
+    if s.get("scenario") and "uses" in s and stage != "result":
+        strip, sh = scenario_strip(fmt, s["scenario"], s["uses"]); top = sy0 + sh + 16
+    elif s.get("scenario") and "uses" in s:
+        _, sh = scenario_strip(fmt, s["scenario"], s["uses"]); top = sy0 + sh + 16
+    lh = lambda f: int(f.size * 1.22)
+    blocks = [("spaced", s["title"].upper(), f_title, ACCENT, lh(f_title) + 10)]
     if s.get("big"):
-        for shrink in (1.0, 0.88, 0.78):   # a long figure takes a smaller size rather than a third line
-            fb = font(int(f_big.size * shrink), "Bold"); lines = wrap(d, s["big"], fb, max_w)
+        for shrink in (1.0, 0.88, 0.78):   # a long line takes a smaller size rather than a third line
+            fb = typeface(fmt, int(T["big"] * shrink), "Bold"); lines = wrap(d, s["big"], fb, max_w)
             if len(lines) <= 2: break
-        blocks += [(ln, fb, INK, int(lh_big * shrink), False) for ln in lines]; blocks.append(("", None, None, 24, False))
+        blocks += [("text", ln, fb, INK, lh(fb)) for ln in lines]; blocks.append(("gap", None, None, None, 18))
     for ln in s.get("lines", []):
-        blocks += [(w, f_line, INK, lh_line, False) for w in wrap(d, ln, f_line, max_w)]; blocks.append(("", None, None, 18, False))
-    if s.get("table"):   # rows of cells in columns, the first row a dim header (Rustam, 2026-10-31: the 20 L/min table)
-        rows = s["table"]; gap = 56
+        blocks += [("text", w, f_line, MUTED, lh(f_line)) for w in wrap(d, ln, f_line, max_w)]
+    if s.get("lines"): blocks.append(("gap", None, None, None, 14))
+    if s.get("rows"):   # a definition list: a short key in teal, its explanation beside it, left-aligned and wrapped, one row per fact
+        f_key, f_val = typeface(fmt, T["lab"] + 6, "Semibold"), typeface(fmt, T["line"] - 4, "Medium")
+        keyw = max(d.textlength(k, font=f_key) for k, _ in s["rows"]) + 30
+        for k, v in s["rows"]:
+            vl = wrap(d, v, f_val, max_w - keyw)
+            blocks.append(("row", (k, vl, keyw, f_key), f_val, MUTED, max(lh(f_key), int(f_val.size * 1.3) * len(vl)) + 16))
+        blocks.append(("gap", None, None, None, 6))
+    if s.get("figures"):   # operands with a label under each, operators between: every number understood from the screen alone
+        for shrink in (1.0, 0.9, 0.8, 0.7):
+            ff, fl = typeface(fmt, int(T["fig"] * shrink), "Bold"), typeface(fmt, int(T["lab"] * max(shrink, 0.85)), "Medium")
+            items, wsum = [], 0
+            for it in s["figures"]:
+                if isinstance(it, tuple):
+                    wv, wl = d.textlength(it[0], font=ff), d.textlength(it[1], font=fl); items.append(("operand", it, max(wv, wl)))
+                else:
+                    items.append(("op", it, d.textlength(it, font=ff)))
+            wsum = sum(w for _, _, w in items) + 30 * (len(items) - 1)
+            if wsum <= max_w: break
+        blocks.append(("gap", None, None, None, 10))
+        blocks.append(("figures", (items, ff, fl, wsum), None, None, lh(ff) + int(fl.size * 1.35)))
+    if s.get("result"):
+        for shrink in (1.0, 0.88, 0.78, 0.68):   # a long result takes a smaller size rather than running out of the column
+            f_res = typeface(fmt, int(T["res"] * shrink), "Bold")
+            if d.textlength("= " + s["result"][0], font=f_res) <= max_w: break
+        blocks.append(("gap", None, None, None, 26))
+        blocks.append(("result", s["result"], f_res, ACCENT, lh(f_res) + int(f_lab.size * 1.35)))
+    if s.get("table"):   # rows of cells in columns, the first row a dim header (Rustam, 2026-10-31: the 20 L/min table, approved)
+        rows = s["table"]; gap = 48
         cw = [max(d.textlength(r[i], font=f_foot if k == 0 else f_line) for k, r in enumerate(rows)) for i in range(len(rows[0]))]
-        tx = (W - sum(cw) - gap * (len(cw) - 1)) // 2 if tall else x0
+        tw = sum(cw) + gap * (len(cw) - 1); tx = x0 + (max_w - tw) // 2 if tall else x0
         xs = [tx + sum(cw[:i]) + gap * i for i in range(len(cw))]
-        blocks.append(("", None, None, 10, False))
+        blocks.append(("gap", None, None, None, 12))
         for k, r in enumerate(rows):
-            blocks.append(((r, xs, cw), f_foot if k == 0 else f_line, DIM if k == 0 else INK, lh_foot + 8 if k == 0 else lh_line, False))
-        blocks.append(("", None, None, 18, False))
+            blocks.append(("table", (r, xs, cw), f_foot if k == 0 else f_line, MUTED if k == 0 else INK, lh(f_foot) + 6 if k == 0 else lh(f_line) + 4))
     if s.get("foot"):
-        blocks.append(("", None, None, 22, False)); blocks += [(w, f_foot, DIM, lh_foot, False) for w in wrap(d, s["foot"], f_foot, max_w)]
-    total = sum(b[3] for b in blocks)
+        blocks.append(("gap", None, None, None, 20)); blocks += [("text", w, f_foot, DIM, lh(f_foot)) for w in wrap(d, s["foot"], f_foot, max_w)]
+    total = sum(b[4] for b in blocks)
+    room = (sy1 - pad) - (top + pad)   # the text block is centred in the safe area, the panel's padding kept inside it; under a strip it
+    anchored = s.get("scenario") and "uses" in s   # sits straight below the strip instead, so the step and its example read as one
     if tall:
-        y = 120 + CAT_SIZE["short"] + 40 if pose else (H - 300 - total) // 2
+        y = 120 + CAT_SIZE["short"] + 40 if pose else (top + pad if anchored else top + pad + max(0, (room - total) // 2))
     else:
-        y = (H - total) // 2 - 20
-    for text, f, fill, lh, spaced in blocks:
-        if isinstance(text, tuple):   # a table row: each cell right-aligned in its column, the first column left-aligned
-            cells, xs, cw = text
+        y = top + pad if anchored else top + pad + max(0, (room - total) // 2)
+    if stage != "result":
+        panel(layer, (px0, y - pad, px1 - 1, min(sy1, y + total + pad) - 1))
+        if strip is not None: layer.alpha_composite(strip, (sx0, sy0))
+    cx = x0 + max_w / 2
+    left = (not tall) or bool(s.get("rows"))   # one left axis for a card that explains (title, headline and rows alike); numbers stay centred on the short cut
+    for kind, payload, f, fill, h in blocks:
+        draw_it = (stage is None) or (stage == "base" and kind != "result") or (stage == "result" and kind == "result")
+        if draw_it and kind == "spaced":
+            x = x0 if left else cx - (d.textlength(payload, font=f) + 2.6 * len(payload)) / 2
+            bm.draw_spaced(d, (x, y), payload, f, fill, 2.6)
+        elif draw_it and kind == "text":
+            x = x0 if left else cx - d.textlength(payload, font=f) / 2
+            d.text((x, y), payload, font=f, fill=fill)
+        elif draw_it and kind == "figures":
+            items, ff, fl, wsum = payload; x = cx - wsum / 2 if tall else x0
+            for which, it, w in items:
+                if which == "operand":
+                    v, lab = it
+                    d.text((x + (w - d.textlength(v, font=ff)) / 2, y), v, font=ff, fill=INK)
+                    d.text((x + (w - d.textlength(lab, font=fl)) / 2, y + lh(ff)), lab, font=fl, fill=MUTED)
+                else:
+                    d.text((x, y), it, font=ff, fill=MUTED)
+                x += w + 30
+        elif draw_it and kind == "result":
+            v, lab = payload; text = "= " + v
+            x = cx - d.textlength(text, font=f) / 2 if tall else x0
+            d.text((x, y), text, font=f, fill=fill)
+            lx = cx - d.textlength(lab, font=f_lab) / 2 if tall else x0 + d.textlength("= ", font=f)
+            d.text((lx, y + lh(f)), lab, font=f_lab, fill=MUTED)
+        elif draw_it and kind == "row":
+            k, vl, keyw, f_key = payload
+            d.text((x0, y + 4), k, font=f_key, fill=ACCENT)
+            for n, ln in enumerate(vl): d.text((x0 + keyw, y + n * int(f.size * 1.3)), ln, font=f, fill=fill)
+        elif draw_it and kind == "table":
+            cells, xs, cw = payload
             for i, c in enumerate(cells):
                 d.text((xs[i] + (0 if i == 0 else cw[i] - d.textlength(c, font=f)), y), c, font=f, fill=fill)
-        elif text:
-            x = (W - d.textlength(text, font=f)) // 2 if tall else x0
-            if spaced:
-                bm.draw_spaced(d, (x - 6, y), text, f, fill, 2.6)
-            else:
-                d.text((x, y), text, font=f, fill=fill)
-        y += lh
-    if pose:
+        y += h
+    if pose and stage != "result":
         layer.alpha_composite(cat(CAT_SIZE["short" if tall else "wide"], pose), cat_place(fmt))
     return layer
 
@@ -538,7 +669,12 @@ def render_chunk(fmt, segs, name, source, with_bubbles):
         k = s["kind"]
         if k in ("footage", "card"):
             pose = s.get("cat"); pose = "standing" if pose is True else pose
-            p = os.path.join(WORK, f"{name}-{i}.png"); card_layer(fmt, s, pose).save(p); layers.append((p, t, s["dur"], 0, "0", True))
+            if s.get("result"):   # the operands first, the result on the beat
+                p = os.path.join(WORK, f"{name}-{i}.png"); card_layer(fmt, s, pose, "base").save(p); layers.append((p, t, s["dur"], 0, "0", True))
+                r = s.get("reveal", 0.9)
+                p = os.path.join(WORK, f"{name}-{i}-result.png"); card_layer(fmt, s, pose, "result").save(p); layers.append((p, t + r, s["dur"] - r, 0, "0", True))
+            else:
+                p = os.path.join(WORK, f"{name}-{i}.png"); card_layer(fmt, s, pose).save(p); layers.append((p, t, s["dur"], 0, "0", True))
             if pose: cat_spans.append((t, t + s["dur"], pose))
         elif k == "phone":
             folder, label, _ = SHOTS[s["app"]]
@@ -638,7 +774,14 @@ def dump_script(slug):
     ep = EPISODES[slug]
     print(f"# {slug}: {ep['question']}\n\nOn screen (cards) and spoken (voice), in order; the same in both cuts.\n")
     for i, x in enumerate(ep["segments"], 1):
-        on = [x.get("title", ""), x.get("big", "")] + x.get("lines", []) + [x.get("foot", "")]
+        on = [x.get("title", ""), x.get("big", "")] + x.get("lines", [])
+        if x.get("rows"): on += [f"{k}: {v}" for k, v in x["rows"]]
+        if x.get("figures"): on.append(" ".join(f"{it[0]} ({it[1]})" if isinstance(it, tuple) else it for it in x["figures"]))
+        if x.get("result"): on.append(f"= {x['result'][0]} ({x['result'][1]}), on the beat")
+        if x.get("table"): on += [" | ".join(r) for r in x["table"]]
+        on.append(x.get("foot", ""))
+        if "uses" in x and ep.get("scenario"): on.insert(0, "example dive strip, lit: " + ", ".join(v for k, l, v in ep["scenario"] if x["uses"] == "all" or k in x["uses"]))
+        if x.get("hold"): on.append(f"then a pause of {x['hold']} s")
         if x["kind"] == "phone": on = [x["head"], x["sub"]]
         print(f"## {i}. {x['kind']}\n\nOn screen: " + " | ".join(o for o in on if o) + f"\n\nVoice: {x['voice']}\n")
 
