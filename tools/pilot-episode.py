@@ -95,7 +95,7 @@ EPISODES = {
    dict(kind="footage", clip="dolphins-blue", title="Gas planning", big="One number to plan your dives with",
         voice="To plan dives and reserves you need one number: a key part of gas planning."),
    dict(new=True, kind="card", title="The number", big="Surface consumption rate",
-        rows=[("SCR", "its short form"), ("Unit", "litres a minute, at the surface"), ("Also SAC", "surface air consumption, though the gas is not always air: nitrox, trimix")], hold=1.0,
+        rows=[("SCR", "for short; the term GUE uses"), ("Unit", "litres a minute, at the surface"), ("Also SAC", "surface air consumption, though the gas is not always air: nitrox, trimix")], hold=1.0,
         voice="Your surface consumption rate, SCR: the litres you breathe in a minute at the surface. Also called SAC, surface air consumption, but the gas is not always air: nitrox, trimix."),
    dict(new=True, kind="card", title="Our example", uses="all", lines=["every step below uses these four values"], hold=1.5,
         voice="An example dive: twenty metres average depth, thirty-five minutes, an eleven point one litre aluminium tank, two hundred bar down to sixty."),
