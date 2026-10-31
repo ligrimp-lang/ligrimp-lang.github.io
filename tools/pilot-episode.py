@@ -86,22 +86,26 @@ EPISODES = {
   # the average depth), GUE's advice (several dives, easy and hard, the higher figure rounded up), and at the very end that some computers
   # track it and Dive log shows it. No cat anywhere in it. Every figure is on the check list in that document; nothing is rendered before
   # the Mac has checked it and Rustam has read the words.
-  question="Why does your buddy surface with more gas than you?", thumb_cat=None, thumb_sub="one number explains it: your surface consumption rate", clip="dolphins-blue",
+  question="Your surface consumption rate, or SAC: work it out in three steps", thumb_cat=None, thumb_sub="from any dive, without hard maths", clip="dolphins-blue",
   segments=[
    dict(kind="footage", clip="dolphins-blue", title="Gas planning", big="One number to plan your dives with",
-        voice="To plan your dives you need one number: a key part of gas planning."),
+        voice="To plan dives and reserves you need one number: a key part of gas planning."),
    dict(new=True, kind="card", title="One number", big="Surface consumption rate, SCR", lines=["also known as SAC", "litres a minute, at the surface"],
         voice="That is your surface consumption rate, SCR, also known as SAC: the litres you breathe in a minute at the surface."),
    dict(new=True, kind="card", title="Step 1 \u00b7 litres used", big="120 bar \u00d7 12 L = 1,440 L", foot=WORKED,
-        voice="Any dive gives it, without hard maths. Your last one: a hundred and twenty bar from a twelve-litre cylinder; bar times litres, fourteen hundred and forty litres."),
+        voice="No hard maths. Say your last dive used a hundred and twenty bar from a twelve-litre cylinder; bar times litres, fourteen hundred and forty litres."),
    dict(kind="card", title="Step 2 \u00b7 litres a minute", big="1,440 L \u00f7 40 min = 36 L/min at depth",
         voice="Over forty minutes, that is thirty-six litres a minute at depth."),
-   dict(kind="card", title="Step 3 \u00b7 back to the surface", big="36 L/min \u00f7 2.0 ATA = 18 L/min", lines=["average depth 10 m = 2.0 ATA"],
+   dict(kind="card", title="Step 3 \u00b7 back to the surface", big="36 L/min \u00f7 2.0 ATA = 18 L/min", lines=["average depth 10 m: 10 \u00f7 10 + 1 = 2.0 ATA"],
         voice="At ten metres average depth the pressure is two atmospheres: divide by two, eighteen litres a minute at the surface."),
    dict(new=True, kind="card", title="Several dives, easy and hard", big="18 \u2192 20 L/min", lines=["the higher figure, rounded up"],
-        voice="Do it over several dives, easy and hard, and plan with the higher figure, rounded up: eighteen becomes twenty litres a minute."),
+        voice="Do it over several dives, easy and hard, and plan with the higher figure, rounded up."),
+   dict(new=True, kind="card", title="An easy rule: 20 L/min", big="Bar every 5 minutes",
+        table=[("", "single AL80", "double AL80"), ("10 m", "20 bar", "10 bar"), ("20 m", "30 bar", "15 bar"), ("30 m", "40 bar", "20 bar")],
+        foot="Rounded up. Breathe more? Use your own figure. Breathe less? This adds a margin.",
+        voice="For an easy rule, plan with twenty litres a minute: here it is in bar every five minutes. Breathe more? Use your own number; breathe less, and it's extra margin."),
    dict(kind="phone", app="dive-log", shot="1-dive-page/00", pill="Free app", head="Dive log shows your rate for each dive", sub="Your Shearwater dives, as the computer logged them",
-        voice="Some computers track it too; for Shearwater divers, Dive log shows it for each dive, and how it changes over time."),
+        voice="Some computers track it with a transmitter; for Shearwater divers, Dive log shows it for each dive, and soon over time."),
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
  "minimum-gas": dict(
@@ -458,6 +462,15 @@ def card_layer(fmt, s, pose):
         blocks += [(ln, fb, INK, int(lh_big * shrink), False) for ln in lines]; blocks.append(("", None, None, 24, False))
     for ln in s.get("lines", []):
         blocks += [(w, f_line, INK, lh_line, False) for w in wrap(d, ln, f_line, max_w)]; blocks.append(("", None, None, 18, False))
+    if s.get("table"):   # rows of cells in columns, the first row a dim header (Rustam, 2026-10-31: the 20 L/min table)
+        rows = s["table"]; gap = 56
+        cw = [max(d.textlength(r[i], font=f_foot if k == 0 else f_line) for k, r in enumerate(rows)) for i in range(len(rows[0]))]
+        tx = (W - sum(cw) - gap * (len(cw) - 1)) // 2 if tall else x0
+        xs = [tx + sum(cw[:i]) + gap * i for i in range(len(cw))]
+        blocks.append(("", None, None, 10, False))
+        for k, r in enumerate(rows):
+            blocks.append(((r, xs, cw), f_foot if k == 0 else f_line, DIM if k == 0 else INK, lh_foot + 8 if k == 0 else lh_line, False))
+        blocks.append(("", None, None, 18, False))
     if s.get("foot"):
         blocks.append(("", None, None, 22, False)); blocks += [(w, f_foot, DIM, lh_foot, False) for w in wrap(d, s["foot"], f_foot, max_w)]
     total = sum(b[3] for b in blocks)
@@ -466,7 +479,11 @@ def card_layer(fmt, s, pose):
     else:
         y = (H - total) // 2 - 20
     for text, f, fill, lh, spaced in blocks:
-        if text:
+        if isinstance(text, tuple):   # a table row: each cell right-aligned in its column, the first column left-aligned
+            cells, xs, cw = text
+            for i, c in enumerate(cells):
+                d.text((xs[i] + (0 if i == 0 else cw[i] - d.textlength(c, font=f)), y), c, font=f, fill=fill)
+        elif text:
             x = (W - d.textlength(text, font=f)) // 2 if tall else x0
             if spaced:
                 bm.draw_spaced(d, (x - 6, y), text, f, fill, 2.6)
