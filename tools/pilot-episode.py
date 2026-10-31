@@ -14,7 +14,7 @@ voice; a cat, simple and unusual, drawn as a charcoal sketch on a sheet of paper
     python3 tools/pilot-episode.py gas-for-the-dive wide     # 1920x1080, YouTube and the page
     python3 tools/pilot-episode.py gas-for-the-dive short    # 1080x1920, Reel / Short
     python3 tools/pilot-episode.py all all                   # every episode, both cuts
-Outputs in build/pilot/: <episode>-<cut>.mp4, <episode>-thumb.png, <episode>.srt (the captions). The same words in both cuts.
+Outputs in build/pilot/: <episode>-<cut>.mp4, <episode>-thumb.png, <episode>.srt and .vtt (the captions, for YouTube and for the page). The same words in both cuts.
 """
 import os, re, sys, json, math, random, hashlib, subprocess, importlib.util, functools
 from PIL import Image, ImageDraw, ImageFilter, ImageChops
@@ -586,14 +586,15 @@ def build(slug, cut):
     if cut == "wide": thumbnail(slug, fmt); captions(slug, segs)
 
 def captions(slug, segs):
-    """The spoken sentences with their times, as build/pilot/<slug>.srt, for YouTube's and Instagram's captions (nothing spoken is drawn on screen)."""
-    def stamp(t): return f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{int(t % 60):02d},{int(round((t % 1) * 1000)):03d}"
-    lines, n, t = [], 0, 0.0
+    """The spoken sentences with their times (nothing spoken is drawn on screen): build/pilot/<slug>.srt for YouTube's captions, and the
+    same cues as <slug>.vtt for the episode page's <track> (episodes/<slug>/; browsers take WebVTT, not SubRip)."""
+    def stamp(t, sep): return f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{int(t % 60):02d}{sep}{int(round((t % 1) * 1000)):03d}"
+    cues, t = [], 0.0
     for x in segs:
-        for st, en, text in x["subs"]:
-            n += 1; lines.append(f"{n}\n{stamp(t + st)} --> {stamp(t + en)}\n{text}\n")
+        for st, en, text in x["subs"]: cues.append((t + st, t + en, text))
         t += x["dur"]
-    open(os.path.join(WORK, f"{slug}.srt"), "w").write("\n".join(lines))
+    open(os.path.join(WORK, f"{slug}.srt"), "w").write("\n".join(f"{n}\n{stamp(a, ',')} --> {stamp(b, ',')}\n{text}\n" for n, (a, b, text) in enumerate(cues, 1)))
+    open(os.path.join(WORK, f"{slug}.vtt"), "w").write("WEBVTT\n\n" + "\n".join(f"{stamp(a, '.')} --> {stamp(b, '.')}\n{text}\n" for a, b, text in cues))
 
 def thumbnail(slug, fmt):
     ep = EPISODES[slug]
