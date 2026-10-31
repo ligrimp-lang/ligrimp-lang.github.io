@@ -37,11 +37,13 @@ RATE, SPEED = 168, 1.06          # the macOS rate; Kokoro's speed
 KOKORO_PY = os.path.join(bm.ROOT, "build", "kokoro-venv", "bin", "python")
 ORPHEUS_PY = os.path.join(bm.ROOT, "build", "orpheus-venv", "bin", "python")   # "orpheus:<leo|dan|zac>[:temperature]", see tools/orpheus-say.py
 CHATTERBOX_PY = os.path.join(bm.ROOT, "build", "chatterbox-venv", "bin", "python")   # "chatterbox:default[:exaggeration:cfg]", tools/chatterbox-say.py
-SPOKEN = [(r"\bSAC\b", "sack"), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
+SPOKEN = [(r"\bSAC\b", "sack"), (r"\bSCR\b", "S.C.R."), (r"\bDCR\b", "D.C.R."), (r"\bRMV\b", "R.M.V."), (r"\bpsi\b", "P.S.I."), (r"\bEAN\b", "E.A.N.")]   # said, not shown
 GAP, PAD, LEAD, FADE = 0.25, 0.8, 0.3, 0.5   # between sentences (unused since passages); after a passage; before the first; layer fades
 FMT = {"wide": dict(W=1920, H=1080, phone_h=1210, phone_top=70, drift=80),
        "short": dict(W=1080, H=1920, phone_h=880, phone_top=540, drift=90)}
 
+# One entry per episode. The cat is per episode: cat="<pose>" on a card and thumb_cat on the entry; none at all on sac-rate (Rustam,
+# 2026-10-31: nobody asked for a cat in a SAC episode) and none on a new episode unless he says so.
 # One entry per episode. Footage clips must show no diver's face (Rustam, 2026-10-21: no pictures of him in a wetsuit; two-divers-facing,
 # diver-over-reef and reef-drill-deep are him). Segment kinds: footage (a card over a reef clip), card (over the family's blurred loop; cat="<pose>"
 # puts one of Rustam's cat drawings beside it), phone (an app screenshot with the site's caption), outro. Every segment is in both cuts.
@@ -77,22 +79,29 @@ EPISODES = {
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
  "sac-rate": dict(
-  question="What is your SAC rate?", thumb_cat="swimming", thumb_sub="the C in C × A × T, from a dive you have done", clip="dolphins-blue",
+  # Redone 2026-10-31 after Rustam's verdict on the first take (bad in content, facts and visuals; the cat uninvited; 1 view), the GUE
+  # expert's review of it and Rustam's structure for the redo (the post-mortem is docs/pilot-postmortem-sac-2026-10-31.md): the problem
+  # and why the number matters, then the term given in full and explained in plain words with "also known as SAC" (SCR, GUE's term, his
+  # decision), then the steps in GUE's order for someone with little background (litres used, litres a minute, divided by the pressure at
+  # the average depth), GUE's advice (several dives, easy and hard, the higher figure rounded up), and at the very end that some computers
+  # track it and Dive log shows it. No cat anywhere in it. Every figure is on the check list in that document; nothing is rendered before
+  # the Mac has checked it and Rustam has read the words.
+  question="Why does your buddy surface with more gas than you?", thumb_cat=None, thumb_sub="one number explains it: your surface consumption rate", clip="dolphins-blue",
   segments=[
-   dict(kind="footage", clip="dolphins-blue", title="The question", big="What is your SAC rate?",
-        voice="Every gas plan starts with your SAC rate: what you breathe in a minute, at the surface. You get it from a dive you have done."),
-   dict(new=True, kind="card", cat="swimming", title="Three things from that dive", big="120 bar used, from a 12-litre cylinder", foot=WORKED,
-        voice="Three things from that dive. The gas you used: say a hundred and twenty bar, from a twelve-litre cylinder."),
-   dict(kind="card", cat="swimming", title="Three things from that dive", big="40 minutes · average depth 14 m",
-        voice="How long: forty minutes. And the average depth your computer recorded: fourteen metres."),
-   dict(new=True, kind="card", cat="swimming", title="Litres a minute, at depth", big="120 × 12 = 1,440 L ÷ 40 min = 36 L/min",
-        voice="A hundred and twenty bar times twelve litres: fourteen hundred and forty litres. Over forty minutes, thirty-six litres a minute."),
-   dict(kind="card", cat="ascending", title="Back to the surface", big="14 ÷ 10 + 1 = 2.4 bar · 36 ÷ 2.4 = 15",
-        voice="At fourteen metres the pressure was two point four bar, so you breathed two point four times the gas. Divide by two point four, and your SAC rate is fifteen litres a minute."),
-   dict(new=True, kind="card", cat="head", title="Make it yours", big="A few dives, averaged",
-        voice="Do it for a few dives and use the average."),
-   dict(kind="phone", app="dive-log", shot="4-statistics", pill="Free app", head="Dive log works it out from each dive's profile and pressures", sub="And draws it over time",
-        voice="Dive log works it out from each dive's profile and pressures."),
+   dict(kind="footage", clip="dolphins-blue", title="Gas planning", big="One number to plan your dives with",
+        voice="To plan your dives you need one number: a key part of gas planning."),
+   dict(new=True, kind="card", title="One number", big="Surface consumption rate, SCR", lines=["also known as SAC", "litres a minute, at the surface"],
+        voice="That is your surface consumption rate, SCR, also known as SAC: the litres you breathe in a minute at the surface."),
+   dict(new=True, kind="card", title="Step 1 \u00b7 litres used", big="120 bar \u00d7 12 L = 1,440 L", foot=WORKED,
+        voice="Any dive gives it, without hard maths. Your last one: a hundred and twenty bar from a twelve-litre cylinder; bar times litres, fourteen hundred and forty litres."),
+   dict(kind="card", title="Step 2 \u00b7 litres a minute", big="1,440 L \u00f7 40 min = 36 L/min at depth",
+        voice="Over forty minutes, that is thirty-six litres a minute at depth."),
+   dict(kind="card", title="Step 3 \u00b7 back to the surface", big="36 L/min \u00f7 2.0 ATA = 18 L/min", lines=["average depth 10 m = 2.0 ATA"],
+        voice="At ten metres average depth the pressure is two atmospheres: divide by two, eighteen litres a minute at the surface."),
+   dict(new=True, kind="card", title="Several dives, easy and hard", big="18 \u2192 20 L/min", lines=["the higher figure, rounded up"],
+        voice="Do it over several dives, easy and hard, and plan with the higher figure, rounded up: eighteen becomes twenty litres a minute."),
+   dict(kind="phone", app="dive-log", shot="1-dive-page/00", pill="Free app", head="Dive log shows your rate for each dive", sub="Your Shearwater dives, as the computer logged them",
+        voice="Some computers track it too; for Shearwater divers, Dive log shows it for each dive, and how it changes over time."),
    dict(kind="outro", voice="Free on the App Store. diver dot today."),
   ]),
  "minimum-gas": dict(
@@ -605,7 +614,7 @@ def thumbnail(slug, fmt):
     y = (720 - len(lines) * 96) // 2 - 20
     for ln in lines: d.text((70, y), ln, font=f, fill=INK); y += 96
     d.text((72, y + 10), ep["thumb_sub"], font=f2, fill=ACCENT)
-    im.alpha_composite(cat(440, ep.get("thumb_cat", "standing")), (820, 150))
+    if ep.get("thumb_cat"): im.alpha_composite(cat(440, ep["thumb_cat"]), (820, 150))   # no cat on an episode that has none (sac-rate, 2026-10-31)
     im.convert("RGB").save(os.path.join(WORK, f"{slug}-thumb.png"))
 
 def dump_script(slug):
