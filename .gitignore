@@ -2,3 +2,9 @@ build/
 .DS_Store
 .claude/
 CLAUDE.local.md
+
+# The knowledge base, the tools and the notes are private (Rustam, 2026-11-01): tracked in ../diver_today-private.git, never here.
+CLAUDE.md
+README.md
+docs/
+tools/
