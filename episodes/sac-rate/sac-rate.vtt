@@ -1,57 +1,76 @@
 WEBVTT
 
-1
-00:00:00.300 --> 00:00:05.140
-Every gas plan starts with your SAC rate: what you breathe in a minute, at the surface.
+00:00.300 --> 00:04.790
+To plan dives and reserves you need one number: a key part of gas planning.
 
-2
-00:00:05.140 --> 00:00:06.850
-You get it from a dive you have done.
+00:05.890 --> 00:11.350
+Your surface consumption rate, SCR: the litres you breathe in a minute at the surface.
 
-3
-00:00:07.950 --> 00:00:09.650
-Three things from that dive.
+00:11.350 --> 00:18.020
+Also called SAC, surface air consumption, but the gas is not always air: nitrox, trimix.
 
-4
-00:00:09.650 --> 00:00:14.880
-The gas you used: say a hundred and twenty bar, from a twelve-litre cylinder.
+00:20.120 --> 00:29.090
+An example dive: twenty metres average depth, thirty-five minutes, an eleven point one litre aluminium tank, two hundred bar down to sixty.
 
-5
-00:00:15.130 --> 00:00:16.870
-How long: forty minutes.
+00:30.840 --> 00:33.520
+Step one: two hundred down to sixty bar.
 
-6
-00:00:16.950 --> 00:00:20.260
-And the average depth your computer recorded: fourteen metres.
+00:33.640 --> 00:34.970
+A hundred and forty bar used.
 
-7
-00:00:21.360 --> 00:00:25.700
-A hundred and twenty bar times twelve litres: fourteen hundred and forty litres.
+00:36.420 --> 00:40.780
+Step two: a hundred and forty bar times eleven point one litres.
 
-8
-00:00:25.700 --> 00:00:28.510
-Over forty minutes, thirty-six litres a minute.
+00:40.960 --> 00:42.710
+Fifteen hundred and fifty-four litres.
 
-9
-00:00:28.760 --> 00:00:34.300
-At fourteen metres the pressure was two point four bar, so you breathed two point four times the gas.
+00:45.010 --> 00:48.030
+Step three: over thirty-five minutes.
 
-10
-00:00:34.300 --> 00:00:38.410
-Divide by two point four, and your SAC rate is fifteen litres a minute.
+00:48.550 --> 00:50.990
+Forty-four point four litres a minute at depth.
 
-11
-00:00:39.510 --> 00:00:41.660
-Do it for a few dives and use the average.
+00:52.430 --> 00:56.070
+Step four: twenty metres is twenty over ten, plus one.
 
-12
-00:00:41.910 --> 00:00:44.940
-Dive log works it out from each dive's profile and pressures.
+00:56.110 --> 00:57.420
+Three atmospheres.
 
-13
-00:00:45.190 --> 00:00:46.810
+00:58.670 --> 01:00.910
+Step five: divide by that pressure.
+
+01:01.010 --> 01:04.690
+Fourteen point eight, rounded up to fifteen litres a minute at the surface.
+
+01:04.690 --> 01:06.780
+That is the rate for this dive.
+
+01:09.880 --> 01:14.620
+Over several dives, easy and hard, plan with the higher figure, rounded up.
+
+01:15.600 --> 01:20.960
+For an easy rule, plan with twenty litres a minute: in bar, every five minutes.
+
+01:21.040 --> 01:21.820
+Breathe more?
+
+01:21.820 --> 01:23.420
+Use your own number.
+
+01:23.460 --> 01:24.320
+Breathe less?
+
+01:24.440 --> 01:25.170
+Extra margin.
+
+01:28.270 --> 01:30.470
+Some computers track it with a transmitter;
+
+01:30.570 --> 01:35.670
+for Shearwater divers, Dive log shows it for each dive, and soon over time.
+
+01:35.890 --> 01:37.590
 Free on the App Store.
 
-14
-00:00:46.810 --> 00:00:47.980
+01:37.590 --> 01:39.440
 diver dot today.
