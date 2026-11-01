@@ -1,76 +1,76 @@
 WEBVTT
 
-00:00.300 --> 00:04.790
-To plan dives and reserves you need one number: a key part of gas planning.
+00:00.300 --> 00:05.460
+To plan your dives and your minimum gas, you need one number: your surface consumption rate, SCR.
 
-00:05.890 --> 00:11.350
-Your surface consumption rate, SCR: the litres you breathe in a minute at the surface.
+00:06.600 --> 00:08.490
+It is a key part of gas planning.
 
-00:11.350 --> 00:18.020
-Also called SAC, surface air consumption, but the gas is not always air: nitrox, trimix.
+00:10.170 --> 00:13.030
+SCR is the litres you breathe per minute at the surface.
 
-00:20.120 --> 00:29.090
-An example dive: twenty metres average depth, thirty-five minutes, an eleven point one litre aluminium tank, two hundred bar down to sixty.
+00:13.962 --> 00:17.522
+It is also called SAC, surface air consumption.
 
-00:30.840 --> 00:33.520
-Step one: two hundred down to sixty bar.
+00:17.582 --> 00:22.292
+But we do not always breathe air, because the gas can be nitrox or trimix.
 
-00:33.640 --> 00:34.970
-A hundred and forty bar used.
+00:24.392 --> 00:29.912
+For example, in our dive the average depth is twenty metres, and the dive lasts thirty-five minutes.
 
-00:36.420 --> 00:40.780
-Step two: a hundred and forty bar times eleven point one litres.
+00:29.912 --> 00:35.042
+The tank holds eleven point one litres, and its pressure went from two hundred bar to sixty bar.
 
-00:40.960 --> 00:42.710
-Fifteen hundred and fifty-four litres.
+00:36.792 --> 00:40.472
+Step one: let's calculate the gas you used, in bar.
 
-00:45.010 --> 00:48.030
-Step three: over thirty-five minutes.
+00:40.592 --> 00:43.702
+Two hundred bar minus sixty bar is one hundred and forty bar.
 
-00:48.550 --> 00:50.990
-Forty-four point four litres a minute at depth.
+00:45.152 --> 00:47.972
+Step two: let's calculate the same gas in litres.
 
-00:52.430 --> 00:56.070
-Step four: twenty metres is twenty over ten, plus one.
+00:48.132 --> 00:54.792
+One hundred and forty bar times the tank's volume, eleven point one litres, is one thousand five hundred and fifty-four litres.
 
-00:56.110 --> 00:57.420
-Three atmospheres.
+00:57.162 --> 01:00.642
+Step three: let's calculate the gas you used per minute, at depth.
 
-00:58.670 --> 01:00.910
-Step five: divide by that pressure.
+01:00.642 --> 01:06.982
+One thousand five hundred and fifty-four litres divided by thirty-five minutes is forty-four point four litres per minute.
 
-01:01.010 --> 01:04.690
-Fourteen point eight, rounded up to fifteen litres a minute at the surface.
+01:08.382 --> 01:10.962
+Step four: let's calculate the average pressure.
 
-01:04.690 --> 01:06.780
-That is the rate for this dive.
+01:11.042 --> 01:14.512
+Twenty metres divided by ten, plus one, is three atmospheres.
 
-01:09.880 --> 01:14.620
-Over several dives, easy and hard, plan with the higher figure, rounded up.
+01:15.762 --> 01:20.022
+Step five: let's calculate your SCR, the rate at the surface.
 
-01:15.600 --> 01:20.960
-For an easy rule, plan with twenty litres a minute: in bar, every five minutes.
+01:20.342 --> 01:27.502
+Forty-four point four litres per minute divided by three atmospheres is fourteen point eight, rounded up to fifteen litres per minute.
 
-01:21.040 --> 01:21.820
-Breathe more?
+01:30.612 --> 01:38.132
+Collect your own SCR over several dives, in different conditions, and plan with a high value, not the average, rounded up.
 
-01:21.820 --> 01:23.420
-Use your own number.
+01:39.152 --> 01:43.032
+Until you have measured your own SCR, start with twenty litres per minute.
 
-01:23.460 --> 01:24.320
-Breathe less?
+01:43.032 --> 01:46.172
+This table shows the bar you use every five minutes.
 
-01:24.440 --> 01:25.170
-Extra margin.
+01:47.049 --> 01:51.759
+If you find your consumption is higher than twenty litres per minute, plan with your own number.
 
-01:28.270 --> 01:30.470
-Some computers track it with a transmitter;
+01:54.859 --> 02:00.579
+Some dive computers calculate your SCR from the tank pressure a transmitter sends.
 
-01:30.570 --> 01:35.670
-for Shearwater divers, Dive log shows it for each dive, and soon over time.
+02:01.450 --> 02:07.650
+For Shearwater divers, Dive log shows it for each dive, and soon how it changes over time.
 
-01:35.890 --> 01:37.590
+02:07.830 --> 02:09.730
 Free on the App Store.
 
-01:37.590 --> 01:39.440
+02:10.601 --> 02:12.011
 diver dot today.

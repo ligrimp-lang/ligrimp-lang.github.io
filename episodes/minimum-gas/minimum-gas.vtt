@@ -1,76 +1,97 @@
 WEBVTT
 
-00:00.300 --> 00:03.620
-At the deepest point your buddy signals: out of gas.
+00:00.300 --> 00:03.860
+Minimum gas is the gas you must always keep in your tank.
 
-00:03.620 --> 00:05.540
-You share, and you both go up.
+00:04.672 --> 00:09.372
+Imagine that, at the deepest point, your buddy signals that they are out of gas.
 
-00:05.540 --> 00:07.980
-How much must still be in your tank for that?
+00:09.412 --> 00:11.912
+You share your gas, and you both ascend.
 
-00:07.980 --> 00:09.690
-That is minimum gas.
+00:12.800 --> 00:15.230
+How much gas must you keep in your tank for this?
 
-00:10.790 --> 00:16.970
-Minimum gas: the gas two divers need to get from the deepest point to the surface on one tank, breathing hard.
+00:16.330 --> 00:23.970
+Minimum gas is the gas two divers need to ascend from the deepest point to the surface, on one tank, under stress.
 
-00:17.130 --> 00:18.430
-Courses size it differently;
+00:24.798 --> 00:26.858
+Courses use different values.
 
-00:18.430 --> 00:20.160
-the idea is the same.
+00:27.805 --> 00:32.965
+We calculate it with a cat: C times A times T, for two divers.
 
-00:22.460 --> 00:31.240
-Our example dive, at its deepest point, twenty metres: two stressed divers at twenty litres a minute each, from an eleven point one litre tank.
+00:33.185 --> 00:36.145
+C is the consumption of both divers.
 
-00:31.240 --> 00:35.530
-The way up: a minute to sort out the problem, then three metres a minute on average.
+00:36.225 --> 00:39.285
+A is the average pressure during the ascent.
 
-00:37.280 --> 00:41.320
-Step one, the rate: twenty litres a minute each, two divers.
+00:39.285 --> 00:41.495
+T is the time to ascend.
 
-00:41.480 --> 00:42.380
-Forty litres a minute.
+00:44.095 --> 00:52.855
+For example, in our dive the deepest point is twenty metres, and two stressed divers breathe twenty litres per minute each from one eleven point one litre tank.
 
-00:43.560 --> 00:50.400
-Step two, the pressure: three atmospheres at twenty metres, one at the surface: add them and halve.
+00:52.855 --> 00:57.485
+They take one minute to solve the problem, then ascend at three metres per minute on average.
 
-00:50.400 --> 00:51.450
-Two atmospheres.
+00:59.235 --> 01:03.155
+Step one: let's calculate C, the consumption of both divers.
 
-00:53.550 --> 01:00.130
-Step three, the time: twenty metres at three metres a minute, plus the minute at depth.
+01:03.155 --> 01:07.075
+Twenty litres per minute each, times two divers, is forty litres per minute.
 
-01:00.130 --> 01:01.620
-Rounded up, eight minutes.
+01:08.315 --> 01:12.975
+Step two: let's calculate A, the average pressure during the ascent.
 
-01:02.870 --> 01:06.970
-Step four: rate times pressure times time.
+01:12.975 --> 01:20.465
+Take three atmospheres at twenty metres and one atmosphere at the surface, add them, then divide by two: two atmospheres.
 
-01:06.970 --> 01:08.540
-Six hundred and forty litres.
+01:22.565 --> 01:26.365
+Step three: let's calculate T, the time to ascend.
 
-01:10.840 --> 01:14.760
-Step five, into bar: divide by the tank's litres.
+01:26.445 --> 01:34.195
+Twenty metres divided by three metres per minute, plus one minute to solve the problem, is seven point seven minutes, rounded up to eight minutes.
 
-01:15.160 --> 01:19.470
-Fifty-seven point seven, rounded up to sixty bar: minimum gas for this dive.
+01:35.445 --> 01:40.365
+Step four: let's calculate the gas for both divers, C times A times T.
 
-01:22.570 --> 01:28.830
-Minimum gas is a floor under the plan: when either gauge gets there, the dive is over, whatever the plan said.
+01:40.625 --> 01:45.775
+Forty litres per minute times two atmospheres times eight minutes is six hundred and forty litres.
 
-01:30.250 --> 01:38.130
-By the deepest point, from a single aluminium eighty: forty, sixty and a hundred bar, rounded up, and never less than forty.
+01:48.075 --> 01:51.075
+Step five: let's calculate the same gas in bar.
 
-01:38.130 --> 01:39.860
-Your course's figures come first.
+01:51.075 --> 02:00.035
+Six hundred and forty litres divided by the tank's volume, eleven point one litres, is fifty-seven point seven bar, rounded up to sixty bar.
 
-01:42.960 --> 01:47.600
-Turn Pressure works out minimum gas for your dive, and the turn pressure.
+02:00.810 --> 02:02.920
+That is minimum gas for this dive.
 
-01:47.840 --> 01:49.760
+02:06.020 --> 02:09.000
+Your plan must never use minimum gas.
+
+02:09.710 --> 02:15.300
+When either gauge reaches it, the dive is over and you both ascend, even if the plan says otherwise.
+
+02:16.750 --> 02:26.450
+For a single aluminium eighty, minimum gas is forty bar for a deepest point of ten metres, sixty bar for twenty metres, and one hundred bar for thirty metres.
+
+02:26.450 --> 02:29.030
+It is never less than forty bar.
+
+02:29.875 --> 02:32.395
+Between two depths, use the deeper one.
+
+02:33.138 --> 02:35.708
+Deeper than thirty metres, calculate it.
+
+02:38.808 --> 02:43.528
+Turn Pressure calculates minimum gas for your dive, and the turn pressure.
+
+02:43.748 --> 02:45.608
 Free on the App Store.
 
-01:49.760 --> 01:51.390
+02:46.423 --> 02:47.833
 diver dot today.

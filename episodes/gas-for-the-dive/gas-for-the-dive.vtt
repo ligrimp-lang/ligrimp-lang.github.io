@@ -1,76 +1,88 @@
 WEBVTT
 
-00:00.300 --> 00:03.580
-Planning a dive: twenty metres, thirty-five minutes.
+00:00.300 --> 00:02.200
+How much gas do you need for the dive?
 
-00:03.580 --> 00:06.060
-Will your tank cover it, with a reserve left?
+00:03.051 --> 00:08.551
+You plan a dive to twenty metres for thirty-five minutes, with a tank filled to two hundred bar.
 
-00:06.060 --> 00:07.950
-Work that out before you get in.
+00:08.551 --> 00:10.851
+Is that fill enough for the dive and a reserve?
 
-00:09.050 --> 00:16.750
-The gas a dive needs is three things multiplied: your surface consumption rate, SCR, the litres you breathe in a minute at the surface;
+00:11.690 --> 00:13.840
+Let's calculate the answer before you dive.
 
-00:16.750 --> 00:18.690
-the pressure at your average depth;
+00:14.940 --> 00:20.600
+The gas a dive needs is easy to remember: a cat, C times A times T.
 
-00:18.770 --> 00:19.840
-and the time.
+00:20.760 --> 00:24.100
+C is your consumption, the surface consumption rate, SCR.
 
-00:22.140 --> 00:30.060
-Our example: twenty metres average depth, thirty-five minutes, an eleven point one litre tank, a rate of fifteen litres a minute.
+00:24.100 --> 00:26.900
+It is the litres you breathe per minute at the surface.
 
-00:31.780 --> 00:35.280
-Step one, the pressure: twenty over ten, plus one.
+00:26.900 --> 00:29.420
+A is the average pressure, in atmospheres.
 
-00:35.280 --> 00:36.430
-Three atmospheres.
+00:29.540 --> 00:31.550
+T is the time, in minutes.
 
-00:37.680 --> 00:40.360
-Step two: fifteen litres a minute, times three.
+00:34.150 --> 00:41.790
+For example, in our dive the average depth is twenty metres, which is also the deepest point, and the dive lasts thirty-five minutes.
 
-00:40.700 --> 00:42.850
-Forty-five litres a minute at twenty metres.
+00:41.810 --> 00:47.680
+The tank holds eleven point one litres, and your SCR is fifteen litres per minute.
 
-00:45.150 --> 00:48.070
-Step three: times thirty-five minutes.
+00:49.430 --> 00:52.950
+Step one: let's calculate the average pressure, A.
 
-00:48.090 --> 00:50.400
-Fifteen hundred and seventy-five litres.
+00:52.950 --> 00:56.960
+Twenty metres divided by ten, plus one, is three atmospheres.
 
-00:51.850 --> 00:55.250
-Step four, into bar: divide by the tank's litres.
+00:58.210 --> 01:03.590
+Step two: let's calculate the gas you breathe per minute at depth, C times A.
 
-00:55.350 --> 00:56.860
-A hundred and forty-two bar.
+01:03.590 --> 01:07.920
+Fifteen litres per minute times three atmospheres is forty-five litres per minute.
 
-00:59.160 --> 01:03.180
-Check it against the dive as it went: a hundred and forty bar used.
+01:10.220 --> 01:15.060
+Step three: let's calculate the gas for the whole dive, times T.
 
-01:03.180 --> 01:05.660
-The plan said a hundred and forty-two bar.
+01:15.180 --> 01:20.510
+Forty-five litres per minute times thirty-five minutes is one thousand five hundred and seventy-five litres.
 
-01:05.660 --> 01:06.290
-It works.
+01:21.960 --> 01:26.880
+Step four: let's calculate the same gas in bar, because your gauge shows bar.
 
-01:07.740 --> 01:14.180
-Then the reserve, minimum gas: what two divers need to get up from twenty metres, the deepest point of this dive: sixty bar.
+01:26.920 --> 01:33.650
+One thousand five hundred and seventy-five litres divided by the tank's volume, eleven point one litres, is one hundred and forty-two bar.
 
-01:14.200 --> 01:17.200
-Together, two hundred and two bar: more than the tank holds.
+01:35.950 --> 01:40.190
+Now let's calculate the total: the gas for the dive plus minimum gas.
 
-01:19.400 --> 01:22.720
-The rule: the dive plus the reserve must fit the fill.
+01:40.190 --> 01:46.430
+Minimum gas is the gas two divers need to ascend from the deepest point, and for twenty metres it is sixty bar.
 
-01:22.720 --> 01:25.410
-Here: fewer minutes, or a bigger tank.
+01:46.510 --> 01:51.110
+One hundred and forty-two bar plus sixty bar is two hundred and two bar.
 
-01:27.710 --> 01:32.270
-Turn Pressure does this for your dive: the gas, and the minimum gas.
+01:51.928 --> 01:54.008
+That is more than the two hundred bar fill.
 
-01:32.450 --> 01:33.770
+01:56.208 --> 02:00.928
+The rule: your tank pressure must cover the gas for the dive plus minimum gas.
+
+02:01.714 --> 02:06.214
+This fill is not enough, so reduce the dive time, or take a bigger tank.
+
+02:07.025 --> 02:10.775
+How to calculate minimum gas is in another video on this channel.
+
+02:13.375 --> 02:18.455
+Turn Pressure calculates both for your dive: the gas, and the minimum gas.
+
+02:18.635 --> 02:20.035
 Free on the App Store.
 
-01:33.770 --> 01:35.400
+02:20.819 --> 02:22.229
 diver dot today.
