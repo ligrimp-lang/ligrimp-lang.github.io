@@ -180,8 +180,58 @@ footer a:hover { color: var(--ink); }
 .prose .episode figcaption { margin: 10px 0 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
 .prose code { font-size: .88em; padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.07); overflow-wrap: anywhere; }
 main + footer { margin-top: 56px; }
+
+/* Episode pages, read as a worked example (2026-11-02): a lead, the example dive as a table, the steps as a numbered list with each
+   formula on its own line, the rule as a callout, and the transcript folded away. */
+.prose .lead { font-size: 20px; line-height: 1.6; color: var(--ink); }
+.prose table.example { margin: 0 0 1.6em; }
+.prose table.example th { width: 42%; padding-right: 16px; color: var(--dim); font-size: 15px; font-weight: 500; vertical-align: top; }
+.prose table.example td { font-weight: 600; }
+.prose table.data caption { caption-side: top; text-align: left; padding: 0 0 8px; color: var(--ink); font-size: 16px; font-weight: 600; }
+.prose table.data tbody th { color: var(--ink); font-size: 16px; font-weight: 500; }
+.prose table.data tbody tr:last-child td { font-weight: 400; }
+.prose table.example tbody tr:last-child th, .prose table.data tbody tr:last-child th { border-bottom: 0; }
+.prose .table-note { color: var(--dim); font-size: 15px; line-height: 1.5; }
+.prose ul.table-notes { color: var(--dim); font-size: 15px; line-height: 1.5; margin: 0 0 1.6em; }
+.prose ol.steps { list-style: none; counter-reset: step; margin: 0 0 1.6em; padding: 0; }
+.prose ol.steps > li { counter-increment: step; position: relative; margin: 0 0 24px; padding: 0 0 0 48px; }
+.prose ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--bg-2); border: 1px solid var(--rule); color: var(--accent);
+  font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums;
+}
+.prose ol.steps > li.plus { counter-increment: none; }
+.prose ol.steps > li.plus::before { content: "+"; font-size: 18px; }
+.prose ol.steps .step { margin: 4px 0 8px; font-size: 18px; line-height: 1.4; font-weight: 650; }
+.prose ol.steps .why { margin: 8px 0 0; color: var(--dim); font-size: 16px; line-height: 1.55; }
+.prose .formula, .prose .formula-inline {
+  font-size: 18px; line-height: 1.45; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink);
+}
+.prose .formula { margin: 0; padding: 12px 16px; border-radius: 10px; background: var(--bg-2); border: 1px solid var(--rule); overflow-wrap: anywhere; }
+.prose .formula b, .prose .formula-inline { color: var(--accent); font-weight: 650; }
+.prose .callout { margin: 0 0 1.6em; padding: 18px 20px; border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; background: var(--bg-2); }
+.prose .callout p { margin: 0 0 .5em; font-size: 17px; line-height: 1.6; }
+.prose .callout p:last-child { margin-bottom: 0; }
+.prose .callout .callout-title { color: var(--accent); font-size: 14px; font-weight: 650; letter-spacing: .06em; text-transform: uppercase; }
+.prose details.transcript { margin: 2.4em 0 0; border-top: 1px solid var(--rule); padding-top: 16px; }
+.prose details.transcript summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 650; padding: 4px 0 12px;
+}
+.prose details.transcript summary::-webkit-details-marker { display: none; }
+.prose details.transcript summary::before {
+  content: "+"; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
+  color: var(--accent); font-size: 18px; font-weight: 500;
+}
+.prose details.transcript[open] summary::before { content: "−"; }
+.prose details.transcript summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.prose details.transcript p { color: var(--dim); font-size: 16px; line-height: 1.65; }
+
 @media (max-width: 760px) {
   .prose { padding: 40px 24px 0; }
+  .prose .lead { font-size: 18px; }
+  .prose ol.steps > li { padding-left: 42px; }
+  .prose .formula { font-size: 17px; padding: 10px 12px; }
+  .prose table.example th { width: 40%; }
   .prose h2 { font-size: 20px; }
   .prose p, .prose ul { font-size: 17px; }
   .closing { grid-template-columns: 60px 1fr; margin-top: 40px; }

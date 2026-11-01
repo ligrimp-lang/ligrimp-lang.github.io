@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0b0f14">
 <link rel="icon" href="../../img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="../../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../../style.css?v=20261101">
+<link rel="stylesheet" href="../../style.css?v=20261102">
 
 <meta property="og:type" content="video.other">
 <meta property="og:site_name" content="diver.today">
@@ -69,16 +69,62 @@
   <figcaption>The spoken words are in the captions and in the transcript below.</figcaption>
 </figure>
 
-<p>How much gas do you need for the dive, and is your tank fill enough? The gas a dive needs is easy to remember: a cat, C × A × T. C is your consumption, the surface consumption rate (SCR), also called SAC, which is the litres you breathe per minute at the surface. A is the average pressure, in atmospheres. T is the time, in minutes. This episode calculates the gas for one example dive step by step, then adds minimum gas. The rule is simple: your tank pressure must cover the gas for the dive plus minimum gas.</p>
+<p class="lead">How much gas does a planned dive need, and is your tank fill enough for the dive and for minimum gas? The gas a dive needs is C × A × T: your consumption, the surface consumption rate (SCR), also called SAC, times the average pressure in atmospheres, times the time in minutes. You calculate it before you dive, so you can change the plan in time.</p>
 
-<h2>What is said</h2>
+<h2>Our example</h2>
+<table class="example">
+  <tbody>
+    <tr><th scope="row">Average depth</th><td>20 m, also the deepest point</td></tr>
+    <tr><th scope="row">Dive time</th><td>35 min</td></tr>
+    <tr><th scope="row">Tank</th><td>aluminium, 11.1 L, filled to 200 bar</td></tr>
+    <tr><th scope="row">Your SCR</th><td>15 L/min</td></tr>
+    <tr><th scope="row">Minimum gas from 20 m</th><td>60 bar</td></tr>
+  </tbody>
+</table>
+
+<h2>Step by step</h2>
+<ol class="steps">
+  <li>
+    <p class="step">The average pressure, A</p>
+    <p class="formula">20 m ÷ 10 + 1 = <b>3 ATA</b></p>
+    <p class="why">Every 10 m of water adds about one atmosphere to the one at the surface.</p>
+  </li>
+  <li>
+    <p class="step">The gas you breathe per minute at depth, C × A</p>
+    <p class="formula">15 L/min × 3 ATA = <b>45 L/min</b></p>
+  </li>
+  <li>
+    <p class="step">The gas for the whole dive, × T</p>
+    <p class="formula">45 L/min × 35 min = <b>1,575 L</b></p>
+  </li>
+  <li>
+    <p class="step">The same gas in bar</p>
+    <p class="formula">1,575 L ÷ 11.1 L = <b>142 bar</b></p>
+    <p class="why">Your gauge shows bar, so the litres are divided by the tank's volume.</p>
+  </li>
+  <li class="plus">
+    <p class="step">Add minimum gas</p>
+    <p class="formula">142 bar + 60 bar = <b>202 bar</b></p>
+    <p class="why">Minimum gas is the gas two divers need to ascend from the deepest point. <a href="../minimum-gas/">Minimum gas, step by step</a> shows how to calculate it.</p>
+  </li>
+</ol>
+
+<div class="callout" role="note">
+  <p class="callout-title">The rule</p>
+  <p>Your tank pressure must cover the gas for the dive plus minimum gas.</p>
+  <p><span class="formula-inline">202 bar &gt; 200 bar fill</span></p>
+  <p>This fill is not enough for this dive, so reduce the dive time or take a bigger tank.</p>
+</div>
+
+<details class="transcript">
+<summary>Transcript</summary>
 <p>How much gas do you need for the dive? You plan a dive to twenty metres for thirty-five minutes, with a tank filled to two hundred bar. Is that fill enough for the dive and a reserve? Let's calculate the answer before you dive.</p>
 <p>The gas a dive needs is easy to remember: a cat, C times A times T. C is your consumption, the surface consumption rate, SCR. It is the litres you breathe per minute at the surface. A is the average pressure, in atmospheres. T is the time, in minutes.</p>
 <p>For example, in our dive the average depth is twenty metres, which is also the deepest point, and the dive lasts thirty-five minutes. The tank holds eleven point one litres, and your SCR is fifteen litres per minute. Step one: let's calculate the average pressure, A. Twenty metres divided by ten, plus one, is three atmospheres. Step two: let's calculate the gas you breathe per minute at depth, C times A. Fifteen litres per minute times three atmospheres is forty-five litres per minute.</p>
 <p>Step three: let's calculate the gas for the whole dive, times T. Forty-five litres per minute times thirty-five minutes is one thousand five hundred and seventy-five litres. Step four: let's calculate the same gas in bar, because your gauge shows bar. One thousand five hundred and seventy-five litres divided by the tank's volume, eleven point one litres, is one hundred and forty-two bar.</p>
 <p>Now let's calculate the total: the gas for the dive plus minimum gas. Minimum gas is the gas two divers need to ascend from the deepest point, and for twenty metres it is sixty bar. One hundred and forty-two bar plus sixty bar is two hundred and two bar. That is more than the two hundred bar fill. The rule: your tank pressure must cover the gas for the dive plus minimum gas. This fill is not enough, so reduce the dive time, or take a bigger tank. How to calculate minimum gas is in another video on this channel.</p>
 <p>Turn Pressure calculates both for your dive: the gas, and the minimum gas. Free on the App Store. diver.today.</p>
-<p class="byline">For example, in our dive the average depth is 20 m, which is also the deepest point, and the dive lasts 35 minutes. The aluminium tank holds 11.1 L and is filled to 200 bar, your SCR is 15 L/min, and minimum gas from 20 m is 60 bar. The minimum gas episode shows how to calculate it.</p>
+</details>
 
 <aside class="closing">
   <img src="../../img/turn-pressure.png" alt="" width="72" height="72">

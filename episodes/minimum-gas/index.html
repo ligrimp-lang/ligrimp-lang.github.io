@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0b0f14">
 <link rel="icon" href="../../img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="../../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../../style.css?v=20261101">
+<link rel="stylesheet" href="../../style.css?v=20261102">
 
 <meta property="og:type" content="video.other">
 <meta property="og:site_name" content="diver.today">
@@ -69,9 +69,70 @@
   <figcaption>The spoken words are in the captions and in the transcript below.</figcaption>
 </figure>
 
-<p>Minimum gas is the gas you must always keep in your tank. It is the gas two divers need to ascend from the deepest point to the surface on one tank, when one of them is out of gas and both are under stress. Courses use different values. We calculate it with a cat, C × A × T: the consumption of both divers, times the average pressure during the ascent, times the time to ascend. This episode calculates it step by step on one example dive and ends with a rounded table by the deepest point.</p>
+<p class="lead">Minimum gas is the gas you must always keep in your tank. It is the gas two divers need to ascend from the deepest point to the surface on one tank, when one of them is out of gas and both are under stress. We calculate it with C × A × T: the consumption of both divers, times the average pressure during the ascent, times the time to ascend.</p>
 
-<h2>What is said</h2>
+<h2>Our example</h2>
+<table class="example">
+  <tbody>
+    <tr><th scope="row">Deepest point</th><td>20 m</td></tr>
+    <tr><th scope="row">Divers</th><td>2, both under stress</td></tr>
+    <tr><th scope="row">Consumption</th><td>20 L/min each</td></tr>
+    <tr><th scope="row">Tank</th><td>one aluminium tank, 11.1 L</td></tr>
+    <tr><th scope="row">At depth</th><td>1 min to solve the problem</td></tr>
+    <tr><th scope="row">Ascent</th><td>3 m/min on average</td></tr>
+  </tbody>
+</table>
+
+<h2>Step by step</h2>
+<ol class="steps">
+  <li>
+    <p class="step">C, the consumption of both divers</p>
+    <p class="formula">20 L/min × 2 divers = <b>40 L/min</b></p>
+  </li>
+  <li>
+    <p class="step">A, the average pressure during the ascent</p>
+    <p class="formula">(3 ATA + 1 ATA) ÷ 2 = <b>2 ATA</b></p>
+    <p class="why">The pressure is 3 ATA at 20 m and 1 ATA at the surface, and the ascent goes from one to the other.</p>
+  </li>
+  <li>
+    <p class="step">T, the time to ascend</p>
+    <p class="formula">20 m ÷ 3 m/min + 1 min = 7.7 min → <b>8 min</b></p>
+    <p class="why">The time is rounded up.</p>
+  </li>
+  <li>
+    <p class="step">The gas for both divers, C × A × T</p>
+    <p class="formula">40 L/min × 2 ATA × 8 min = <b>640 L</b></p>
+  </li>
+  <li>
+    <p class="step">The same gas in bar</p>
+    <p class="formula">640 L ÷ 11.1 L = 57.7 bar → <b>60 bar</b></p>
+    <p class="why">That is minimum gas for this dive, rounded up to the next 10 bar.</p>
+  </li>
+</ol>
+
+<h2>By the deepest point</h2>
+<table class="data">
+  <caption>Minimum gas for a single AL80</caption>
+  <thead><tr><th scope="col">Deepest point</th><th scope="col" class="n">Minimum gas</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">10 m</th><td class="n">40 bar</td></tr>
+    <tr><th scope="row">20 m</th><td class="n">60 bar</td></tr>
+    <tr><th scope="row">30 m</th><td class="n">100 bar</td></tr>
+  </tbody>
+</table>
+<ul class="table-notes">
+  <li>The values are rounded up to the next 10 bar, and minimum gas is never less than 40 bar.</li>
+  <li>Between two depths, use the deeper one.</li>
+  <li>Deeper than 30 m, calculate it.</li>
+  <li>Courses use different values. If your course uses other values, use those.</li>
+</ul>
+<div class="callout" role="note">
+  <p class="callout-title">At minimum gas, the dive is over</p>
+  <p>Your plan must never use minimum gas. When either gauge reaches it, the dive is over and you both ascend, even if the plan says otherwise.</p>
+</div>
+
+<details class="transcript">
+<summary>Transcript</summary>
 <p>Minimum gas is the gas you must always keep in your tank. Imagine that, at the deepest point, your buddy signals that they are out of gas. You share your gas, and you both ascend. How much gas must you keep in your tank for this?</p>
 <p>Minimum gas is the gas two divers need to ascend from the deepest point to the surface, on one tank, under stress. Courses use different values. We calculate it with a cat: C times A times T, for two divers. C is the consumption of both divers. A is the average pressure during the ascent. T is the time to ascend.</p>
 <p>For example, in our dive the deepest point is twenty metres, and two stressed divers breathe twenty litres per minute each from one eleven point one litre tank. They take one minute to solve the problem, then ascend at three metres per minute on average. Step one: let's calculate C, the consumption of both divers. Twenty litres per minute each, times two divers, is forty litres per minute. Step two: let's calculate A, the average pressure during the ascent. Take three atmospheres at twenty metres and one atmosphere at the surface, add them, then divide by two: two atmospheres.</p>
@@ -79,7 +140,7 @@
 <p>Step five: let's calculate the same gas in bar. Six hundred and forty litres divided by the tank's volume, eleven point one litres, is fifty-seven point seven bar, rounded up to sixty bar. That is minimum gas for this dive.</p>
 <p>Your plan must never use minimum gas. When either gauge reaches it, the dive is over and you both ascend, even if the plan says otherwise. For a single aluminium eighty, minimum gas is forty bar for a deepest point of ten metres, sixty bar for twenty metres, and one hundred bar for thirty metres. It is never less than forty bar. Between two depths, use the deeper one. Deeper than thirty metres, calculate it.</p>
 <p>Turn Pressure calculates minimum gas for your dive, and the turn pressure. Free on the App Store. diver.today.</p>
-<p class="byline">For example, in our dive the deepest point is 20 m, and two stressed divers breathe 20 L/min each from one aluminium 11.1 L tank. They take one minute to solve the problem, then ascend at 3 m/min on average. If your course uses other values, use those.</p>
+</details>
 
 <aside class="closing">
   <img src="../../img/turn-pressure.png" alt="" width="72" height="72">
