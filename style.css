@@ -187,3 +187,22 @@ main + footer { margin-top: 56px; }
   .closing { grid-template-columns: 60px 1fr; margin-top: 40px; }
   .closing img { width: 60px; height: 60px; }
 }
+
+/* Answers for divers: the reviewed episodes, on the home page (2026-11-01) */
+.answers { border-top: 1px solid var(--rule); padding: 72px 0 56px; }
+.answers h2 { margin: 0 0 12px; font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 650; }
+.answers .lead { margin: 0 0 32px; font-size: 18px; color: var(--dim); max-width: 60ch; }
+.eps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.ep video { display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 14px; background: #000; }
+.ep h3 { margin: 16px 0 6px; font-size: 19px; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em; }
+.ep h3 a { color: var(--ink); border-bottom: 1px solid var(--rule); }
+.ep h3 a:hover { border-color: var(--dim); }
+.ep p { margin: 0; font-size: 15px; color: var(--dim); }
+@media (max-width: 960px) { .eps { grid-template-columns: 1fr; gap: 40px; max-width: 640px; } }
+@media (max-width: 760px) { .answers { padding: 48px 0 40px; } }
+.ep-stage { position: relative; }
+.ep-stage .play {
+  position: absolute; right: 16px; bottom: 16px; width: 56px; height: 56px; border-radius: 50%; border: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; background: var(--accent); color: var(--accent-ink);
+}
+.ep-stage .play svg { width: 22px; height: 22px; margin-left: 3px; }
