@@ -161,13 +161,14 @@ footer a:hover { color: var(--ink); }
 .prose .byline { margin: 0 0 40px; color: var(--dim); font-size: 14px; line-height: 1.4; }
 .prose h2 { font-size: 22px; line-height: 1.25; letter-spacing: -0.015em; font-weight: 650; margin: 2.2em 0 .6em; }
 .prose p { margin: 0 0 1.2em; font-size: 18px; line-height: 1.7; }
-.prose p a { color: var(--accent); border-bottom: 1px solid var(--rule); }
+.prose p a { color: var(--accent); border-bottom: 0; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.prose a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 .prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.4em; font-size: 16px; font-variant-numeric: tabular-nums; }
 .prose th, .prose td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); }
 .prose th { color: var(--dim); font-weight: 500; font-size: 14px; }
 .prose th.n, .prose td.n { text-align: right; padding-right: 0; }
 .prose tbody tr:last-child td { font-weight: 600; border-bottom: 0; }
-.closing { display: grid; grid-template-columns: 72px 1fr; gap: 18px; align-items: center; margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--rule); }
+.closing { display: grid; grid-template-columns: 72px 1fr; gap: 18px; align-items: start; margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--rule); }
 .closing img { width: 72px; height: 72px; border-radius: 22%; }
 .prose .closing h2 { margin: 0; font-size: 24px; }
 .prose .closing p { margin: 4px 0 0; font-size: 16px; line-height: 1.5; color: var(--dim); }
@@ -178,7 +179,7 @@ footer a:hover { color: var(--ink); }
 .prose .episode { margin: 0 0 32px; }
 .prose .episode video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 14px; background: #000; }
 .prose .episode figcaption { margin: 10px 0 0; color: var(--dim); font-size: 14px; line-height: 1.4; }
-.prose code { font-size: .88em; padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.07); overflow-wrap: anywhere; }
+.prose code { font-size: .88em; padding: 1px 6px; border-radius: 6px; background: rgba(255,255,255,.07); overflow-wrap: break-word; }
 main + footer { margin-top: 56px; }
 
 /* Episode pages, read as a worked example (2026-11-02): a lead, the example dive as a table, the steps as a numbered list with each
@@ -186,6 +187,7 @@ main + footer { margin-top: 56px; }
 .prose .lead { font-size: 20px; line-height: 1.6; color: var(--ink); }
 .prose table.example { margin: 0 0 1.6em; }
 .prose table.example th { width: 42%; padding-right: 16px; color: var(--dim); font-size: 15px; font-weight: 500; vertical-align: top; }
+.prose table.example td { vertical-align: top; }
 .prose table.example td { font-weight: 600; }
 .prose table.data caption { caption-side: top; text-align: left; padding: 0 0 8px; color: var(--ink); font-size: 16px; font-weight: 600; }
 .prose table.data tbody th { color: var(--ink); font-size: 16px; font-weight: 500; }
@@ -201,14 +203,14 @@ main + footer { margin-top: 56px; }
   font-size: 15px; font-weight: 650; font-variant-numeric: tabular-nums;
 }
 .prose ol.steps > li.plus { counter-increment: none; }
-.prose ol.steps > li.plus::before { content: "+"; font-size: 18px; }
+.prose ol.steps > li.plus::before { content: "+" / ""; font-size: 18px; }
 .prose ol.steps .step { margin: 4px 0 8px; font-size: 18px; line-height: 1.4; font-weight: 650; }
 .prose ol.steps .why { margin: 8px 0 0; color: var(--dim); font-size: 16px; line-height: 1.55; }
-.prose .formula, .prose .formula-inline {
+.prose .formula {
   font-size: 18px; line-height: 1.45; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ink);
 }
-.prose .formula { margin: 0; padding: 12px 16px; border-radius: 10px; background: var(--bg-2); border: 1px solid var(--rule); overflow-wrap: anywhere; }
-.prose .formula b, .prose .formula-inline { color: var(--accent); font-weight: 650; }
+.prose .formula { margin: 0; padding: 12px 16px; border-radius: 10px; background: var(--bg-2); border: 1px solid var(--rule); overflow-wrap: break-word; }
+.prose .formula b { color: var(--accent); font-weight: 650; white-space: nowrap; }
 .prose .callout { margin: 0 0 1.6em; padding: 18px 20px; border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; background: var(--bg-2); }
 .prose .callout p { margin: 0 0 .5em; font-size: 17px; line-height: 1.6; }
 .prose .callout p:last-child { margin-bottom: 0; }
@@ -222,7 +224,7 @@ main + footer { margin-top: 56px; }
   content: "+"; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule);
   color: var(--accent); font-size: 18px; font-weight: 500;
 }
-.prose details.transcript[open] summary::before { content: "−"; }
+.prose details.transcript[open] summary::before { content: "−" / ""; }
 .prose details.transcript summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
 .prose details.transcript p { color: var(--dim); font-size: 16px; line-height: 1.65; }
 
@@ -256,3 +258,14 @@ main + footer { margin-top: 56px; }
   display: flex; align-items: center; justify-content: center; background: var(--accent); color: var(--accent-ink);
 }
 .ep-stage .play svg { width: 22px; height: 22px; margin-left: 3px; }
+
+/* review 2026-11-02: the rule's formula on the callout, phone tap targets, balanced wraps, readable row lines */
+.prose .callout .formula { background: var(--bg); }
+.prose h1, .prose h2, .prose .step { text-wrap: balance; }
+.prose p, .prose li { text-wrap: pretty; }
+.prose th, .prose td { border-bottom-color: #2a343e; }
+@media (max-width: 760px) {
+  .prose .closing .actions { display: grid; gap: 0; }
+  .prose .closing .store { justify-self: start; margin-bottom: 8px; }
+  .prose .closing .more { display: block; padding: 12px 0; font-size: 16px; border-bottom: 1px solid var(--rule); }
+}

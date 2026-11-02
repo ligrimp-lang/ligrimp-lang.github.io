@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#0b0f14">
 <link rel="icon" href="../../img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="../../img/apple-touch-icon.png">
-<link rel="stylesheet" href="../../style.css?v=20261102">
+<link rel="stylesheet" href="../../style.css?v=20261102b">
 
 <meta property="og:type" content="video.other">
 <meta property="og:site_name" content="diver.today">
@@ -72,7 +72,7 @@
 <p class="lead">To plan your dives and your minimum gas, you need one number: your surface consumption rate (SCR), the litres you breathe per minute at the surface. It is also called SAC, surface air consumption, but we do not always breathe air, because the gas can be nitrox or trimix. You can calculate it from any dive in five steps, without difficult maths.</p>
 
 <h2>Our example</h2>
-<table class="example">
+<table class="example" aria-label="The numbers of our dive">
   <tbody>
     <tr><th scope="row">Average depth</th><td>20 m</td></tr>
     <tr><th scope="row">Dive time</th><td>35 min</td></tr>
@@ -82,7 +82,7 @@
 </table>
 
 <h2>Step by step</h2>
-<ol class="steps">
+<ol class="steps" role="list">
   <li>
     <p class="step">The gas you used, in bar</p>
     <p class="formula">200 bar − 60 bar = <b>140 bar</b></p>
@@ -108,7 +108,6 @@
 </ol>
 
 <h2>Plan with your own SCR</h2>
-<p>Collect your own SCR over several dives, in different conditions, and plan with a high value, not the average, rounded up. Until you have measured your own SCR, start with 20&nbsp;L/min.</p>
 <table class="data">
   <caption>Bar used every 5 minutes, at 20 L/min</caption>
   <thead><tr><th scope="col">Depth</th><th scope="col" class="n">Single AL80</th><th scope="col" class="n">Double AL80</th></tr></thead>
@@ -118,7 +117,12 @@
     <tr><th scope="row">30 m</th><td class="n">40 bar</td><td class="n">20 bar</td></tr>
   </tbody>
 </table>
-<p class="table-note">Rounded up. If you find your consumption is higher than 20&nbsp;L/min, plan with your own number.</p>
+<p class="table-note">The values are rounded up. If your own consumption is higher than 20&nbsp;L/min, plan with your own number.</p>
+<div class="callout" role="note">
+  <p class="callout-title">The rule</p>
+  <p>Measure your own SCR over several dives in different conditions. Plan with a high value, not the average, and round it up.</p>
+  <p>Until you have measured your own SCR, start with 20&nbsp;L/min.</p>
+</div>
 
 <details class="transcript">
 <summary>Transcript</summary>
@@ -129,6 +133,30 @@
 <p>Collect your own SCR over several dives, in different conditions, and plan with a high value, not the average, rounded up. Until you have measured your own SCR, start with twenty litres per minute. This table shows the bar you use every five minutes. If you find your consumption is higher than twenty litres per minute, plan with your own number.</p>
 <p>Some dive computers calculate your SCR from the tank pressure a transmitter sends. For Shearwater divers, Dive log shows it for each dive, and soon how it changes over time. Free on the App Store. diver.today.</p>
 </details>
+
+<aside class="closing">
+  <img src="../../img/turn-pressure.png" alt="" width="72" height="72">
+  <div>
+    <h2>Turn Pressure</h2>
+    <p>Turn Pressure plans your dive with your own SCR. You enter it, or calculate it from a dive you logged, and the app uses it for the turn pressure, minimum gas and bottom time. It is free, works offline and needs no account.</p>
+  </div>
+  <div class="actions">
+    <a class="store" href="https://apps.apple.com/app/id6801749776">Download on the App Store</a>
+    <a class="more" href="https://diver.today/turnpressure-site/">Details, support &amp; privacy</a>
+  </div>
+</aside>
+
+<aside class="closing">
+  <img src="../../img/time-to-surface.png" alt="" width="72" height="72">
+  <div>
+    <h2>Time to Surface</h2>
+    <p>Time to Surface plans decompression dives with each diver&rsquo;s own SCR, so the gas plan fits the way you breathe. Your divers and their SCR are in your own iCloud and shared with Turn Pressure, so you enter them once. It is free, works offline and needs no account.</p>
+  </div>
+  <div class="actions">
+    <a class="store" href="https://apps.apple.com/app/id6803187271">Download on the App Store</a>
+    <a class="more" href="https://diver.today/timetosurface-site/">Details, support &amp; privacy</a>
+  </div>
+</aside>
 
 <aside class="closing">
   <img src="../../img/dive-log.png" alt="" width="72" height="72">
