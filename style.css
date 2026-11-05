@@ -115,6 +115,18 @@ img { display: block; }
 .app.pro .more { border-color: #b7d2cc; }
 .app.pro .soon-mark { color: #0f8f84; }
 .app.pro .title h2 { font-size: 26px; }
+/* The Mac app: the page's warm section, orange above and red below, so the page is not all dark blue (Rustam, 2026-11-05). Its video is on the same sunset water. */
+.app.mac {
+  --bg: #b42a18; --bg-2: #a82516; --ink: #fff; --dim: #ffe9dc; --rule: rgba(255,255,255,.28); --accent: #ffd696; --accent-ink: #5a1208;
+  background: linear-gradient(180deg, #cf3f1c 0%, #a82516 100%);
+  color: var(--ink); border-top: 0; padding-top: 0; margin-top: 0;
+}
+.app.mac + .answers { border-top: 0; }
+.app.mac .stage::after { background: linear-gradient(to bottom, transparent, #cf3f1c); }
+.app.mac .store { background: #fff; color: #8f1d0f; }
+.app.mac .store:hover { background: #ffe9dc; }
+.app.mac .more { color: #fff; border-color: rgba(255,255,255,.55); }
+.app.mac .title p, .app.mac .line { color: var(--dim); }
 .soon-mark { color: var(--accent); font-weight: 600; margin-left: 1px; }
 .family { border-top: 1px solid var(--rule); padding: 72px 0 56px; }
 .family h2 { margin: 0 0 12px; font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 650; }
