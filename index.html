@@ -355,13 +355,27 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
   var variant = small ? 'tall' : 'wide';   // 4:5 on a phone, 16:9 everywhere else
   var stages = document.querySelectorAll('.stage[data-video]');
 
+  // Low Power Mode, on a Mac or an iPhone, makes Safari refuse autoplay for every video. Safari still plays an MP4 given to an image, muted and looping, so the
+  // same file runs that way there. Anywhere else, or if the image fails, the play button comes back.
+  var safari = /Apple/.test(navigator.vendor);
+  function clearClip(stage) { var c = stage.querySelector('img.clip'); if (c) c.remove(); }
+  function clip(stage, v) {
+    if (stage.querySelector('img.clip')) return;
+    if (!safari) { stage.classList.add('manual'); return; }
+    var im = new Image();
+    im.className = 'clip'; im.alt = '';
+    im.onerror = function () { im.remove(); stage.classList.add('manual'); };
+    im.src = v.currentSrc || v.src;
+    stage.insertBefore(im, stage.querySelector('.play'));
+  }
+
   function load(stage) {
     var v = stage.querySelector('video');
     if (v.dataset.loaded) return v;
     v.preload = 'auto';
     v.src = 'video/' + stage.dataset.video + '-' + variant + '.mp4';
     v.dataset.loaded = '1';
-    v.addEventListener('playing', function () { v.classList.add('on'); });
+    v.addEventListener('playing', function () { v.classList.add('on'); clearClip(stage); });
     return v;
   }
 
@@ -398,7 +412,7 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
   function start(stage) {
     var v = load(stage), p = v.play();
     // Only a refused autoplay gets the play button; a play() cut short by a fast scroll does not.
-    if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError') { blocked = true; stage.classList.add('manual'); } });
+    if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError') { blocked = true; clip(stage, v); } });
   }
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
@@ -406,7 +420,7 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
       shown.set(e.target, e.intersectionRatio);
       if (e.intersectionRatio >= 0.5) start(e.target);
       else if (v.dataset.loaded && e.intersectionRatio < 0.2) v.pause();
-      if (!e.isIntersecting && v.dataset.loaded) { v.currentTime = 0; v.classList.remove('on'); }
+      if (!e.isIntersecting && v.dataset.loaded) { v.currentTime = 0; v.classList.remove('on'); clearClip(e.target); }
     });
   }, { threshold: [0, 0.2, 0.5] });
 
