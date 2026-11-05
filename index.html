@@ -354,20 +354,23 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
   var small = window.matchMedia('(max-width: 760px)').matches;
   var variant = small ? 'tall' : 'wide';   // 4:5 on a phone, 16:9 everywhere else
   var stages = document.querySelectorAll('.stage[data-video]');
+  var shown = new Map();
 
-  // Low Power Mode, on a Mac or an iPhone, makes Safari refuse autoplay for every video. Safari still plays an MP4 given to an image, muted and looping, so the
-  // same file runs that way there. Anywhere else, or if the image fails, the play button comes back.
-  var safari = /Apple/.test(navigator.vendor);
+  // Low Power Mode, on a Mac or an iPhone, makes Safari refuse autoplay for every video, however muted. Safari still plays an MP4 given to an image, but only once
+  // all of it is here, so that case has small copies (-lite.mp4), fetched ahead like the real ones. A one-frame video finds out at once whether autoplay is refused.
+  var safari = /Apple/.test(navigator.vendor), lowPower = false;
+  function lite(stage) { return 'video/' + stage.dataset.video + '-' + variant + '-lite.mp4'; }
   function clearClip(stage) { var c = stage.querySelector('img.clip'); if (c) c.remove(); }
-  function clip(stage, v) {
+  function clip(stage) {
     if (stage.querySelector('img.clip')) return;
     if (!safari) { stage.classList.add('manual'); return; }
     var im = new Image();
     im.className = 'clip'; im.alt = '';
     im.onerror = function () { im.remove(); stage.classList.add('manual'); };
-    im.src = v.currentSrc || v.src;
+    im.src = lite(stage);
     stage.insertBefore(im, stage.querySelector('.play'));
   }
+  function ahead(stage) { if (lowPower) { if (!stage.dataset.ahead && safari) { stage.dataset.ahead = '1'; fetch(lite(stage)).catch(function () {}); } } else load(stage); }
 
   function load(stage) {
     var v = stage.querySelector('video');
@@ -381,11 +384,17 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
 
   // Start fetching a video about a screen and a half before it is reached, so it can play the moment it
   // is in view. Skipped when the visitor has asked their browser to save data.
-  var saver = navigator.connection && navigator.connection.saveData;
+  var saver = navigator.connection && navigator.connection.saveData, nearby = [];
+  var probe = document.createElement('video');
+  probe.muted = true; probe.playsInline = true; probe.src = 'video/probe.mp4';
+  var tried = reduce ? null : probe.play();
+  if (tried && tried.catch) tried.catch(function (err) {
+    if (err && err.name === 'NotAllowedError') { lowPower = true; nearby.forEach(ahead); stages.forEach(function (s) { if (shown.get(s) >= 0.5) start(s); }); }
+  });
   if ('IntersectionObserver' in window && !saver) {
     var near = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting) { load(e.target); near.unobserve(e.target); }
+        if (e.isIntersecting) { nearby.push(e.target); ahead(e.target); near.unobserve(e.target); }
       });
     }, { rootMargin: '150% 0px' });
     stages.forEach(function (stage) { near.observe(stage); });
@@ -408,11 +417,11 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
   }
 
   // A video starts when at least half of it is on screen, from its intro card, and goes back to the card once it has left the screen.
-  var blocked = false, shown = new Map();
   function start(stage) {
+    if (lowPower) { clip(stage); return; }
     var v = load(stage), p = v.play();
-    // Only a refused autoplay gets the play button; a play() cut short by a fast scroll does not.
-    if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError') { blocked = true; clip(stage, v); } });
+    // Only a refused autoplay needs help; a play() cut short by a fast scroll does not.
+    if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError') { lowPower = true; clip(stage); } });
   }
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
@@ -420,22 +429,9 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
       shown.set(e.target, e.intersectionRatio);
       if (e.intersectionRatio >= 0.5) start(e.target);
       else if (v.dataset.loaded && e.intersectionRatio < 0.2) v.pause();
-      if (!e.isIntersecting && v.dataset.loaded) { v.currentTime = 0; v.classList.remove('on'); clearClip(e.target); }
+      if (!e.isIntersecting) { clearClip(e.target); if (v.dataset.loaded) { v.currentTime = 0; v.classList.remove('on'); } }
     });
   }, { threshold: [0, 0.2, 0.5] });
-
-  // An iPhone in Low Power Mode refuses autoplay until the visitor touches the page. The first touch lets every video run from then on.
-  document.addEventListener('pointerup', function () {
-    if (!blocked) return;
-    blocked = false;
-    stages.forEach(function (stage) {
-      var v = stage.querySelector('video');
-      if (!v.dataset.loaded) return;
-      stage.classList.remove('manual');
-      var p = v.play();
-      if ((shown.get(stage) || 0) < 0.5 && p && p.then) p.then(function () { v.pause(); v.currentTime = 0; v.classList.remove('on'); }).catch(function () {});
-    });
-  });
 
   stages.forEach(function (stage) {
     io.observe(stage);
