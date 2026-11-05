@@ -393,19 +393,35 @@ document.querySelectorAll('.ep-stage').forEach(function (st) {
     return;
   }
 
+  // A video starts when at least half of it is on screen, from its intro card, and goes back to the card once it has left the screen.
+  var blocked = false, shown = new Map();
+  function start(stage) {
+    var v = load(stage), p = v.play();
+    // Only a refused autoplay gets the play button; a play() cut short by a fast scroll does not.
+    if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError') { blocked = true; stage.classList.add('manual'); } });
+  }
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       var v = e.target.querySelector('video');
-      if (e.isIntersecting) {
-        v = load(e.target);
-        var p = v.play();
-        // Only a refused autoplay gets the play button; a play() cut short by a fast scroll does not.
-        if (p && p.catch) p.catch(function (err) { if (err && err.name === 'NotAllowedError') e.target.classList.add('manual'); });
-      } else if (v.dataset.loaded) {
-        v.pause();
-      }
+      shown.set(e.target, e.intersectionRatio);
+      if (e.intersectionRatio >= 0.5) start(e.target);
+      else if (v.dataset.loaded && e.intersectionRatio < 0.2) v.pause();
+      if (!e.isIntersecting && v.dataset.loaded) { v.currentTime = 0; v.classList.remove('on'); }
     });
-  }, { rootMargin: '200px 0px', threshold: 0.1 });
+  }, { threshold: [0, 0.2, 0.5] });
+
+  // An iPhone in Low Power Mode refuses autoplay until the visitor touches the page. The first touch lets every video run from then on.
+  document.addEventListener('pointerup', function () {
+    if (!blocked) return;
+    blocked = false;
+    stages.forEach(function (stage) {
+      var v = stage.querySelector('video');
+      if (!v.dataset.loaded) return;
+      stage.classList.remove('manual');
+      var p = v.play();
+      if ((shown.get(stage) || 0) < 0.5 && p && p.then) p.then(function () { v.pause(); v.currentTime = 0; v.classList.remove('on'); }).catch(function () {});
+    });
+  });
 
   stages.forEach(function (stage) {
     io.observe(stage);
