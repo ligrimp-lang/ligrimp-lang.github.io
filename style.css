@@ -274,3 +274,8 @@ main + footer { margin-top: 56px; }
 .prose .formula .res { white-space: nowrap; }
 @media (max-width: 600px) { .prose table.example th { width: 34%; } }
 .prose .trim-table { margin-top: 20px; }
+
+/* the Mac app's list of what it covers */
+.mac-features { list-style: none; margin: 18px 0 22px; padding: 0; display: grid; gap: 10px; }
+.mac-features li { color: inherit; line-height: 1.45; }
+.mac-features b { font-weight: 600; }
