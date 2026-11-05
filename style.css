@@ -121,7 +121,7 @@ img { display: block; }
   background: linear-gradient(180deg, #cf3f1c 0%, #a82516 100%);
   color: var(--ink); border-top: 0; padding-top: 0; margin-top: 0;
 }
-.app.mac + .answers { border-top: 0; }
+.app.mac + .app { border-top: 0; }
 .app.mac .stage::after { background: linear-gradient(to bottom, transparent, #cf3f1c); }
 .app.mac .store { background: #fff; color: #8f1d0f; }
 .app.mac .store:hover { background: #ffe9dc; }
