@@ -287,3 +287,18 @@ main + footer { margin-top: 56px; }
 .mac-features { list-style: none; margin: 18px 0 22px; padding: 0; display: grid; gap: 10px; }
 .mac-features li { color: inherit; line-height: 1.45; }
 .mac-features b { font-weight: 600; }
+
+/* Answers for divers, folded by default (Rustam, 2026-11-10: "make the section with education videos expandable and collapsed by
+   default as it takes too much space and runs before the applications") */
+.answers:has(.answers-fold:not([open])) { padding: 40px 0 36px; }
+.answers-fold > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+.answers-fold > summary::-webkit-details-marker { display: none; }
+.answers-fold > summary h2 { margin: 0; }
+.answers-what { font-size: 16px; color: var(--dim); }
+.answers-toggle { margin-left: auto; font-size: 15px; font-weight: 600; color: var(--accent); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 14px; }
+.answers-toggle::before { content: "Show the episodes  \25BE"; }
+.answers-fold[open] .answers-toggle::before { content: "Hide  \25B4"; }
+.answers-fold > summary:hover .answers-toggle { border-color: var(--dim); }
+.answers-fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 8px; }
+.answers-fold[open] > summary { margin-bottom: 12px; }
+@media (max-width: 760px) { .answers-toggle { margin-left: 0; } }

@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#0b0f14">
 <link rel="icon" href="img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-<link rel="stylesheet" href="style.css?v=20261105f">
+<link rel="stylesheet" href="style.css?v=20261110a">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="diver.today">
@@ -91,7 +91,8 @@
 
 <section class="answers" id="answers">
   <div class="wrap">
-    <h2>Answers for divers</h2>
+    <details class="answers-fold">
+    <summary><h2>Answers for divers</h2><span class="answers-what">Five short episodes on gas planning and weighting</span><span class="answers-toggle" aria-hidden="true"></span></summary>
     <p class="lead">These short episodes explain gas planning and weighting in plain words. Each one answers one question and finds the answer step by step on one example. Each episode has its full transcript on its own page.</p>
     <div class="eps">
       <article class="ep">
@@ -150,6 +151,7 @@
         <p>Every part of one rig in a table, at the 3&nbsp;m stop and at 30&nbsp;m: the lead that makes it neutral, and whether you could swim it up if the wing fails, in under three minutes.</p>
       </article>
     </div>
+    </details>
   </div>
 </section>
 
@@ -354,6 +356,13 @@
 
 <script>
 // The episodes: a quiet poster with one play button; the player's own controls appear once it plays.
+(function () {   // the episodes fold open from the header menu and from a link to #answers
+  var fold = document.querySelector('.answers-fold');
+  if (!fold) return;
+  function openIfAsked() { if (location.hash === '#answers') fold.open = true; }
+  openIfAsked(); window.addEventListener('hashchange', openIfAsked);
+  document.querySelectorAll('a[href="#answers"]').forEach(function (a) { a.addEventListener('click', function () { fold.open = true; }); });
+})();
 document.querySelectorAll('.ep-stage').forEach(function (st) {
   var v = st.querySelector('video'), b = st.querySelector('.play');
   b.addEventListener('click', function () { v.controls = true; b.remove(); v.play(); });
