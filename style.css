@@ -123,6 +123,11 @@ img { display: block; }
 .app.mac .store:hover { background: #ffe9dc; }
 .app.mac .more { color: #fff; border-color: rgba(255,255,255,.55); }
 .app.mac .title p, .app.mac .line { color: var(--dim); }
+/* Coming soon: an app in review, the last section; its heading sits above the video */
+.coming-head { padding-top: 56px; padding-bottom: 28px; }
+.coming-head h2 { margin: 0; font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 650; }
+.title h3 { margin: 0; font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 650; }
+@media (max-width: 760px) { .coming-head { padding-top: 40px; padding-bottom: 20px; } .title h3 { font-size: 24px; } }
 .soon-mark { color: var(--accent); font-weight: 600; margin-left: 1px; }
 .family { padding: 72px 0 56px; }
 .family h2 { margin: 0 0 12px; font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; font-weight: 650; }
