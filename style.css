@@ -292,6 +292,9 @@ main + footer { margin-top: 56px; }
 .mac-features { list-style: none; margin: 18px 0 22px; padding: 0; display: grid; gap: 10px; }
 .mac-features li { color: inherit; line-height: 1.45; }
 .mac-features b { font-weight: 600; }
+/* a still of one feature, under an app's words */
+.feature-shot { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 0 22px; border-radius: 12px; border: 1px solid var(--rule); }
+.feature-shot.phone { max-width: 300px; border-radius: 22px; }
 
 /* Answers for divers, folded by default (Rustam, 2026-11-10: "make the section with education videos expandable and collapsed by
    default as it takes too much space and runs before the applications") */
