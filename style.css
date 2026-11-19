@@ -40,7 +40,7 @@ img { display: block; }
 .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 24px; }
 .brand { font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
 .brand b { color: var(--accent); font-weight: 600; }
-.top nav { display: flex; gap: 22px; font-size: 14px; color: var(--dim); overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+.top nav { display: flex; gap: 16px; font-size: 14px; color: var(--dim); overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
 .top nav::-webkit-scrollbar { display: none; }
 .top nav a:hover { color: var(--ink); }
 
