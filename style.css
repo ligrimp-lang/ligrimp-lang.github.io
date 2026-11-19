@@ -295,6 +295,8 @@ main + footer { margin-top: 56px; }
 /* a still of one feature, under an app's words */
 .feature-shot { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 0 22px; border-radius: 12px; border: 1px solid var(--rule); }
 .feature-shot.phone { max-width: 300px; border-radius: 22px; }
+/* a feature that is new, marked in the app's own accent (Rustam, 2026-11-19: "highlight its a new feature made available nov 2026") */
+.new-tag { display: inline-block; margin-right: 6px; padding: 2px 9px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: 12px; font-weight: 650; letter-spacing: .02em; line-height: 1.5; vertical-align: 1px; white-space: nowrap; }
 
 /* Answers for divers, folded by default (Rustam, 2026-11-10: "make the section with education videos expandable and collapsed by
    default as it takes too much space and runs before the applications") */
